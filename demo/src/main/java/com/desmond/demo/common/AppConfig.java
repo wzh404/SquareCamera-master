@@ -1,4 +1,4 @@
-package com.desmond.demo;
+package com.desmond.demo.common;
 
 /**
  * Created by wangzunhui on 2016/2/5.

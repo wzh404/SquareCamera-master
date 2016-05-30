@@ -3,6 +3,7 @@ package com.desmond.demo;
 import android.app.Application;
 import android.content.pm.PackageManager;
 
+import com.desmond.demo.common.AppConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

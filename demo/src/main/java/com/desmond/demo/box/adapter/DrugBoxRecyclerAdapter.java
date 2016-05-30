@@ -1,4 +1,4 @@
-package com.desmond.demo.box.view;
+package com.desmond.demo.box.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 
 import com.desmond.demo.BR;
+import com.desmond.demo.box.model.DrugBox;
+import com.desmond.demo.box.view.DrugBoxItemView;
 import com.desmond.demo.common.IView;
 import com.desmond.demo.common.RecyclerViewHolder;
 
@@ -17,17 +19,17 @@ import java.util.List;
 public class DrugBoxRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     final int defaultType = 1;
 
-    private List<Object> items;
+    private List<DrugBox> items;
     private Context context;
 
-    public DrugBoxRecyclerAdapter(Context context, List<Object> items){
+    public DrugBoxRecyclerAdapter(Context context, List<DrugBox> items){
         this.items = items;
         this.context = context;
     }
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        IView v = new DrugBoxView();
+        IView v = new DrugBoxItemView(context, parent);
         return new RecyclerViewHolder(v);
     }
 
