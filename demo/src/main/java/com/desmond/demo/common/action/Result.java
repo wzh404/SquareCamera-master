@@ -1,4 +1,4 @@
-package com.desmond.demo.action;
+package com.desmond.demo.common.action;
 
 import android.support.annotation.NonNull;
 

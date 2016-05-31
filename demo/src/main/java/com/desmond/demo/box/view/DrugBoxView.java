@@ -21,10 +21,12 @@ import java.util.List;
  * Created by WIN10 on 2016/5/30.
  */
 public class DrugBoxView extends AbstractSwipeRefresh {
+    private List<DrugBox> items;
     private CallbackDrugBoxView  callback;
+
     public DrugBoxView(Context context, ViewGroup container, CallbackDrugBoxView callback) {
         this.callback = callback;
-        super.init(context, container, R.layout.item_drug_box);
+        super.init(context, container, R.layout.activity_main);
     }
 
     @Override
@@ -33,8 +35,9 @@ public class DrugBoxView extends AbstractSwipeRefresh {
     }
 
     @Override
-    public RecyclerView.Adapter getAdapter(Context context) {
-        return new DrugBoxRecyclerAdapter(context, callback.getDrugBoxes());
+    public RecyclerView.Adapter createAdapter(Context context) {
+        this.items = callback.getItems();
+        return new DrugBoxRecyclerAdapter(context, items);
     }
 
     @Override
@@ -47,8 +50,13 @@ public class DrugBoxView extends AbstractSwipeRefresh {
         return get(R.id.drug_box_recycler_view);
     }
 
+    public void addItem(DrugBox box){
+        items.add(box);
+        getAdapter().notifyDataSetChanged();
+    }
+
     public interface CallbackDrugBoxView{
         public void fresh();
-        public List<DrugBox> getDrugBoxes();
+        public List<DrugBox> getItems();
     }
 }

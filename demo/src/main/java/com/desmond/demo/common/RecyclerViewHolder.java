@@ -10,6 +10,7 @@ import android.view.View;
  */
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     private ViewDataBinding binding;
+//    private View view;
     private IView iView;
 
     public RecyclerViewHolder(IView v){

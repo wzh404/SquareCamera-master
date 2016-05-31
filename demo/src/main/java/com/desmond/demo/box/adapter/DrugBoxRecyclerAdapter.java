@@ -1,11 +1,15 @@
 package com.desmond.demo.box.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 import com.desmond.demo.BR;
+import com.desmond.demo.R;
 import com.desmond.demo.box.model.DrugBox;
 import com.desmond.demo.box.view.DrugBoxItemView;
 import com.desmond.demo.common.IView;
@@ -38,7 +42,8 @@ public class DrugBoxRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHol
         if (holder.getItemViewType() == 0)
             return;
 
-        holder.getBinding().setVariable(BR.box, items.get(position));
+        ((DrugBoxItemView)holder.getIView()).setDrugOtc(items.get(position).getOtc());
+        holder.getBinding().setVariable(BR.drug, items.get(position));
         holder.getBinding().executePendingBindings();
     }
 

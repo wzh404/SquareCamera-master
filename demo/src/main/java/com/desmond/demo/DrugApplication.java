@@ -24,11 +24,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by wangzunhui on 2015/9/18.
  */
 public class DrugApplication extends Application {
-    private Retrofit retrofit;
+    private static Retrofit retrofit;
     private Integer versionCode = 0;
     public static String token = "0";
 
-    public Retrofit getRetrofit() {
+    public static Retrofit getRetrofit() {
         return retrofit;
     }
 

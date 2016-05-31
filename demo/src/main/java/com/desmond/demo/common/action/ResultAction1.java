@@ -1,9 +1,9 @@
-package com.desmond.demo.action;
+package com.desmond.demo.common.action;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.desmond.demo.rxbus.RxBus;
+import com.desmond.demo.common.rxbus.RxBus;
 import com.google.gson.JsonObject;
 //import com.xeehoo.health.BrainApplication;
 //import com.xeehoo.health.rxjava.rxbus.RxBus;

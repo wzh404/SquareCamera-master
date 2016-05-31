@@ -1,4 +1,4 @@
-package com.desmond.demo;
+package com.desmond.demo.service;
 
 import com.google.gson.JsonObject;
 

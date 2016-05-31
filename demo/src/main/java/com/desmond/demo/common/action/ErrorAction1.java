@@ -1,10 +1,10 @@
-package com.desmond.demo.action;
+package com.desmond.demo.common.action;
 
 import android.support.annotation.NonNull;
 
 //import com.xeehoo.health.rxjava.rxbus.RxBus;
 
-import com.desmond.demo.rxbus.RxBus;
+import com.desmond.demo.common.rxbus.RxBus;
 
 import rx.functions.Action1;
 

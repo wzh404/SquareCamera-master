@@ -44,12 +44,16 @@ public abstract class AbstractSwipeRefresh<E> extends AbstractView{
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new SpacesItemDecoration(AndroidUtil.dip2px(context, 10.0f)));
 
-        adapter = getAdapter(context);
+        adapter = createAdapter(context);
         recyclerView.setAdapter(adapter);
     }
 
+    public RecyclerView.Adapter getAdapter(){
+        return this.adapter;
+    }
+
     public abstract void freshData();
-    public abstract RecyclerView.Adapter getAdapter(Context context);
+    public abstract RecyclerView.Adapter createAdapter(Context context);
     public abstract SwipeRefreshLayout getSwipeRefresh();
     public abstract RecyclerView getRecyclerView();
 }

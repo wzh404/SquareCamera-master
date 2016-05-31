@@ -389,10 +389,20 @@ public class SquareCameraPreview extends SurfaceView{
         }
 
         if (check(sb.toString())){
-            if (sb.charAt(0) == '2'
-                    || sb.charAt(0) == 'z'
-                    || sb.charAt(0) == 'E'){
+            if (sb.charAt(0) == '2' || sb.charAt(0) == 'z' || sb.charAt(0) == 'E'){
                 sb.setCharAt(0, 'Z');
+            }
+
+            for (int i = 1; i < sb.length(); i++){
+                char c = sb.charAt(i);
+
+                if (c == 'i' || c == 'I' ){
+                    sb.setCharAt(i, '1');
+                }
+
+                if (c == 'o' || c == 'O'){
+                    sb.setCharAt(i, '0');
+                }
             }
             return sb.toString();
         }
@@ -406,20 +416,17 @@ public class SquareCameraPreview extends SurfaceView{
         }
 
         char c = s.charAt(0);
-        if (c >= 'A' && c <= 'Z') {
-        }
+        if (c >= 'A' && c <= 'Z') {}
         else if (c >= 'a' && c <= 'z'){}
-        else if (c == '2'){
-
-        }
+        else if (c == '2'){}
         else{
             return false;
         }
 
         for (int i =1; i < s.length(); i++){
             c = s.charAt(i);
-            if (c >= '0' && c <= '9') {
-            }
+            if (c >= '0' && c <= '9') {}
+            else if (c == 'i' || c == 'I' || c == 'o' || c == 'O'){}
             else{
                 return false;
             }

@@ -10,7 +10,25 @@ public class DrugBox {
     private String name;
     private String company;
     private String otc;
-    private Date time;
+    private String time;
+    private String code;
+    private String form;
+
+    public String getCode() {
+        return "国药准字" + code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getForm() {
+        return form;
+    }
+
+    public void setForm(String form) {
+        this.form = form;
+    }
 
     public String getName() {
         return name;
@@ -44,11 +62,11 @@ public class DrugBox {
         this.otc = otc;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }

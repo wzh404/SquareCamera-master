@@ -1,4 +1,4 @@
-package com.desmond.demo.rxbus;
+package com.desmond.demo.common.rxbus;
 
 import android.support.annotation.NonNull;
 
