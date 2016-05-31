@@ -19,7 +19,7 @@ public class ScanLineView extends SurfaceView implements SurfaceHolder.Callback 
     private int width;
     private int height;
 
-    private final static double ASPECT_RATIO = 4.0 / 4.0;
+    private final static double ASPECT_RATIO = 4.0 / 3.0;
     public ScanLineView(Context context, AttributeSet attrs) {
         super(context, attrs);
         // TODO Auto-generated constructor stub

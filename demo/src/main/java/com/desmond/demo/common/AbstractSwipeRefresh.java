@@ -6,11 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.desmond.demo.R;
-import com.desmond.demo.box.adapter.DrugBoxRecyclerAdapter;
 import com.desmond.demo.common.util.AndroidUtil;
-
-import java.util.List;
 
 /**
  * Created by WIN10 on 2016/5/30.

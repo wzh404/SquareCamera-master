@@ -14,8 +14,8 @@ import com.desmond.demo.common.IView;
 /**
  * Created by wangzunhui on 2016/5/30.
  */
-public class DrugBoxItemView extends AbstractView {
-    public DrugBoxItemView(Context context, ViewGroup container){
+public class DrugItemView extends AbstractView {
+    public DrugItemView(Context context, ViewGroup container){
         super.init(context, container, R.layout.item_drug_box);
     }
 

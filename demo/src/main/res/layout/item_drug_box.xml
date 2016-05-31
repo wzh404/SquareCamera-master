@@ -5,7 +5,7 @@
 
         <variable
             name="drug"
-            type="com.desmond.demo.box.model.DrugBox" />
+            type="com.desmond.demo.box.model.Drug" />
     </data>
 
     <RelativeLayout
@@ -85,8 +85,6 @@
                 android:text="@{drug.company}"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="12sp" />
-
-
         </RelativeLayout>
     </RelativeLayout>
 </layout>

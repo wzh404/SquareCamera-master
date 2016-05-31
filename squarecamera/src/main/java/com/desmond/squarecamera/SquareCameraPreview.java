@@ -47,7 +47,7 @@ public class SquareCameraPreview extends SurfaceView{
     private static final int FOCUS_MAX_BOUND = 1000;
     private static final int FOCUS_MIN_BOUND = -FOCUS_MAX_BOUND;
 
-    private static final double ASPECT_RATIO = 4.0 / 4.0;
+    private static final double ASPECT_RATIO = 4.0 / 3.0;
     private Camera mCamera;
 
     private float mLastTouchX;

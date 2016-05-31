@@ -1,54 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <data>
+
         <variable
             name="drug"
             type="com.desmond.demo.box.model.Drug" />
     </data>
 
-    <LinearLayout
-        android:id="@+id/item_my_product"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#fff">
+    <RelativeLayout
+        android:id="@+id/item_v2_detail_root"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:clickable="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/item_v2_detail_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:src="@mipmap/ic_launcher" />
+
+        <RelativeLayout
+            android:id="@+id/item_v2_detail_layout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal">
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/item_v2_detail_icon"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/product_name"
+                android:id="@+id/drug_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="12dp"
-                android:text=""
-                android:textColor="#333"
+                android:text="@{drug.name}"
+                android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/drug_add_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_weight="0.1"
-                android:gravity="right"
-                android:orientation="horizontal">
+                android:layout_alignBottom="@+id/drug_name"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:text="@{drug.time}"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/invest_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="12dp"
-                    android:text=""
-                    android:textColor="#999"
-                    android:textSize="16sp" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/drug_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/drug_company"
+                android:layout_marginTop="4dp"
+                android:text="@{drug.code}"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/drug_otc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/drug_no"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:text="OTC"
+                android:background="@drawable/text_view_otc_border"
+                android:textColor="#ff0f9d58"
+                android:textSize="12sp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp" />
+
+            <TextView
+                android:id="@+id/drug_company"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/drug_name"
+                android:layout_marginTop="4dp"
+                android:text="@{drug.company}"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </RelativeLayout>
 </layout>
