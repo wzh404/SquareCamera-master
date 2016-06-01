@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.desmond.demo.R;
@@ -34,5 +35,15 @@ public class DrugItemView extends AbstractView {
             textView.setTextColor(Color.parseColor("#ff999999"));
             textView.setBackgroundResource(R.drawable.text_view_other_border);
         }
+    }
+
+    public void setOnClick(){
+        RelativeLayout relativeLayout = get(R.id.item_drug_root);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("Drug", "----click-----");
+            }
+        });
     }
 }

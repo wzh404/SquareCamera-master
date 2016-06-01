@@ -22,23 +22,35 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.desmond.demo.R;
+import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.presenter.DrugPresenter;
+import com.desmond.demo.box.view.DrugView;
+import com.desmond.demo.common.action.Result;
 import com.desmond.demo.common.util.AndroidUtil;
+import com.desmond.demo.common.util.DateUtil;
 import com.desmond.demo.common.util.IconCenterEditText;
 import com.desmond.squarecamera.CameraActivity;
+import com.google.gson.JsonObject;
+
+import rx.functions.Action1;
 
 /**
  * Created by WIN10 on 2016/5/31.
  */
 public class DrugFragment extends Fragment {
-    private DrugPresenter presenter;
+    private static final int REQUEST_CAMERA = 0;
 
+    private DrugPresenter presenter;
+    private DrugView view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_drug, container, false);
-        IconCenterEditText icet_search = (IconCenterEditText) view.findViewById(R.id.icet_search);
+        this.presenter = new DrugPresenter(drugAction1);
+        this.view = new DrugView(getContext(), null, this.presenter);
+
+//        View view = inflater.inflate(R.layout.fragment_drug, container, false);
+        IconCenterEditText icet_search = view.get(R.id.icet_search);
 
         icet_search.setOnSearchClickListener(new IconCenterEditText.OnSearchClickListener() {
             @Override
@@ -47,7 +59,7 @@ public class DrugFragment extends Fragment {
             }
         });
 
-        TextView vt = (TextView) view.findViewById(R.id.sao);
+        TextView vt = (TextView) view.get(R.id.sao);
         vt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +89,7 @@ public class DrugFragment extends Fragment {
 //        View searchplate = searchView.findViewById(R.id.search_plate);
 //        searchplate.setBackgroundResource(R.drawable.underline);
 
-        return view;
+        return view.getView();
     }
 
     @Override
@@ -88,12 +100,17 @@ public class DrugFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        Log.e("Drug", resultCode + " - " + requestCode);
+        if (resultCode != -1) return;
+
+        if (requestCode == REQUEST_CAMERA) {
+            String code = data.getStringExtra("code");
+            this.presenter.drug(code);
+        }
     }
 
     public void start(View view){
         final String permission = Manifest.permission.CAMERA;
-        if (ContextCompat.checkSelfPermission(getContext(), permission)
+        if (ContextCompat.checkSelfPermission(view.getContext(), permission)
                 != PackageManager.PERMISSION_GRANTED) {
             requestForPermission(permission);
         } else {
@@ -109,4 +126,26 @@ public class DrugFragment extends Fragment {
         Intent startCustomCameraIntent = new Intent(getContext(), CameraActivity.class);
         startActivityForResult(startCustomCameraIntent, 0);
     }
+
+    private Action1 drugAction1 = new Action1<Result>() {
+        @Override
+        public void call(Result result) {
+            if (result.isResult("drug", "OK")) {
+                JsonObject jsonObject = result.getObj().getAsJsonObject("drug");
+                Drug drug = new Drug();
+
+                drug.setId(jsonObject.get("id").getAsInt());
+                drug.setName(jsonObject.get("name").getAsString());
+                drug.setCompany(jsonObject.get("manufacturer").getAsString());
+                drug.setCode(jsonObject.get("code").getAsString());
+                drug.setForm(jsonObject.get("form").getAsString());
+                drug.setOtc(jsonObject.get("otc").getAsString());
+                drug.setTime(DateUtil.getCurrentTime());
+
+                view.addItem(drug);
+            } else {
+                Toast.makeText(getContext(), result.getMsg(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 }

@@ -42,21 +42,21 @@ public class DrugActivity extends AppCompatActivity {
         this.view = new DrugView(this, null, this.presenter);
         setContentView(this.view.getView());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        toolbar.setOnMenuItemClickListener(
-                new Toolbar.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-//                        switch (item.getItemId()) {
-//                            case R.id.add_drug:
-//                                requestForCameraPermission(null);
-//                                break;
-//                        }
-                        return false;
-                    }
-                });
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//
+//        toolbar.setOnMenuItemClickListener(
+//                new Toolbar.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+////                        switch (item.getItemId()) {
+////                            case R.id.add_drug:
+////                                requestForCameraPermission(null);
+////                                break;
+////                        }
+//                        return false;
+//                    }
+//                });
     }
 
     private Action1 drugAction1 = new Action1<Result>() {

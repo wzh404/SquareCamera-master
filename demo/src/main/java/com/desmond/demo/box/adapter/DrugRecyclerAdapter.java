@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-
 import com.desmond.demo.BR;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.model.DrugBox;
@@ -39,7 +38,10 @@ public class DrugRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         if (holder.getItemViewType() == 0)
             return;
 
-        ((DrugItemView)holder.getIView()).setDrugOtc(items.get(position).getOtc());
+        DrugItemView view = (DrugItemView)holder.getIView();
+        view.setDrugOtc(items.get(position).getOtc());
+        view.setOnClick();
+
         holder.getBinding().setVariable(BR.drug, items.get(position));
         holder.getBinding().executePendingBindings();
     }

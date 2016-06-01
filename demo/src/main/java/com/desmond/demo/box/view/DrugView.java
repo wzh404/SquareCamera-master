@@ -22,7 +22,7 @@ public class DrugView extends AbstractSwipeRefresh {
 
     public DrugView(Context context, ViewGroup container, CallbackDrugView callback) {
         this.callback = callback;
-        super.init(context, container, R.layout.activity_drugs);
+        super.init(context, container, R.layout.fragment_drug);
     }
 
     @Override

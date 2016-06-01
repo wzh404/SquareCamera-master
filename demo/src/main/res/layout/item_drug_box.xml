@@ -9,10 +9,10 @@
     </data>
 
     <RelativeLayout
-        android:id="@+id/item_v2_detail_root"
+        android:id="@+id/item_drug_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
+        android:background="@drawable/layout_selector"
         android:clickable="true">
 
         <ImageView
