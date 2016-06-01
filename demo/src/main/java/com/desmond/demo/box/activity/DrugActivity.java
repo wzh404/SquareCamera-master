@@ -49,11 +49,11 @@ public class DrugActivity extends AppCompatActivity {
                 new Toolbar.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.add_drug:
-                                requestForCameraPermission(null);
-                                break;
-                        }
+//                        switch (item.getItemId()) {
+//                            case R.id.add_drug:
+//                                requestForCameraPermission(null);
+//                                break;
+//                        }
                         return false;
                     }
                 });

@@ -1,17 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!--<android.support.v7.widget.Toolbar-->
+    <!--android:id="@+id/search_view_toolbar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--app:actionViewClass="android.support.v7.widget.SearchView"-->
+    <!--android:background="?attr/colorPrimary"-->
+    <!--app:theme="@style/ToolbarTheme"-->
+    <!--/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="扫一扫"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="18sp"
-        android:clickable="true"
-        android:onClick="start"/>
+        android:orientation="horizontal"
+        android:background="@color/alzheimer_red"
+        android:gravity="center">
+
+        <com.desmond.demo.common.util.IconCenterEditText
+            android:id="@+id/icet_search"
+            style="@style/StyleEditText"
+            android:layout_height="32dp"
+            android:layout_width="200dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="请输入国药准字号"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/sao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:text="扫一扫"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
+    </LinearLayout>
 </LinearLayout>

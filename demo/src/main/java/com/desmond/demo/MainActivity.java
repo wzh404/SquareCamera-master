@@ -8,6 +8,7 @@ import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.desmond.demo.base.MainView;
@@ -26,22 +27,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void start(View view){
-        final String permission = Manifest.permission.CAMERA;
-        if (ContextCompat.checkSelfPermission(MainActivity.this, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestForPermission(permission);
-        } else {
-            launch();
-        }
-    }
-
-    private void requestForPermission(final String permission) {
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, 1);
-    }
-
-    private void launch() {
-        Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
-        startActivityForResult(startCustomCameraIntent, 0);
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data){
+//        Log.e("Main-Drug", resultCode + " - " + requestCode);
+//        super.onActivityResult(requestCode,resultCode,data);
+//    }
 }
