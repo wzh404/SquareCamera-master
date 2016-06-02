@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.desmond.demo.R;
 import com.desmond.demo.box.adapter.DrugRecyclerAdapter;
 import com.desmond.demo.box.model.Drug;
-import com.desmond.demo.box.model.DrugBox;
 import com.desmond.demo.common.AbstractSwipeRefresh;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public class DrugView extends AbstractSwipeRefresh {
 
     public DrugView(Context context, ViewGroup container, CallbackDrugView callback) {
         this.callback = callback;
-        super.init(context, container, R.layout.fragment_drug);
+        super.init(context, container, R.layout.fragment_drug_box);
     }
 
     @Override
@@ -47,6 +46,10 @@ public class DrugView extends AbstractSwipeRefresh {
     }
 
     public void addItem(Drug drug){
+        if (items.size() == 1 && items.get(0).getId().intValue() == 0){
+            items.clear();
+        }
+
         items.add(drug);
         getAdapter().notifyDataSetChanged();
     }

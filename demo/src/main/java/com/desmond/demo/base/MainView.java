@@ -15,6 +15,8 @@ import com.desmond.demo.MainActivity;
 import com.desmond.demo.R;
 import com.desmond.demo.common.AbstractView;
 import com.desmond.demo.fragment.DrugFragment;
+import com.desmond.demo.fragment.MyAccountFragment;
+import com.desmond.demo.fragment.PlanFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,8 +70,8 @@ public class MainView extends AbstractView {
     private List<TabBean> getTabs(){
         List<TabBean> tabs = new ArrayList<TabBean>();
         tabs.add(new TabBean("首页", R.drawable.selector_tab_home, new DrugFragment()));
-        tabs.add(new TabBean("用药计划", R.drawable.selector_tab_share, new DrugFragment()));
-        tabs.add(new TabBean("我的账户", R.drawable.selector_tab_me, new DrugFragment()));
+        tabs.add(new TabBean("用药", R.drawable.selector_tab_share, new PlanFragment()));
+        tabs.add(new TabBean("我的账户", R.drawable.selector_tab_me, new MyAccountFragment()));
 
         return tabs;
     }

@@ -33,12 +33,16 @@ public abstract class AbstractSwipeRefresh<E> extends AbstractView{
                     @Override
                     public void onRefresh() {
                         freshData();
+
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 });
 
         RecyclerView recyclerView = getRecyclerView();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.addItemDecoration(new SpacesItemDecoration(AndroidUtil.dip2px(context, 10.0f)));
+        recyclerView.addItemDecoration(new SpacesItemDecoration(AndroidUtil.dip2px(context, 0.0f)));
 
         adapter = createAdapter(context);
         recyclerView.setAdapter(adapter);

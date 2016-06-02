@@ -27,6 +27,17 @@ public class Drug {
     @SerializedName("form")
     private String form;
 
+    @SerializedName("category")
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public String getCode() {
         return "国药准字" + code;
     }

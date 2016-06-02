@@ -24,12 +24,26 @@ public class DrugPresenter extends DefaultPresenter implements DrugView.Callback
 
     @Override
     public void fresh() {
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
     public List<Drug> getItems() {
         List<Drug> items = new ArrayList<>();
+
+        Drug drug = new Drug();
+        drug.setId(0);
+        items.add(drug);
+
         return items;
     }
 

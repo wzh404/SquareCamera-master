@@ -10,7 +10,7 @@
         android:id="@+id/item_drug_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
+        android:background="@color/white"
         android:clickable="true">
 
         <ImageView
@@ -84,5 +84,7 @@
                 android:textColor="@android:color/darker_gray"
                 android:textSize="12sp" />
         </RelativeLayout>
+
+
     </RelativeLayout>
 </layout>

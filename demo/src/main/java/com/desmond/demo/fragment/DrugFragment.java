@@ -35,6 +35,8 @@ import com.google.gson.JsonObject;
 import rx.functions.Action1;
 
 /**
+ * 药箱
+ *
  * Created by WIN10 on 2016/5/31.
  */
 public class DrugFragment extends Fragment {
@@ -49,7 +51,7 @@ public class DrugFragment extends Fragment {
         this.presenter = new DrugPresenter(drugAction1);
         this.view = new DrugView(getContext(), null, this.presenter);
 
-//        View view = inflater.inflate(R.layout.fragment_drug, container, false);
+//        View view = inflater.inflate(R.layout.fragment_drug_box, container, false);
         IconCenterEditText icet_search = view.get(R.id.icet_search);
 
         icet_search.setOnSearchClickListener(new IconCenterEditText.OnSearchClickListener() {
@@ -70,7 +72,7 @@ public class DrugFragment extends Fragment {
 //        Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_view_toolbar);
 ////        int h = ((AppCompatActivity)getActivity()).getSupportActionBar().getHeight();
 ////        Log.e("Drug", "h is " + h);
-//        toolbar.inflateMenu(R.menu.menu_main);
+//        toolbar.inflateMenu(R.menu.menu_my_account);
 //
 ////        toolbar.setBackgroundColor(Color.parseColor("#FF0033"));
 ////        LinearLayout searchBar =  (LinearLayout)toolbar.findViewById(R.id.search_bar);
@@ -139,7 +141,8 @@ public class DrugFragment extends Fragment {
                 drug.setCompany(jsonObject.get("manufacturer").getAsString());
                 drug.setCode(jsonObject.get("code").getAsString());
                 drug.setForm(jsonObject.get("form").getAsString());
-                drug.setOtc(jsonObject.get("otc").getAsString());
+                drug.setOtc(jsonObject.get("otc").isJsonNull() ? "OTHER" : jsonObject.get("otc").getAsString());
+                drug.setCategory(jsonObject.get("category").getAsString());
                 drug.setTime(DateUtil.getCurrentTime());
 
                 view.addItem(drug);
