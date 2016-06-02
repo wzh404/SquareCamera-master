@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.desmond.demo.R;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.presenter.DrugPresenter;
@@ -44,20 +45,30 @@ public class DrugFragment extends Fragment {
 
     private DrugPresenter presenter;
     private DrugView view;
+    private MaterialDialog.Builder builder;
+    private MaterialDialog dialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         this.presenter = new DrugPresenter(drugAction1);
         this.view = new DrugView(getContext(), null, this.presenter);
-
-//        View view = inflater.inflate(R.layout.fragment_drug_box, container, false);
         IconCenterEditText icet_search = view.get(R.id.icet_search);
 
         icet_search.setOnSearchClickListener(new IconCenterEditText.OnSearchClickListener() {
             @Override
             public void onSearchClick(View view) {
-                Toast.makeText(getContext(), "i'm going to seach", Toast.LENGTH_SHORT).show();
+                if (view instanceof IconCenterEditText){
+                    String code = ((IconCenterEditText) view).getText().toString();
+                    if (code.length() != 9){
+                        Toast.makeText(view.getContext(), "请输入正确的批准文号", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        dialog = builder.show();
+                        presenter.drug(code.toUpperCase());
+                    }
+                }
             }
         });
 
@@ -94,10 +105,23 @@ public class DrugFragment extends Fragment {
         return view.getView();
     }
 
+    private void createProgressDialog(boolean horizontal) {
+        builder = new MaterialDialog.Builder(getContext())
+                .title("药品查询")
+                .backgroundColorRes(R.color.white)
+                .contentColorRes(R.color.black)
+                .titleColorRes(R.color.black)
+                .content("请稍后...")
+                .progress(true, 0)
+                .progressIndeterminateStyle(horizontal)
+                .canceledOnTouchOutside(false);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        createProgressDialog(false);
     }
 
     @Override
@@ -105,6 +129,7 @@ public class DrugFragment extends Fragment {
         if (resultCode != -1) return;
 
         if (requestCode == REQUEST_CAMERA) {
+            dialog = builder.show();
             String code = data.getStringExtra("code");
             this.presenter.drug(code);
         }
@@ -149,6 +174,7 @@ public class DrugFragment extends Fragment {
             } else {
                 Toast.makeText(getContext(), result.getMsg(), Toast.LENGTH_SHORT).show();
             }
+            dialog.dismiss();
         }
     };
 }

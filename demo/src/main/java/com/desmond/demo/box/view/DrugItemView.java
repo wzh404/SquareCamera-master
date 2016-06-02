@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.desmond.demo.R;
 import com.desmond.demo.common.AbstractView;
@@ -20,45 +21,45 @@ import com.desmond.demo.common.IView;
  */
 public class DrugItemView extends AbstractView {
     private Context context;
-    public DrugItemView(Context context, ViewGroup container){
+
+    public DrugItemView(Context context, ViewGroup container) {
         super.init(context, container, R.layout.item_drug_box);
         this.context = context;
     }
 
-    public void setDrugOtc(String otc){
+    public void setDrugOtc(String otc) {
         if (otc == null) otc = "OTHER";
 
         TextView textView = get(R.id.drug_otc);
-        if ("RX".equalsIgnoreCase(otc)){
+        if ("RX".equalsIgnoreCase(otc)) {
             textView.setText("处方");
             textView.setTextColor(ContextCompat.getColor(context, R.color.accent));
             textView.setBackgroundResource(R.drawable.text_view_rx_border);
-        }
-        else if ("OTHER".equalsIgnoreCase(otc)){
+        } else if ("OTHER".equalsIgnoreCase(otc)) {
             textView.setText("其它");
             textView.setTextColor(ContextCompat.getColor(context, R.color.dark_gray));
             textView.setBackgroundResource(R.drawable.text_view_other_border);
         }
     }
 
-    public void setDrugForm(String form){
+    public void setDrugForm(String form) {
         ImageView imageView = get(R.id.item_drug_form);
-        if (form == null){
+        if (form == null) {
             imageView.setImageResource(R.mipmap.ic_jiaolang);
         }
 
-        if (form.contains("胶囊")){
+        if (form.contains("胶囊")) {
             imageView.setImageResource(R.mipmap.ic_jiaolang);
-        }
-        else if (form.contains("片剂")){
+        } else if (form.contains("片剂")) {
             imageView.setImageResource(R.mipmap.ic_yaopian);
-        }
-        else if (form.contains("口服液")){
+        } else if (form.contains("口服液")) {
+            imageView.setImageResource(R.mipmap.ic_koufuye);
+        } else if (form.contains("颗粒剂")) {
             imageView.setImageResource(R.mipmap.ic_koufuye);
         }
     }
 
-    public void setOnClick(){
+    public void setOnClick() {
         RelativeLayout relativeLayout = get(R.id.item_drug_root);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +71,17 @@ public class DrugItemView extends AbstractView {
         relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Log.e("Drug", "----long click-----");
+                new MaterialDialog.Builder(v.getContext())
+                        .items(new String[]{"创建用药计划", "查看药品信息", "设置有效期", "标识已用完"})
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+
+                            }
+                        })
+                        .backgroundColorRes(R.color.white)
+                        .contentColorRes(R.color.black)
+                        .show();
                 return true;
             }
         });
