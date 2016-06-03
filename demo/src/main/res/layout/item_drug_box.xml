@@ -72,15 +72,15 @@
                 android:textColor="@android:color/darker_gray"
                 android:textSize="13sp" />
 
-            <View
-                android:id="@+id/item_v2_line"
-                android:layout_width="0.5dp"
-                android:layout_height="6dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_alignBottom="@+id/drug_no"
-                android:layout_toRightOf="@id/drug_no"
-                android:background="#ddd"></View>
+            <!--<View-->
+                <!--android:id="@+id/item_v2_line"-->
+                <!--android:layout_width="0.5dp"-->
+                <!--android:layout_height="6dp"-->
+                <!--android:layout_marginBottom="4dp"-->
+                <!--android:layout_marginLeft="4dp"-->
+                <!--android:layout_alignBottom="@+id/drug_no"-->
+                <!--android:layout_toRightOf="@id/drug_no"-->
+                <!--android:background="#ddd"></View>-->
 
             <TextView
                 android:id="@+id/drug_cls"
@@ -88,9 +88,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/drug_company"
                 android:layout_alignBottom="@+id/drug_no"
-                android:layout_toRightOf="@id/item_v2_line"
+                android:layout_toRightOf="@id/drug_no"
                 android:layout_marginTop="4dp"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="8dp"
                 android:text="@{drug.category}"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="13sp" />

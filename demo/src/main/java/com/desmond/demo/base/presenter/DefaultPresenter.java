@@ -1,4 +1,4 @@
-package com.desmond.demo.common;
+package com.desmond.demo.base.presenter;
 
 import com.desmond.demo.DrugApplication;
 import com.desmond.demo.service.WebService;

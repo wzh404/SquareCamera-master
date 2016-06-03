@@ -6,8 +6,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.desmond.demo.R;
+import com.desmond.demo.box.model.Drug;
+import com.desmond.demo.common.action.Result;
+import com.desmond.demo.common.util.DateUtil;
+import com.desmond.demo.plan.presenter.DrugPlanPresenter;
+import com.desmond.demo.plan.view.DrugPlanView;
+import com.google.gson.JsonObject;
+
+import rx.functions.Action1;
 
 /**
  * 用药
@@ -19,15 +28,25 @@ public class PlanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_drug_plan, null);
-        Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
-        toolbar.setTitle("用药");
+        DrugPlanPresenter presenter = new DrugPlanPresenter(drugPlanAction1);
+        DrugPlanView view = new DrugPlanView(getContext(), container, presenter);
 
-        return view;
+        return view.getView();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
+    private Action1 drugPlanAction1 = new Action1<Result>() {
+        @Override
+        public void call(Result result) {
+            if (result.isResult("plan", "OK")) {
+
+            } else {
+                Toast.makeText(getContext(), result.getMsg(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 }

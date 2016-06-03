@@ -1,4 +1,4 @@
-package com.desmond.demo.base;
+package com.desmond.demo.base.view;
 
 import android.content.Context;
 import android.view.ViewGroup;
@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.desmond.demo.R;
-import com.desmond.demo.common.AbstractView;
 
 
 /**

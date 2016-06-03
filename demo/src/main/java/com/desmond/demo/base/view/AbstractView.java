@@ -1,7 +1,6 @@
-package com.desmond.demo.common;
+package com.desmond.demo.base.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,7 @@ import android.view.ViewGroup;
 /**
  * Created by WIN10 on 2015/11/14.
  */
-public abstract class AbstractView implements IView{
+public abstract class AbstractView implements IView {
 //    private SweetAlertDialog dialog;
     protected View view;
     private Context context;

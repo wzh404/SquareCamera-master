@@ -2,9 +2,8 @@ package com.desmond.demo.box.presenter;
 
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.action.Result;
-import com.desmond.demo.box.model.DrugBox;
 import com.desmond.demo.box.view.DrugView;
-import com.desmond.demo.common.DefaultPresenter;
+import com.desmond.demo.base.presenter.DefaultPresenter;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;

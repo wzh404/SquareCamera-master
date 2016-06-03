@@ -1,9 +1,11 @@
-package com.desmond.demo.common;
+package com.desmond.demo.base.view;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.desmond.demo.base.view.IView;
 
 /**
  * Created by wangzunhui on 2015/11/10.

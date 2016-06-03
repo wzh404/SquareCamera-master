@@ -1,4 +1,4 @@
-package com.desmond.demo.common;
+package com.desmond.demo.base.view;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

@@ -1,13 +1,11 @@
-package com.desmond.demo.base;
+package com.desmond.demo.base.view;
 
 import android.content.Context;
-import android.graphics.Point;
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.desmond.demo.R;
-import com.desmond.demo.common.AbstractView;
 
 
 /**
@@ -23,5 +21,13 @@ public class EmptyView extends AbstractView {
 //        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams)getView().getLayoutParams();
 //        layoutParams.height = point.y;
 //        getView().setLayoutParams(layoutParams);
+    }
+
+    public void setHintText(int img, int text){
+        TextView textView = get(R.id.empty_hint);
+        textView.setText(text);
+
+        ImageView imageView = get(R.id.empty_image);
+        imageView.setImageResource(img);
     }
 }

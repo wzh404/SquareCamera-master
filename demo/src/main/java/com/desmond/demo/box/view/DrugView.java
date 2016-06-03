@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.desmond.demo.R;
 import com.desmond.demo.box.adapter.DrugRecyclerAdapter;
 import com.desmond.demo.box.model.Drug;
-import com.desmond.demo.common.AbstractSwipeRefresh;
+import com.desmond.demo.base.view.AbstractSwipeRefresh;
 
 import java.util.List;
 

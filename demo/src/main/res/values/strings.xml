@@ -3,4 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="empty_pill">你的药箱暂时没有药品</string>
+    <string name="empty_plan">你还没有添加用药计划</string>
 </resources>

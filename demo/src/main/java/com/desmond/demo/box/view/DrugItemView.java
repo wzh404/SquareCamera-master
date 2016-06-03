@@ -1,7 +1,6 @@
 package com.desmond.demo.box.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -11,10 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import com.desmond.demo.R;
-import com.desmond.demo.common.AbstractView;
-import com.desmond.demo.common.IView;
+import com.desmond.demo.base.view.AbstractView;
 
 /**
  * Created by wangzunhui on 2016/5/30.
@@ -72,7 +69,7 @@ public class DrugItemView extends AbstractView {
             @Override
             public boolean onLongClick(View v) {
                 new MaterialDialog.Builder(v.getContext())
-                        .items(new String[]{"创建用药计划", "查看药品信息", "设置有效期", "标识已用完"})
+                        .items(new String[]{"创建用药计划", "设置有效期", "添加药品剂量"})
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {

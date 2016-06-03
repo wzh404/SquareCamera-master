@@ -1,6 +1,5 @@
-package com.desmond.demo.base;
+package com.desmond.demo.base.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +12,7 @@ import android.widget.TabWidget;
 
 import com.desmond.demo.MainActivity;
 import com.desmond.demo.R;
-import com.desmond.demo.common.AbstractView;
+import com.desmond.demo.base.adapter.FragmentAdapter;
 import com.desmond.demo.fragment.DrugFragment;
 import com.desmond.demo.fragment.MyAccountFragment;
 import com.desmond.demo.fragment.PlanFragment;

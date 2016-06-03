@@ -1,4 +1,4 @@
-package com.desmond.demo.common;
+package com.desmond.demo.base.view;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;

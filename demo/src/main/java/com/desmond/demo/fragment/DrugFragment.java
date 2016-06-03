@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +73,8 @@ public class DrugFragment extends Fragment {
             }
         });
 
-        TextView vt = (TextView) view.get(R.id.sao);
+//        TextView vt = view.get(R.id.sao);
+        ImageView vt = view.get(R.id.sao);
         vt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

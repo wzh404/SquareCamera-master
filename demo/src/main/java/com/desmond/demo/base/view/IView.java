@@ -1,4 +1,4 @@
-package com.desmond.demo.common;
+package com.desmond.demo.base.view;
 
 import android.view.View;
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="obj"
+            type="com.google.gson.JsonObject" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/item_default_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_selector"
+        android:clickable="true">
+
+        <TextView
+            android:id="@+id/item_my_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:text="@{obj.get(`title`).getAsString()}"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/view_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:showText="false"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:padding="0dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/item_my_account_line"
+            android:layout_height="0.3dp"
+            android:visibility="visible"
+            android:layout_marginTop="16dp"
+            android:layout_below="@id/item_my_name"
+            android:background="@color/common_line_gray"></View>
+    </RelativeLayout>
+</layout>

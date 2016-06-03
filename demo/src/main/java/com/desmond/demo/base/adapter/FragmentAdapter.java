@@ -1,4 +1,4 @@
-package com.desmond.demo.base;
+package com.desmond.demo.base.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
