@@ -13,6 +13,8 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -47,8 +49,8 @@ public class SquareCameraPreview extends SurfaceView{
     private static final int FOCUS_MAX_BOUND = 1000;
     private static final int FOCUS_MIN_BOUND = -FOCUS_MAX_BOUND;
 
-    private static final double ASPECT_RATIO = 4.0 / 3.0;
-    private Camera mCamera;
+    private static final double ASPECT_RATIO = 3.0 / 4.0;
+    private volatile Camera mCamera;
 
     private float mLastTouchX;
     private float mLastTouchY;
@@ -99,24 +101,24 @@ public class SquareCameraPreview extends SurfaceView{
         int height = MeasureSpec.getSize(heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
 
-        final boolean isPortrait =
-                getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+//        final boolean isPortrait =
+//                getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+//
+//        if (isPortrait) {
+//            if (width > height * ASPECT_RATIO) {
+//                width = (int) (height * ASPECT_RATIO + 0.5);
+//            } else {
+//                height = (int) (width / ASPECT_RATIO + 0.5);
+//            }
+//        } else {
+//            if (height > width * ASPECT_RATIO) {
+//                height = (int) (width * ASPECT_RATIO + 0.5);
+//            } else {
+//                width = (int) (height / ASPECT_RATIO + 0.5);
+//            }
+//        }
 
-        if (isPortrait) {
-            if (width > height * ASPECT_RATIO) {
-                width = (int) (height * ASPECT_RATIO + 0.5);
-            } else {
-                height = (int) (width / ASPECT_RATIO + 0.5);
-            }
-        } else {
-            if (height > width * ASPECT_RATIO) {
-                height = (int) (width * ASPECT_RATIO + 0.5);
-            } else {
-                width = (int) (height / ASPECT_RATIO + 0.5);
-            }
-        }
-
-//        Log.e("Measure", width + "-" + height);
+        Log.e("Measure", width + "-" + height);
         setMeasuredDimension(width, height);
     }
 
@@ -136,8 +138,8 @@ public class SquareCameraPreview extends SurfaceView{
             mIsZoomSupported = params.isZoomSupported();
             if (mIsZoomSupported) {
                 mMaxZoom = params.getMaxZoom();
-
-                params.setZoom(mMaxZoom);
+Log.e("Drug", "mMaxZoom is " + mMaxZoom);
+                params.setZoom(50);
                 camera.setParameters(params);
                 params.setPreviewFormat(ImageFormat.NV21);
             }
@@ -245,9 +247,9 @@ public class SquareCameraPreview extends SurfaceView{
     private Camera.PreviewCallback previewCallback = new Camera.PreviewCallback(){
         @Override
         public void onPreviewFrame(final byte[] data, final Camera camera) {
-            Log.e("Preview", "------data coming--------" + Thread.currentThread().getId());
+//            Log.e("Preview", "------data coming--------" + Thread.currentThread().getId());
             camera.setPreviewCallback(null);
-
+            final CameraActivity cameraActivity = (CameraActivity)getContext();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -255,9 +257,19 @@ public class SquareCameraPreview extends SurfaceView{
                     boolean ok = decodeToBitMap(data, camera);
                     Log.e("Times", getContext() + " - times is " + (System.currentTimeMillis() - start) + "ms");
 
-                    if (mCamera != null && !ok){
-                        camera.cancelAutoFocus();
-                        camera.autoFocus(autoFocusCallback);
+                    if (!ok){
+//                        if (mCamera != null) {
+//                            camera.cancelAutoFocus();
+//                        }
+//                        if (mCamera != null) {
+//                            camera.autoFocus(autoFocusCallback);
+//                        }
+                        cameraActivity.mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                cameraActivity.retryAutoFoucs();
+                            }
+                        });
                     }
                 }
             }).start();
@@ -287,14 +299,14 @@ public class SquareCameraPreview extends SurfaceView{
     }
 
     private Bitmap ImageCrop(Bitmap bitmap) {
-        int w = bitmap.getWidth(); // 得到图片的宽，高
+        int w = bitmap.getWidth();
         int h = bitmap.getHeight();
 
         int wh = 200;
-        int retX = 0 ;
+        int retX = w/4;//0 ;
         int retY = h / 2 - wh/2;
 
-        return Bitmap.createBitmap(bitmap, retX, retY, w - retX, wh, null, false);
+        return Bitmap.createBitmap(bitmap, retX, retY, /*w - retX*/ w / 2,  wh, null, false);
     }
 
     private boolean ocrImage(Bitmap source) {
@@ -327,8 +339,13 @@ public class SquareCameraPreview extends SurfaceView{
 //        baseApi.init(appDir.toString(), "eng");
         Log.e("times", "TessBaseAPI is " + (System.currentTimeMillis() - start) + "ms");
 
-        cameraActivity.baseApi.setImage(b);
-        final String ori = cameraActivity.baseApi.getUTF8Text();
+//        cameraActivity.baseApi.setImage(b);
+//        final String ori = cameraActivity.baseApi.getUTF8Text();
+        String ori = cameraActivity.baseApi.parser(b);
+        if (ori == null){
+            return false;
+        }
+
         Log.e("times", "getUTF8Text is " + (System.currentTimeMillis() - start) + "ms");
         final String outputText = parser(ori);
         Log.e("Tesseract", "[" + ori + "]-------[" + outputText + "]*****************");
@@ -343,23 +360,6 @@ public class SquareCameraPreview extends SurfaceView{
             });
         }
         return outputText != null;
-//        bmp.recycle();
-//        if (! appDir.exists()) {
-//            appDir.mkdir();
-//        }
-//        Log.e("--------", bmp.getWidth() + " - " + bmp.getHeight());
-//        String fileName = System.currentTimeMillis() + ".jpg";
-//        File file = new File(appDir, fileName);
-//        try {
-//            FileOutputStream fos = new FileOutputStream(file);
-//            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-//            fos.flush();
-//            fos.close();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private  String parser(String s) {
@@ -378,16 +378,25 @@ public class SquareCameraPreview extends SurfaceView{
 
             if ((next - prev) == 1) {
                 sb.append(c);
-                if (sb.length() == 9) break;
             } else {
-                sb.setLength(0);
-                sb.append(c);
+                if (sb.length() >= 9){
+                    break;
+                }
+                else {
+                    sb.setLength(0);
+                    sb.append(c);
+                }
             }
 
             prev = next;
             next++;
         }
 
+        Log.e("Drug", "string is [" + sb.toString() + "]");
+        if (sb.length() > 9) {
+            sb.delete(0, sb.length() - 9);
+        }
+        Log.e("Drug", "delete is [" + sb.toString() + "]");
         if (check(sb.toString())){
             if (sb.charAt(0) == '2' || sb.charAt(0) == 'z' || sb.charAt(0) == 'E'){
                 sb.setCharAt(0, 'Z');
@@ -402,6 +411,10 @@ public class SquareCameraPreview extends SurfaceView{
 
                 if (c == 'o' || c == 'O'){
                     sb.setCharAt(i, '0');
+                }
+
+                if (c == 's' || c == 'S'){
+                    sb.setCharAt(i, '5');
                 }
             }
             return sb.toString();
@@ -426,7 +439,9 @@ public class SquareCameraPreview extends SurfaceView{
         for (int i =1; i < s.length(); i++){
             c = s.charAt(i);
             if (c >= '0' && c <= '9') {}
-            else if (c == 'i' || c == 'I' || c == 'o' || c == 'O'){}
+            else if (c == 'i' || c == 'I' ||
+                     c == 'o' || c == 'O' ||
+                     c == 's' || c == 'S'){}
             else{
                 return false;
             }
@@ -537,7 +552,7 @@ public class SquareCameraPreview extends SurfaceView{
         int backvalue = (int) (graybackmean / back);// 背景中心
         float G[] = new float[frontvalue - backvalue + 1];// 方差数组
         int s = 0;
-//        Log.i(TAG,"Front:"+front+"**Frontvalue:"+frontvalue+"**Backvalue:"+backvalue);
+
         for (int i1 = backvalue; i1 < frontvalue + 1; i1++)// 以前景中心和背景中心为区间采用大津法算法（OTSU算法）
         {
             back = 0;

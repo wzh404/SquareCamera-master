@@ -3,4 +3,25 @@
     <string-array name="select_jiao_lang">
         <item>胶囊</item>
     </string-array>
+
+    <string-array name="select_pian_ji">
+        <item>片剂</item>
+        <item>咀嚼片</item>
+        <item>糖衣片</item>
+    </string-array>
+
+    <string-array name="select_wan_ji">
+        <item>丸剂</item>
+        <item>大蜜丸</item>
+    </string-array>
+
+    <string-array name="select_ke_li">
+        <item>颗粒剂</item>
+    </string-array>
+
+    <string-array name="select_hun_xuan">
+        <item>混悬剂</item>
+        <item>糖浆剂</item>
+        <item>合剂</item>
+    </string-array>
 </resources>

@@ -31,25 +31,25 @@ public class ScanLineView extends SurfaceView implements SurfaceHolder.Callback 
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        int width = MeasureSpec.getSize(widthMeasureSpec);
+        height = MeasureSpec.getSize(heightMeasureSpec);
+        width = MeasureSpec.getSize(widthMeasureSpec);
 
-        final boolean isPortrait =
-                getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-
-        if (isPortrait) {
-            if (width > height * ASPECT_RATIO) {
-                width = (int) (height * ASPECT_RATIO + 0.5);
-            } else {
-                height = (int) (width / ASPECT_RATIO + 0.5);
-            }
-        } else {
-            if (height > width * ASPECT_RATIO) {
-                height = (int) (width * ASPECT_RATIO + 0.5);
-            } else {
-                width = (int) (height / ASPECT_RATIO + 0.5);
-            }
-        }
+//        final boolean isPortrait =
+//                getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+//
+//        if (isPortrait) {
+//            if (width > height * ASPECT_RATIO) {
+//                width = (int) (height * ASPECT_RATIO + 0.5);
+//            } else {
+//                height = (int) (width / ASPECT_RATIO + 0.5);
+//            }
+//        } else {
+//            if (height > width * ASPECT_RATIO) {
+//                height = (int) (width * ASPECT_RATIO + 0.5);
+//            } else {
+//                width = (int) (height / ASPECT_RATIO + 0.5);
+//            }
+//        }
 
         setMeasuredDimension(width, height);
     }
@@ -86,7 +86,26 @@ public class ScanLineView extends SurfaceView implements SurfaceHolder.Callback 
                 p.setStyle(Paint.Style.STROKE);
                 p.setStrokeWidth((float) 5.0);
                 p.setAlpha(128);
-                canvas.drawLine(0, height/2, width, height/2, p);
+                canvas.drawLine(width/4, height/2, width*3/4, height/2, p);
+
+                int h = 400;
+                int w = width / 2;
+                int l = (width - w) / 2;
+                int t = height / 2 - h / 2;
+                int r = l + w;
+                int b = t + h;
+
+
+                Paint mAreaPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                mAreaPaint.setColor(Color.GRAY);
+                mAreaPaint.setStyle(Paint.Style.FILL);
+                mAreaPaint.setAlpha(180);
+                Log.e("Drug", l + "-" + t + "-"+ r + "-" + b);
+                canvas.drawRect(0, 0, width, t, mAreaPaint);
+                canvas.drawRect(0, height/2 + h/2, width, height, mAreaPaint);
+                canvas.drawRect(0, height/2 - h/2, width/4, height/2 + h / 2, mAreaPaint);
+                canvas.drawRect(width*3/4, height/2 - h/2, width, height/2 + h / 2, mAreaPaint);
+
                 sh.unlockCanvasAndPost(canvas);
                 break;
             }

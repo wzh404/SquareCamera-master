@@ -18,6 +18,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.BitmapCompat;
@@ -95,6 +97,10 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.squarecamera__fragment_camera, container, false);
+    }
+
+    public void retryAutoFoucs(){
+        mPreviewView.startAutoFocusInCenter();
     }
 
     public void setImageView(Bitmap bitmap){

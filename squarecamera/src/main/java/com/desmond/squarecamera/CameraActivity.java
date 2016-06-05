@@ -20,7 +20,9 @@ import java.io.File;
 public class CameraActivity extends AppCompatActivity {
     public static final String TAG = CameraActivity.class.getSimpleName();
     public Handler mHandler;
-    public TessBaseAPI baseApi;
+//    public TessBaseAPI baseApi;
+
+    public AsyncTessBase baseApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +45,11 @@ public class CameraActivity extends AppCompatActivity {
                     .commit();
         }
 
-        baseApi = new TessBaseAPI();
-        File appDir = new File(Environment.getExternalStorageDirectory().getPath(), "Boohee");
-        baseApi.init(appDir.toString(), "eng");
+//        baseApi = new TessBaseAPI();
+//        File appDir = new File(Environment.getExternalStorageDirectory().getPath(), "Boohee");
+//        baseApi.init(appDir.toString(), "eng");
+        baseApi = new AsyncTessBase();
+        baseApi.init();
 
         mHandler = new Handler();
     }
@@ -62,10 +66,17 @@ public class CameraActivity extends AppCompatActivity {
         finish();
     }
 
+    public void retryAutoFoucs(){
+        CameraFragment cameraFragment = (CameraFragment)getSupportFragmentManager().getFragments().get(0);
+        if (cameraFragment != null) {
+            cameraFragment.retryAutoFoucs();
+        }
+    }
+
     @Override
     public void onDestroy(){
-        baseApi.end();
         super.onDestroy();
+        baseApi.end();
     }
 
     public void onCancel(View view) {

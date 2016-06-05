@@ -39,22 +39,42 @@ public class DrugItemView extends AbstractView {
         }
     }
 
-    public void setDrugForm(String form) {
-        ImageView imageView = get(R.id.item_drug_form);
-        if (form == null) {
-            imageView.setImageResource(R.mipmap.ic_jiaolang);
-        }
+    public void setDrugForm(String form){
+        int[][] f = {
+                {R.array.select_jiao_lang, R.mipmap.ic_jiaolang},
+                {R.array.select_pian_ji, R.mipmap.ic_yaopian},
+                {R.array.select_ke_li, R.mipmap.ic_chongji},
+                {R.array.select_hun_xuan, R.mipmap.ic_koufuye}
+        };
 
-        if (form.contains("胶囊")) {
-            imageView.setImageResource(R.mipmap.ic_jiaolang);
-        } else if (form.contains("片剂")) {
-            imageView.setImageResource(R.mipmap.ic_yaopian);
-        } else if (form.contains("口服液")) {
-            imageView.setImageResource(R.mipmap.ic_koufuye);
-        } else if (form.contains("颗粒剂")) {
-            imageView.setImageResource(R.mipmap.ic_koufuye);
+        ImageView imageView = get(R.id.item_drug_form);
+        for (int i = 0; i < f.length; i++){
+            String[] arr = context.getResources().getStringArray(f[i][0]);
+            for (String s : arr) {
+                if (form.contains(s)) {
+                    imageView.setImageResource(f[i][1]);
+                    return;
+                }
+            }
         }
     }
+
+//    public void setDrugForm(String form) {
+//        ImageView imageView = get(R.id.item_drug_form);
+//        if (form == null) {
+//            imageView.setImageResource(R.mipmap.ic_jiaolang);
+//        }
+//
+//        if (form.contains("胶囊")) {
+//            imageView.setImageResource(R.mipmap.ic_jiaolang);
+//        } else if (form.contains("片剂")) {
+//            imageView.setImageResource(R.mipmap.ic_yaopian);
+//        } else if (form.contains("口服液")) {
+//            imageView.setImageResource(R.mipmap.ic_koufuye);
+//        } else if (form.contains("颗粒剂")) {
+//            imageView.setImageResource(R.mipmap.ic_koufuye);
+//        }
+//    }
 
     public void setOnClick() {
         RelativeLayout relativeLayout = get(R.id.item_drug_root);
