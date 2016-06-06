@@ -138,8 +138,8 @@ public class SquareCameraPreview extends SurfaceView{
             mIsZoomSupported = params.isZoomSupported();
             if (mIsZoomSupported) {
                 mMaxZoom = params.getMaxZoom();
-Log.e("Drug", "mMaxZoom is " + mMaxZoom);
-                params.setZoom(50);
+
+                params.setZoom(mMaxZoom > 50 ? 50 : mMaxZoom);
                 camera.setParameters(params);
                 params.setPreviewFormat(ImageFormat.NV21);
             }
@@ -250,11 +250,12 @@ Log.e("Drug", "mMaxZoom is " + mMaxZoom);
 //            Log.e("Preview", "------data coming--------" + Thread.currentThread().getId());
             camera.setPreviewCallback(null);
             final CameraActivity cameraActivity = (CameraActivity)getContext();
+            final Camera.Size size = camera.getParameters().getPreviewSize();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     long start = System.currentTimeMillis();
-                    boolean ok = decodeToBitMap(data, camera);
+                    boolean ok = decodeToBitMap(data, size);
                     Log.e("Times", getContext() + " - times is " + (System.currentTimeMillis() - start) + "ms");
 
                     if (!ok){
@@ -276,8 +277,8 @@ Log.e("Drug", "mMaxZoom is " + mMaxZoom);
         }
     };
 
-    public boolean decodeToBitMap(byte[] data, Camera camera) {
-        Camera.Size size = camera.getParameters().getPreviewSize();
+    public boolean decodeToBitMap(byte[] data, Camera.Size size) {
+//        Camera.Size size = camera.getParameters().getPreviewSize();
         try {
             YuvImage image = new YuvImage(data, ImageFormat.NV21, size.width, size.height, null);
             if (image != null) {

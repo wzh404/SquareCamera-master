@@ -1,6 +1,7 @@
 package com.desmond.demo.fragment;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -54,13 +55,14 @@ public class DrugFragment extends Fragment {
     private MaterialDialog dialog;
     private RealmAsyncTask realmAsyncTask;
     private RealmResults<Drug> result;
+    private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
+        this.context = getContext();
         this.presenter = new DrugPresenter(drugAction1);
-        this.view = new DrugView(getContext(), null, this.presenter);
+        this.view = new DrugView(context, null, this.presenter);
         IconCenterEditText icet_search = view.get(R.id.icet_search);
 
         icet_search.setOnSearchClickListener(new IconCenterEditText.OnSearchClickListener() {
@@ -177,11 +179,11 @@ public class DrugFragment extends Fragment {
                 drug.setTime(DateUtil.getCurrentTime());
 
                 Realm realm = Realm.getDefaultInstance();
-                Log.e("Drug", "query code [" + drug.getCode() + "]");
+                Log.e("Drug", "query code [" + drug.getCode() + "]-" + context + " - " + Thread.currentThread().getId());
                 long count = realm.where(Drug.class).equalTo("id", drug.getId()).count();
                 if (count > 0){
                     if (dialog != null) dialog.dismiss();
-                    Toast.makeText(getContext(), "药品已存在", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "药品已存在", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 realmAsyncTask = realm.executeTransactionAsync(
@@ -204,7 +206,7 @@ public class DrugFragment extends Fragment {
                             }
                         });
             } else {
-                Toast.makeText(getContext(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
             }
 
             if (dialog != null) dialog.dismiss();

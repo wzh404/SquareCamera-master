@@ -20,6 +20,7 @@ public class ScanLineView extends SurfaceView implements SurfaceHolder.Callback 
     private int height;
 
     private final static double ASPECT_RATIO = 4.0 / 3.0;
+
     public ScanLineView(Context context, AttributeSet attrs) {
         super(context, attrs);
         // TODO Auto-generated constructor stub
@@ -70,9 +71,8 @@ public class ScanLineView extends SurfaceView implements SurfaceHolder.Callback 
 
     }
 
-    public void drawLine()
-    {
-        while(true) {
+    public void drawLine() {
+        while (true) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -86,25 +86,47 @@ public class ScanLineView extends SurfaceView implements SurfaceHolder.Callback 
                 p.setStyle(Paint.Style.STROKE);
                 p.setStrokeWidth((float) 5.0);
                 p.setAlpha(128);
-                canvas.drawLine(width/4, height/2, width*3/4, height/2, p);
+                canvas.drawLine(width / 4, height / 2, width * 3 / 4, height / 2, p);
 
+                int f = 32;
+                int g = 10;
                 int h = 400;
-                int w = width / 2;
-                int l = (width - w) / 2;
-                int t = height / 2 - h / 2;
-                int r = l + w;
-                int b = t + h;
+                p.setStyle(Paint.Style.FILL);
+                p.setStrokeWidth(10);
+                p.setAlpha(255);
+                // left-top
+                canvas.drawRect(width / 4, height / 2 - h / 2, width / 4 + f, height / 2 - h / 2 + g, p);
+                canvas.drawRect(width / 4, height / 2 - h / 2, width / 4 + g , height / 2 - h / 2 + f, p);
+
+                // left-bottom
+                canvas.drawRect(width / 4, height / 2 + h / 2, width / 4 + f, height / 2 + h / 2 - g, p);
+                canvas.drawRect(width / 4, height / 2 + h / 2, width / 4 + g, height / 2 + h / 2 - f, p);
+
+                // right-top
+                canvas.drawRect(width * 3 / 4, height / 2 - h / 2, width * 3 / 4 - f, height / 2 - h / 2 + g, p);
+                canvas.drawRect(width * 3 / 4, height / 2 - h / 2, width * 3 / 4 - g, height / 2 - h / 2 + f, p);
+
+                // right-bottom
+                canvas.drawRect(width * 3 / 4, height / 2 + h / 2, width  * 3 / 4 - f, height / 2 + h / 2 - g, p);
+                canvas.drawRect(width * 3 / 4, height / 2 + h / 2, width  * 3 / 4 - g, height / 2 + h / 2 - f, p);
+
+
+//                int w = width / 2;
+//                int l = (width - w) / 2;
+//                int t = height / 2 - h / 2;
+//                int r = l + w;
+//                int b = t + h;
 
 
                 Paint mAreaPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 mAreaPaint.setColor(Color.GRAY);
                 mAreaPaint.setStyle(Paint.Style.FILL);
                 mAreaPaint.setAlpha(180);
-                Log.e("Drug", l + "-" + t + "-"+ r + "-" + b);
-                canvas.drawRect(0, 0, width, t, mAreaPaint);
-                canvas.drawRect(0, height/2 + h/2, width, height, mAreaPaint);
-                canvas.drawRect(0, height/2 - h/2, width/4, height/2 + h / 2, mAreaPaint);
-                canvas.drawRect(width*3/4, height/2 - h/2, width, height/2 + h / 2, mAreaPaint);
+//                Log.e("Drug", l + "-" + t + "-"+ r + "-" + b);
+                canvas.drawRect(0, 0, width, height / 2 - h / 2, mAreaPaint);
+                canvas.drawRect(0, height / 2 + h / 2, width, height, mAreaPaint);
+                canvas.drawRect(0, height / 2 - h / 2, width / 4, height / 2 + h / 2, mAreaPaint);
+                canvas.drawRect(width * 3 / 4, height / 2 - h / 2, width, height / 2 + h / 2, mAreaPaint);
 
                 sh.unlockCanvasAndPost(canvas);
                 break;
