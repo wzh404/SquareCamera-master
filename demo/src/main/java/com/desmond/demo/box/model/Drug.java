@@ -2,10 +2,14 @@ package com.desmond.demo.box.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by wangzunhui on 2016/5/30.
  */
-public class Drug {
+public class Drug extends RealmObject{
+    @PrimaryKey
     @SerializedName("id")
     private Integer id;
 
@@ -39,7 +43,7 @@ public class Drug {
     }
 
     public String getCode() {
-        return "国药准字" + code;
+        return code;
     }
 
     public void setCode(String code) {

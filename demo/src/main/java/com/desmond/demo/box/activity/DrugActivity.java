@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import com.desmond.demo.common.util.DateUtil;
 import com.desmond.squarecamera.CameraActivity;
 import com.google.gson.JsonObject;
 
+import io.realm.Realm;
 import rx.functions.Action1;
 
 
@@ -61,9 +63,9 @@ public class DrugActivity extends AppCompatActivity {
         @Override
         public void call(Result result) {
             if (result.isResult("drug", "OK")) {
-                JsonObject jsonObject = result.getObj().getAsJsonObject("drug");
-                Drug drug = new Drug();
 
+                JsonObject jsonObject = result.getObj().getAsJsonObject("drug");
+                final Drug drug = new Drug();
                 drug.setId(jsonObject.get("id").getAsInt());
                 drug.setName(jsonObject.get("name").getAsString());
                 drug.setCompany(jsonObject.get("manufacturer").getAsString());
@@ -72,7 +74,31 @@ public class DrugActivity extends AppCompatActivity {
                 drug.setOtc(jsonObject.get("otc").getAsString());
                 drug.setTime(DateUtil.getCurrentTime());
 
-                view.addItem(drug);
+                Log.e("Drug", "---start save to database---");
+                Realm realm = Realm.getDefaultInstance();
+                realm.executeTransactionAsync(
+                        new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                Log.e("Drug", "---save execute---");
+                                realm.copyToRealm(drug);
+                            }
+                        },
+                        new Realm.Transaction.OnSuccess() {
+                            @Override
+                            public void onSuccess() {
+                                Log.e("Drug", "---save success---");
+                                view.addItem(drug);
+                            }
+                        },
+                        new Realm.Transaction.OnError() {
+                            @Override
+                            public void onError(Throwable error) {
+                                Log.e("Drug", "---save error---");
+                                error.printStackTrace();
+                            }
+                        });
+
             } else {
                 Toast.makeText(DrugActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
             }

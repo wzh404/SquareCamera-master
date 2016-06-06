@@ -39,12 +39,7 @@ public class ResultAction1 implements Action1 {
                 r.setMsg(jsonObject.get("resultMsg").getAsString());
             }
 
-//            if ("ER90".equalsIgnoreCase(r.getCode())){
-//                BrainApplication.isLogin = false;
-//                BrainApplication.token = "0";
-//                RxBus.get().post("user_retry_login", r);
-//            }
-//
+            Log.e("Drug", "Thread is " + Thread.currentThread().getId());
             RxBus.get().post(tag, r);
         }
     }

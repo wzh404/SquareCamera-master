@@ -3,6 +3,7 @@ package com.desmond.demo.box.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.desmond.demo.BR;
 import com.desmond.demo.R;
@@ -44,12 +45,14 @@ public class DrugRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         if (holder.getItemViewType() == emptyType)
             return;
 
+        Drug drug = items.get(position);
         DrugItemView view = (DrugItemView)holder.getIView();
-        view.setDrugOtc(items.get(position).getOtc());
-        view.setDrugForm(items.get(position).getForm());
+        view.setDrugOtc(drug.getOtc());
+        view.setDrugForm(drug.getForm());
         view.setOnClick();
+        ((TextView)view.get(R.id.drug_no)).setText("国药准字" + drug.getCode());
 
-        holder.getBinding().setVariable(BR.drug, items.get(position));
+        holder.getBinding().setVariable(BR.drug, drug);
         holder.getBinding().executePendingBindings();
     }
 

@@ -54,6 +54,15 @@ public class DrugView extends AbstractSwipeRefresh {
         getAdapter().notifyDataSetChanged();
     }
 
+    public void addItem(List<Drug> drugs){
+        if (items.size() == 1 && items.get(0).getId().intValue() == 0){
+            items.clear();
+        }
+
+        items.addAll(drugs);
+        getAdapter().notifyDataSetChanged();
+    }
+
     public interface CallbackDrugView{
         public void fresh();
         public List<Drug> getItems();

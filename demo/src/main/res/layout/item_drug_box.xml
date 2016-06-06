@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/drug_company"
                 android:layout_marginTop="4dp"
-                android:text="@{drug.code}"
+                android:text=''
                 android:textColor="@android:color/darker_gray"
                 android:textSize="13sp" />
 

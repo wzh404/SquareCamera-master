@@ -34,6 +34,10 @@ import com.desmond.demo.common.util.IconCenterEditText;
 import com.desmond.squarecamera.CameraActivity;
 import com.google.gson.JsonObject;
 
+import io.realm.Realm;
+import io.realm.RealmAsyncTask;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 import rx.functions.Action1;
 
 /**
@@ -48,6 +52,8 @@ public class DrugFragment extends Fragment {
     private DrugView view;
     private MaterialDialog.Builder builder;
     private MaterialDialog dialog;
+    private RealmAsyncTask realmAsyncTask;
+    private RealmResults<Drug> result;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +79,6 @@ public class DrugFragment extends Fragment {
             }
         });
 
-//        TextView vt = view.get(R.id.sao);
         ImageView vt = view.get(R.id.sao);
         vt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,30 +87,19 @@ public class DrugFragment extends Fragment {
             }
         });
 
-//        Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_view_toolbar);
-////        int h = ((AppCompatActivity)getActivity()).getSupportActionBar().getHeight();
-////        Log.e("Drug", "h is " + h);
-//        toolbar.inflateMenu(R.menu.menu_my_account);
-//
-////        toolbar.setBackgroundColor(Color.parseColor("#FF0033"));
-////        LinearLayout searchBar =  (LinearLayout)toolbar.findViewById(R.id.search_bar);
-////        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams)searchBar.getLayoutParams();
-////        params.topMargin = AndroidUtil.dip2px(getContext(), 100);
-////        searchBar.setLayoutParams(params);
-//
-//        SearchView searchView = (SearchView) toolbar.findViewById(R.id.action_search);
-//        searchView.setIconified(false);
-////        searchView.setIconifiedByDefault(false);
-//        toolbar.setTitle("家庭药箱");
-//        searchView.setQueryHint("国药准字号");
-//        searchView.setMaxWidth(AndroidUtil.dip2px(getContext(), 240));
-//        searchView.setSubmitButtonEnabled(true);
-//
-//        View searchplate = searchView.findViewById(R.id.search_plate);
-//        searchplate.setBackgroundResource(R.drawable.underline);
+        Realm realm = Realm.getDefaultInstance();
+        result = realm.where(Drug.class).findAllAsync();
+        result.addChangeListener(callback);
 
         return view.getView();
     }
+
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<Drug>>() {
+        @Override
+        public void onChange(RealmResults<Drug> results) {
+            view.addItem(results);
+        }
+    };
 
     private void createProgressDialog(boolean horizontal) {
         builder = new MaterialDialog.Builder(getContext())
@@ -124,6 +118,16 @@ public class DrugFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         createProgressDialog(false);
+    }
+
+    @Override
+    public void onStop(){
+        if (realmAsyncTask != null && !realmAsyncTask.isCancelled()) {
+            realmAsyncTask.cancel();
+        }
+
+        result.removeChangeListeners();
+        super.onStop();
     }
 
     @Override
@@ -161,7 +165,7 @@ public class DrugFragment extends Fragment {
         public void call(Result result) {
             if (result.isResult("drug", "OK")) {
                 JsonObject jsonObject = result.getObj().getAsJsonObject("drug");
-                Drug drug = new Drug();
+                final Drug drug = new Drug();
 
                 drug.setId(jsonObject.get("id").getAsInt());
                 drug.setName(jsonObject.get("name").getAsString());
@@ -172,11 +176,38 @@ public class DrugFragment extends Fragment {
                 drug.setCategory(jsonObject.get("category").getAsString());
                 drug.setTime(DateUtil.getCurrentTime());
 
-                view.addItem(drug);
+                Realm realm = Realm.getDefaultInstance();
+                Log.e("Drug", "query code [" + drug.getCode() + "]");
+                long count = realm.where(Drug.class).equalTo("id", drug.getId()).count();
+                if (count > 0){
+                    if (dialog != null) dialog.dismiss();
+                    Toast.makeText(getContext(), "药品已存在", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                realmAsyncTask = realm.executeTransactionAsync(
+                        new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealm(drug);
+                            }
+                        },
+                        new Realm.Transaction.OnSuccess() {
+                            @Override
+                            public void onSuccess() {
+                                view.addItem(drug);
+                            }
+                        },
+                        new Realm.Transaction.OnError() {
+                            @Override
+                            public void onError(Throwable error) {
+                                error.printStackTrace();
+                            }
+                        });
             } else {
                 Toast.makeText(getContext(), result.getMsg(), Toast.LENGTH_SHORT).show();
             }
-            dialog.dismiss();
+
+            if (dialog != null) dialog.dismiss();
         }
     };
 }

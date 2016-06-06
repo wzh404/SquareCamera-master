@@ -10,6 +10,6 @@ import rx.Observable;
  * Created by wangzunhui on 2016/5/25.
  */
 public interface WebService {
-    @GET("/drug/{code}")
+    @GET("/screening/drug/{code}")
     Observable<JsonObject> drug(@Path("code") String code);
 }
