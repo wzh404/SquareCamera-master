@@ -73,12 +73,13 @@ public class DrugFragment extends Fragment {
             public void onSearchClick(View view) {
                 if (view instanceof IconCenterEditText){
                     String code = ((IconCenterEditText) view).getText().toString();
-                    if (code.length() != 9){
+                    if (code.length() <= 0){
                         Toast.makeText(view.getContext(), "请输入正确的批准文号", Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        dialog = builder.show();
-                        presenter.drug(code.toUpperCase());
+//                        dialog = builder.show();
+//                        presenter.drug(code.toUpperCase());
+                        queryDrug(code);
                     }
                 }
             }
@@ -95,16 +96,33 @@ public class DrugFragment extends Fragment {
         Realm realm = Realm.getDefaultInstance();
         result = realm.where(Drug.class)
                 .equalTo("state", Constants.DRUG_STATE_NORMAL)
-                .findAllAsync();
+                .findAllSortedAsync("time", Sort.DESCENDING);
         result.addChangeListener(callback);
 
         return view.getView();
     }
 
+    private void queryDrug(String name){
+        Realm realm = Realm.getDefaultInstance();
+        result = realm.where(Drug.class)
+                .contains("name", name)
+                .findAllAsync();
+        result.addChangeListener(callback);
+    }
+
+    private void deleteDrug(final Drug drug){
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                drug.deleteFromRealm();
+            }
+        });
+    }
+
     private RealmChangeListener callback = new RealmChangeListener<RealmResults<Drug>>() {
         @Override
         public void onChange(RealmResults<Drug> results) {
-            results.sort("time", Sort.DESCENDING);
             view.addItem(results);
         }
     };

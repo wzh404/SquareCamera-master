@@ -59,13 +59,13 @@ public class DrugApplication extends Application {
         public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
             Log.e("Drug", oldVersion + " - " + newVersion);
             RealmSchema schema = realm.getSchema();
-            for (String name : schema.get("Drug").getFieldNames()) {
-                Log.e("Drug", name);
-            }
+//            for (String name : schema.get("Drug").getFieldNames()) {
+//                Log.e("Drug", name);
+//            }
 
-            if (oldVersion == 1) {
-
-            }
+//            if (oldVersion == 1) {
+//
+//            }
         }
     };
 
