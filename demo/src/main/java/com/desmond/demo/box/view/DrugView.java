@@ -50,7 +50,7 @@ public class DrugView extends AbstractSwipeRefresh {
             items.clear();
         }
 
-        items.add(drug);
+        items.add(0, drug);
         getAdapter().notifyDataSetChanged();
     }
 
@@ -59,7 +59,7 @@ public class DrugView extends AbstractSwipeRefresh {
             items.clear();
         }
 
-        items.addAll(drugs);
+        items.addAll(0, drugs);
         getAdapter().notifyDataSetChanged();
     }
 

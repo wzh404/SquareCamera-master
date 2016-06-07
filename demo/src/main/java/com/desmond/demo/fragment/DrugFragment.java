@@ -30,15 +30,19 @@ import com.desmond.demo.box.presenter.DrugPresenter;
 import com.desmond.demo.box.view.DrugView;
 import com.desmond.demo.common.action.Result;
 import com.desmond.demo.common.util.AndroidUtil;
+import com.desmond.demo.common.util.Constants;
 import com.desmond.demo.common.util.DateUtil;
 import com.desmond.demo.common.util.IconCenterEditText;
 import com.desmond.squarecamera.CameraActivity;
 import com.google.gson.JsonObject;
 
+import java.util.Date;
+
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import rx.functions.Action1;
 
 /**
@@ -48,7 +52,6 @@ import rx.functions.Action1;
  */
 public class DrugFragment extends Fragment {
     private static final int REQUEST_CAMERA = 0;
-
     private DrugPresenter presenter;
     private DrugView view;
     private MaterialDialog.Builder builder;
@@ -90,7 +93,9 @@ public class DrugFragment extends Fragment {
         });
 
         Realm realm = Realm.getDefaultInstance();
-        result = realm.where(Drug.class).findAllAsync();
+        result = realm.where(Drug.class)
+                .equalTo("state", Constants.DRUG_STATE_NORMAL)
+                .findAllAsync();
         result.addChangeListener(callback);
 
         return view.getView();
@@ -99,6 +104,7 @@ public class DrugFragment extends Fragment {
     private RealmChangeListener callback = new RealmChangeListener<RealmResults<Drug>>() {
         @Override
         public void onChange(RealmResults<Drug> results) {
+            results.sort("time", Sort.DESCENDING);
             view.addItem(results);
         }
     };
@@ -176,16 +182,19 @@ public class DrugFragment extends Fragment {
                 drug.setForm(jsonObject.get("form").getAsString());
                 drug.setOtc(jsonObject.get("otc").isJsonNull() ? "OTHER" : jsonObject.get("otc").getAsString());
                 drug.setCategory(jsonObject.get("category").getAsString());
-                drug.setTime(DateUtil.getCurrentTime());
+                drug.setTime(new Date());
+                drug.setSync(false);
+                drug.setState(Constants.DRUG_STATE_NORMAL);
 
                 Realm realm = Realm.getDefaultInstance();
-                Log.e("Drug", "query code [" + drug.getCode() + "]-" + context + " - " + Thread.currentThread().getId());
+//                Log.e("Drug", "query code [" + drug.getCode() + "]-" + context + " - " + Thread.currentThread().getId());
                 long count = realm.where(Drug.class).equalTo("id", drug.getId()).count();
                 if (count > 0){
                     if (dialog != null) dialog.dismiss();
                     Toast.makeText(context, "药品已存在", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 realmAsyncTask = realm.executeTransactionAsync(
                         new Realm.Transaction() {
                             @Override

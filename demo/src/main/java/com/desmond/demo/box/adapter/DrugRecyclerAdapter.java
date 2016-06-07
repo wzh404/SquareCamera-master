@@ -50,7 +50,7 @@ public class DrugRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         view.setDrugOtc(drug.getOtc());
         view.setDrugForm(drug.getForm());
         view.setOnClick();
-        ((TextView)view.get(R.id.drug_no)).setText("国药准字" + drug.getCode());
+//        ((TextView)view.get(R.id.drug_no)).setText("国药准字" + drug.getCode());
 
         holder.getBinding().setVariable(BR.drug, drug);
         holder.getBinding().executePendingBindings();

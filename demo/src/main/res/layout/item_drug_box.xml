@@ -48,7 +48,7 @@
                 android:layout_alignBottom="@+id/drug_name"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp"
-                android:text="@{drug.time}"
+                android:text="@{drug.showTime()}"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="13sp" />
 
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/drug_company"
                 android:layout_marginTop="4dp"
-                android:text=''
+                android:text="@{drug.showCode()}"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="13sp" />
 

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.util.concurrent.ConcurrentHashMap;
 
 import rx.Observable;
+import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 

@@ -1,8 +1,12 @@
 package com.desmond.demo.box.model;
 
+import com.desmond.demo.common.util.DateUtil;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -23,7 +27,7 @@ public class Drug extends RealmObject{
     private String otc;
 
     @SerializedName("time")
-    private String time;
+    private Date time;
 
     @SerializedName("code")
     private String code;
@@ -33,6 +37,22 @@ public class Drug extends RealmObject{
 
     @SerializedName("category")
     private String category;
+
+    // 同步标识
+    private boolean sync;
+
+    // allow,deny
+    private String reserve;
+
+    private String state;
+
+    public String showTime() {
+       return DateUtil.formatDate(time);
+    }
+
+    public String showCode() {
+        return "国药准字" + code;
+    }
 
     public String getCategory() {
         return category;
@@ -90,11 +110,35 @@ public class Drug extends RealmObject{
         this.otc = otc;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
+    }
+
+    public boolean isSync() {
+        return sync;
+    }
+
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
+
+    public String getReserve() {
+        return reserve;
+    }
+
+    public void setReserve(String reserve) {
+        this.reserve = reserve;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }
