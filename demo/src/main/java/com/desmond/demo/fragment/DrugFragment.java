@@ -4,34 +4,25 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.desmond.demo.R;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.presenter.DrugPresenter;
+import com.desmond.demo.box.view.DrugItemView;
 import com.desmond.demo.box.view.DrugView;
 import com.desmond.demo.common.action.Result;
-import com.desmond.demo.common.util.AndroidUtil;
 import com.desmond.demo.common.util.Constants;
-import com.desmond.demo.common.util.DateUtil;
 import com.desmond.demo.common.util.IconCenterEditText;
 import com.desmond.squarecamera.CameraActivity;
 import com.google.gson.JsonObject;
@@ -42,7 +33,6 @@ import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
-import io.realm.Sort;
 import rx.functions.Action1;
 
 /**
@@ -63,9 +53,10 @@ public class DrugFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        Log.e("Drug", "----onCreateView----");
         this.context = getContext();
         this.presenter = new DrugPresenter(drugAction1);
-        this.view = new DrugView(context, null, this.presenter);
+        this.view = new DrugView(context, null, new DrugOnClickListener());
         IconCenterEditText icet_search = view.get(R.id.icet_search);
 
         icet_search.setOnSearchClickListener(new IconCenterEditText.OnSearchClickListener() {
@@ -77,9 +68,8 @@ public class DrugFragment extends Fragment {
                         Toast.makeText(view.getContext(), "请输入正确的批准文号", Toast.LENGTH_SHORT).show();
                     }
                     else{
-//                        dialog = builder.show();
-//                        presenter.drug(code.toUpperCase());
-                        queryDrug(code);
+                        dialog = builder.show();
+                        presenter.drug(code.toUpperCase());
                     }
                 }
             }
@@ -93,39 +83,18 @@ public class DrugFragment extends Fragment {
             }
         });
 
-        Realm realm = Realm.getDefaultInstance();
-        result = realm.where(Drug.class)
-                .equalTo("state", Constants.DRUG_STATE_NORMAL)
-                .findAllSortedAsync("time", Sort.DESCENDING);
-        result.addChangeListener(callback);
+        result = this.presenter.queryDrugAsync();
+        result.addChangeListener(new RealmChangeListener<RealmResults<Drug>>() {
+            @Override
+            public void onChange(RealmResults<Drug> element) {
+                Log.e("Drug", "----onChange----" + element.size());
+                view.addItem(element);
+//                result.removeChangeListener(this);
+            }
+        });
 
         return view.getView();
     }
-
-    private void queryDrug(String name){
-        Realm realm = Realm.getDefaultInstance();
-        result = realm.where(Drug.class)
-                .contains("name", name)
-                .findAllAsync();
-        result.addChangeListener(callback);
-    }
-
-    private void deleteDrug(final Drug drug){
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                drug.deleteFromRealm();
-            }
-        });
-    }
-
-    private RealmChangeListener callback = new RealmChangeListener<RealmResults<Drug>>() {
-        @Override
-        public void onChange(RealmResults<Drug> results) {
-            view.addItem(results);
-        }
-    };
 
     private void createProgressDialog(boolean horizontal) {
         builder = new MaterialDialog.Builder(getContext())
@@ -142,18 +111,27 @@ public class DrugFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("Drug", "----onCreate----");
         setHasOptionsMenu(true);
         createProgressDialog(false);
     }
 
     @Override
     public void onStop(){
+        Log.e("Drug", "----onStop----");
         if (realmAsyncTask != null && !realmAsyncTask.isCancelled()) {
             realmAsyncTask.cancel();
         }
 
         result.removeChangeListeners();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy(){
+        Log.e("Drug", "----OnDestroy----");
+        this.presenter.destroy();
+        super.onDestroy();
     }
 
     @Override
@@ -188,8 +166,9 @@ public class DrugFragment extends Fragment {
 
     private Action1 drugAction1 = new Action1<Result>() {
         @Override
-        public void call(Result result) {
+        public void call(final Result result) {
             if (result.isResult("drug", "OK")) {
+                Log.e("Drug", "----drugAction1----");
                 JsonObject jsonObject = result.getObj().getAsJsonObject("drug");
                 final Drug drug = new Drug();
 
@@ -239,4 +218,20 @@ public class DrugFragment extends Fragment {
             if (dialog != null) dialog.dismiss();
         }
     };
+
+    private class DrugOnClickListener implements DrugItemView.ClickListener{
+        @Override
+        public void onClick(View v, Drug drug) {
+            Log.e("Drug", "drug item onclick ");
+        }
+
+        @Override
+        public void onLongClick(View v, int which, Drug drug) {
+            Log.e("Drug", "drug item onclick " + which);
+            if (which == 2){
+                view.deleteItem(drug);
+                presenter.deleteDrug(drug);
+            }
+        }
+    }
 }

@@ -46,7 +46,7 @@ public class DateUtil {
         int currentMonth = currentCalendar.get(Calendar.MONTH);
         int currentYear = currentCalendar.get(Calendar.YEAR);
 
-        if (currentYear != year && currentMonth != month && currentDay != day){
+        if (currentYear != year || currentMonth != month || currentDay != day){
             SimpleDateFormat history = new SimpleDateFormat("MM-dd");
             return history.format(date);
         }

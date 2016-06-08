@@ -3,6 +3,7 @@ package com.desmond.demo.box.view;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.desmond.demo.R;
@@ -10,6 +11,7 @@ import com.desmond.demo.box.adapter.DrugRecyclerAdapter;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.base.view.AbstractSwipeRefresh;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,22 +19,29 @@ import java.util.List;
  */
 public class DrugView extends AbstractSwipeRefresh {
     private List<Drug> items;
-    private CallbackDrugView  callback;
+//    private CallbackDrugView  callback;
+    private DrugItemView.ClickListener listener;
 
-    public DrugView(Context context, ViewGroup container, CallbackDrugView callback) {
-        this.callback = callback;
+    public DrugView(Context context, ViewGroup container, DrugItemView.ClickListener listener) {
+//        this.callback = callback;
+        this.listener = listener;
         super.init(context, container, R.layout.fragment_drug_box);
     }
 
     @Override
     public void freshData() {
-        callback.fresh();
+//        callback.fresh();
     }
 
     @Override
     public RecyclerView.Adapter createAdapter(Context context) {
-        this.items = callback.getItems();
-        return new DrugRecyclerAdapter(context, items);
+//        this.items = callback.getItems();
+        items = new ArrayList<>();
+
+        Drug drug = new Drug();
+        drug.setId(0);
+        items.add(drug);
+        return new DrugRecyclerAdapter(context, items, listener);
     }
 
     @Override
@@ -46,6 +55,7 @@ public class DrugView extends AbstractSwipeRefresh {
     }
 
     public void addItem(Drug drug){
+        Log.e("Drug", "----addItem1----");
         if (items.size() == 1 && items.get(0).getId().intValue() == 0){
             items.clear();
         }
@@ -55,6 +65,10 @@ public class DrugView extends AbstractSwipeRefresh {
     }
 
     public void addItem(List<Drug> drugs){
+        if (drugs.size() == 0)
+            return;
+
+        Log.e("Drug", "----addItem2----");
         if (items.size() == 1 && items.get(0).getId().intValue() == 0){
             items.clear();
         }
@@ -63,8 +77,16 @@ public class DrugView extends AbstractSwipeRefresh {
         getAdapter().notifyDataSetChanged();
     }
 
-    public interface CallbackDrugView{
-        public void fresh();
-        public List<Drug> getItems();
+    public void deleteItem(Drug drug){
+        Log.e("Drug", "----deleteItem----");
+        if (drug.isValid()) {
+            items.remove(drug);
+        }
+        getAdapter().notifyDataSetChanged();
     }
+
+//    public interface CallbackDrugView{
+//        public void fresh();
+//        public List<Drug> getItems();
+//    }
 }

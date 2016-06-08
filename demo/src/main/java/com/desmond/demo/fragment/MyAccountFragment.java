@@ -35,7 +35,7 @@ public class MyAccountFragment extends Fragment {
         String json = AndroidUtil.getFromAssets(getContext(), "my_account.json");
         JsonArray items = (new JsonParser()).parse(json).getAsJsonArray();
 
-        Log.e("Drug", "items is " + items.size());
+//        Log.e("Drug", "items is " + items.size());
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.my_account_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new SpacesItemDecoration(0));

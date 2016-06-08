@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.desmond.demo.R;
 import com.desmond.demo.base.view.AbstractView;
+import com.desmond.demo.box.model.Drug;
 
 /**
  * Created by wangzunhui on 2016/5/30.
@@ -76,12 +77,13 @@ public class DrugItemView extends AbstractView {
 //        }
 //    }
 
-    public void setOnClick() {
+    public void setOnClick(final Drug drug, final ClickListener listener) {
         RelativeLayout relativeLayout = get(R.id.item_drug_root);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("Drug", "----click-----");
+                listener.onClick(v, drug);
             }
         });
 
@@ -89,11 +91,11 @@ public class DrugItemView extends AbstractView {
             @Override
             public boolean onLongClick(View v) {
                 new MaterialDialog.Builder(v.getContext())
-                        .items(new String[]{"创建用药计划", "设置有效期", "添加药品剂量"})
+                        .items(new String[]{"创建用药计划", "增加剂量", "删除"})
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-
+                                listener.onLongClick(view, which, drug);
                             }
                         })
                         .backgroundColorRes(R.color.white)
@@ -102,5 +104,10 @@ public class DrugItemView extends AbstractView {
                 return true;
             }
         });
+    }
+
+    public interface ClickListener{
+        public void onClick(View view, Drug drug);
+        public void onLongClick(View view, int which, Drug drug);
     }
 }

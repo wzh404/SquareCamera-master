@@ -24,9 +24,12 @@ public class DrugRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     private List<Drug> items;
     private Context context;
 
-    public DrugRecyclerAdapter(Context context, List<Drug> items){
+    private DrugItemView.ClickListener listener;
+
+    public DrugRecyclerAdapter(Context context, List<Drug> items, DrugItemView.ClickListener listener){
         this.items = items;
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
@@ -49,8 +52,7 @@ public class DrugRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         DrugItemView view = (DrugItemView)holder.getIView();
         view.setDrugOtc(drug.getOtc());
         view.setDrugForm(drug.getForm());
-        view.setOnClick();
-//        ((TextView)view.get(R.id.drug_no)).setText("国药准字" + drug.getCode());
+        view.setOnClick(drug, listener);
 
         holder.getBinding().setVariable(BR.drug, drug);
         holder.getBinding().executePendingBindings();
