@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.desmond.demo.R;
+import com.desmond.demo.box.activity.DrugSettingActivity;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.presenter.DrugPresenter;
 import com.desmond.demo.box.view.DrugItemView;
@@ -49,6 +50,7 @@ public class DrugFragment extends Fragment {
     private RealmAsyncTask realmAsyncTask;
     private RealmResults<Drug> result;
     private Context context;
+    private boolean query = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,8 +90,10 @@ public class DrugFragment extends Fragment {
             @Override
             public void onChange(RealmResults<Drug> element) {
                 Log.e("Drug", "----onChange----" + element.size());
-                view.addItem(element);
-//                result.removeChangeListener(this);
+                if (query){
+                    view.addItem(element);
+                    query = false;
+                }
             }
         });
 
@@ -165,12 +169,13 @@ public class DrugFragment extends Fragment {
     }
 
     private Action1 drugAction1 = new Action1<Result>() {
+
         @Override
         public void call(final Result result) {
             if (result.isResult("drug", "OK")) {
-                Log.e("Drug", "----drugAction1----");
                 JsonObject jsonObject = result.getObj().getAsJsonObject("drug");
                 final Drug drug = new Drug();
+                Log.e("Drug", "----drugAction1----" + drug);
 
                 drug.setId(jsonObject.get("id").getAsInt());
                 drug.setName(jsonObject.get("name").getAsString());
@@ -183,7 +188,7 @@ public class DrugFragment extends Fragment {
                 drug.setSync(false);
                 drug.setState(Constants.DRUG_STATE_NORMAL);
 
-                Realm realm = Realm.getDefaultInstance();
+                final Realm realm = Realm.getDefaultInstance();
 //                Log.e("Drug", "query code [" + drug.getCode() + "]-" + context + " - " + Thread.currentThread().getId());
                 long count = realm.where(Drug.class).equalTo("id", drug.getId()).count();
                 if (count > 0){
@@ -222,16 +227,32 @@ public class DrugFragment extends Fragment {
     private class DrugOnClickListener implements DrugItemView.ClickListener{
         @Override
         public void onClick(View v, Drug drug) {
-            Log.e("Drug", "drug item onclick ");
+            startDrugSetting(drug);
         }
 
         @Override
         public void onLongClick(View v, int which, Drug drug) {
-            Log.e("Drug", "drug item onclick " + which);
-            if (which == 2){
-                view.deleteItem(drug);
-                presenter.deleteDrug(drug);
+            Log.e("Drug", "drug item onclick " + drug);
+            switch (which){
+                case 0:
+
+                    break;
+
+                case 1:
+                    startDrugSetting(drug);
+                    break;
+
+                case 2:
+                    view.deleteItem(drug);
+                    presenter.deleteDrug(drug);
+                    break;
             }
         }
+    }
+
+    private void startDrugSetting(Drug drug){
+        Intent intent = new Intent(getContext(), DrugSettingActivity.class);
+        intent.putExtra("drug", drug);
+        startActivity(intent);
     }
 }

@@ -1,5 +1,8 @@
 package com.desmond.demo.box.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.desmond.demo.common.util.DateUtil;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +15,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by wangzunhui on 2016/5/30.
  */
-public class Drug extends RealmObject{
+public class Drug extends RealmObject implements Parcelable{
     @PrimaryKey
     @SerializedName("id")
     private Integer id;
@@ -45,6 +48,32 @@ public class Drug extends RealmObject{
     private String reserve;
 
     private String state;
+
+    public Drug(){}
+
+    protected Drug(Parcel in) {
+        name = in.readString();
+        company = in.readString();
+        otc = in.readString();
+        code = in.readString();
+        form = in.readString();
+        category = in.readString();
+        sync = in.readByte() != 0;
+        reserve = in.readString();
+        state = in.readString();
+    }
+
+    public static final Creator<Drug> CREATOR = new Creator<Drug>() {
+        @Override
+        public Drug createFromParcel(Parcel in) {
+            return new Drug(in);
+        }
+
+        @Override
+        public Drug[] newArray(int size) {
+            return new Drug[size];
+        }
+    };
 
     public String showTime() {
        return DateUtil.formatDate(time);
@@ -140,5 +169,23 @@ public class Drug extends RealmObject{
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(company);
+        dest.writeString(otc);
+        dest.writeString(code);
+        dest.writeString(form);
+        dest.writeString(category);
+        dest.writeByte((byte) (sync ? 1 : 0));
+        dest.writeString(reserve);
+        dest.writeString(state);
     }
 }

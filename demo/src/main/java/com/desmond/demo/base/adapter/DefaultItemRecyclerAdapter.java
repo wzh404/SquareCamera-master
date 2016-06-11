@@ -6,7 +6,9 @@ import android.view.ViewGroup;
 
 import com.desmond.demo.BR;
 import com.desmond.demo.base.RecyclerViewType;
+import com.desmond.demo.base.view.DefaultButtonItemView;
 import com.desmond.demo.base.view.DefaultItemView;
+import com.desmond.demo.base.view.DefaultTextItemView;
 import com.desmond.demo.base.view.MarginItemView;
 import com.desmond.demo.base.view.SwitchItemView;
 import com.desmond.demo.base.view.RecyclerViewHolder;
@@ -47,36 +49,33 @@ public class DefaultItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
 
             return holder;
         }
-//        else if (viewType == RecyclerViewType.TEL.ordinal()){
-//            MyAccountTelView view = new MyAccountTelView(context, parent);
-//            RecyclerViewHolder holder = new RecyclerViewHolder(view);
-//            return holder;
-//        }
-//        else if (viewType == RecyclerViewType.LOGOUT.ordinal()){
-//            MyAccountLogoutView view = new MyAccountLogoutView(context, parent);
-//            RecyclerViewHolder holder = new RecyclerViewHolder(view);
-//            return holder;
-//        }
-//        else if (viewType == RecyclerViewType.LOGIN.ordinal()){
-//            this.loginView = new MyAccountLoginView(context, parent);
-//            RecyclerViewHolder holder = new RecyclerViewHolder(loginView);
-//            return holder;
-//        }
+        else if (viewType == RecyclerViewType.TEXT.ordinal()){
+            DefaultTextItemView view = new DefaultTextItemView(context, parent);
+            RecyclerViewHolder holder = new RecyclerViewHolder(view);
+
+            return holder;
+        }
+        else if (viewType == RecyclerViewType.BUTTON.ordinal()){
+            DefaultButtonItemView view = new DefaultButtonItemView(context, parent);
+            RecyclerViewHolder holder = new RecyclerViewHolder(view);
+
+            return holder;
+        }
+
         return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-//        currentPosition = position;
         JsonObject obj =  (JsonObject)items.get(position);
 
         holder.getBinding().setVariable(BR.obj, obj);
         holder.getBinding().executePendingBindings();
 
-//        if (holder.getIView() instanceof MyAccountItemView){
-//            MyAccountItemView myView = (MyAccountItemView)holder.getIView();
-//            myView.initData(obj);
-//        }
+        if (holder.getIView() instanceof DefaultItemView){
+            DefaultItemView v = (DefaultItemView)holder.getIView();
+            v.onBindView(obj);
+        }
     }
 
     @Override

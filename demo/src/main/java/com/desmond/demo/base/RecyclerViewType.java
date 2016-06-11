@@ -5,6 +5,8 @@ package com.desmond.demo.base;
  */
 public enum RecyclerViewType {
     DEFAULT,
+    TEXT,
+    BUTTON,
     MARGIN,
     SWITCH,
     LOGOUT,

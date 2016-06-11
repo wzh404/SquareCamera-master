@@ -60,23 +60,6 @@ public class DrugItemView extends AbstractView {
         }
     }
 
-//    public void setDrugForm(String form) {
-//        ImageView imageView = get(R.id.item_drug_form);
-//        if (form == null) {
-//            imageView.setImageResource(R.mipmap.ic_jiaolang);
-//        }
-//
-//        if (form.contains("胶囊")) {
-//            imageView.setImageResource(R.mipmap.ic_jiaolang);
-//        } else if (form.contains("片剂")) {
-//            imageView.setImageResource(R.mipmap.ic_yaopian);
-//        } else if (form.contains("口服液")) {
-//            imageView.setImageResource(R.mipmap.ic_koufuye);
-//        } else if (form.contains("颗粒剂")) {
-//            imageView.setImageResource(R.mipmap.ic_koufuye);
-//        }
-//    }
-
     public void setOnClick(final Drug drug, final ClickListener listener) {
         RelativeLayout relativeLayout = get(R.id.item_drug_root);
         relativeLayout.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,61 @@
+[
+  {
+    "type": "TEXT",
+    "title": "药品名称",
+    "code": "name"
+  },
+  {
+    "type": "TEXT",
+    "title": "生产厂商",
+    "code": "company"
+  },
+  {
+    "type": "MARGIN"
+  },
+  {
+    "type": "DEFAULT",
+    "title": "药品类型",
+    "code": "otc",
+    "select": ["非处方","处方","其它"]
+  },
+  {
+    "type": "TEXT",
+    "title": "药品类别",
+    "code": "category"
+  },
+  {
+    "type": "TEXT",
+    "title": "剂型",
+    "code": "form"
+  },
+  {
+    "type": "DEFAULT",
+    "title": "餐饮说明",
+    "code": "meal",
+    "select": ["饭前","饭后","随饭服用", "无餐饮说明"]
+  },
+  {
+    "type": "TEXT",
+
+    "title": "剩余剂量",
+    "code": "dosage"
+  },
+  {
+    "type": "DEFAULT",
+    "title": "服用原因",
+    "desc": "其他",
+    "code": "reason",
+    "select": ["感冒","降压","鼻炎", "糖尿病", "其他"]
+  },
+  {
+    "type": "TEXT",
+    "title": "其他说明",
+    "desc": "无",
+    "code": "desc"
+  },
+  {
+    "type": "BUTTON",
+    "title": "设置服用时间",
+    "code": "plan"
+  }
+]

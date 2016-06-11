@@ -66,11 +66,11 @@ public class DrugPresenter extends DefaultPresenter {
 
     public void deleteDrug(final Drug drug){
         Realm realm = Realm.getDefaultInstance();
-
+        final RealmResults<Drug> result = realm.where(Drug.class).equalTo("id", drug.getId()).findAll();
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                drug.deleteFromRealm();
+                if (result.size() > 0) result.deleteFromRealm(0);
             }
         });
     }

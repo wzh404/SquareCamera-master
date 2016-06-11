@@ -79,9 +79,7 @@ public class DrugView extends AbstractSwipeRefresh {
 
     public void deleteItem(Drug drug){
         Log.e("Drug", "----deleteItem----");
-        if (drug.isValid()) {
-            items.remove(drug);
-        }
+        items.remove(drug);
         getAdapter().notifyDataSetChanged();
     }
 
