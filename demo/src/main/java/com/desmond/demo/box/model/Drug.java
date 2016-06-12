@@ -33,13 +33,13 @@ public class Drug extends RealmObject implements Parcelable{
     private Date time;
 
     @SerializedName("code")
-    private String code;
+    private String code; // 准字号
 
-    @SerializedName("form")
+    @SerializedName("form") // 剂型
     private String form;
 
     @SerializedName("category")
-    private String category;
+    private String category; // 分类 中药，化学药品
 
     // 同步标识
     private boolean sync;
@@ -47,7 +47,13 @@ public class Drug extends RealmObject implements Parcelable{
     // allow,deny
     private String reserve;
 
-    private String state;
+    private String state; // 药品状态
+
+    private String meal; // 餐饮说明
+
+    private String dosage; // 剂量单位
+
+    private Integer stock; // 库存量
 
     public Drug(){}
 
@@ -61,6 +67,9 @@ public class Drug extends RealmObject implements Parcelable{
         sync = in.readByte() != 0;
         reserve = in.readString();
         state = in.readString();
+        meal = in.readString();
+        dosage = in.readString();
+        stock = in.readInt();
     }
 
     public static final Creator<Drug> CREATOR = new Creator<Drug>() {
@@ -171,6 +180,30 @@ public class Drug extends RealmObject implements Parcelable{
         this.state = state;
     }
 
+    public String getMeal() {
+        return meal;
+    }
+
+    public void setMeal(String meal) {
+        this.meal = meal;
+    }
+
+    public String getDosage() {
+        return dosage;
+    }
+
+    public void setDosage(String dosage) {
+        this.dosage = dosage;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -187,5 +220,8 @@ public class Drug extends RealmObject implements Parcelable{
         dest.writeByte((byte) (sync ? 1 : 0));
         dest.writeString(reserve);
         dest.writeString(state);
+        dest.writeString(meal);
+        dest.writeString(dosage);
+        dest.writeInt(stock);
     }
 }

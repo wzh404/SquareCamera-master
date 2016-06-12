@@ -33,17 +33,7 @@ public class DefaultItemView extends AbstractView {
     }
 
     public void onBindView(final JsonObject object){
-//        if (object.get("select") == null || object.get("select").getAsJsonArray().isJsonNull()){
-//            return;
-//        }
-//
         final String code = object.get("code").getAsString();
-//        int  mores = object.get("select").getAsJsonArray().size();
-//        final String[] selection = new String[mores];
-//        int i = 0;
-//        for (JsonElement element : object.get("select").getAsJsonArray()){
-//            selection[i++] = element.getAsString();
-//        }
         RelativeLayout layout = get(R.id.item_default_layout);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override

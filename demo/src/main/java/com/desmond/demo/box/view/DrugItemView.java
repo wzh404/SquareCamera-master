@@ -33,7 +33,13 @@ public class DrugItemView extends AbstractView {
             textView.setText("处方");
             textView.setTextColor(ContextCompat.getColor(context, R.color.accent));
             textView.setBackgroundResource(R.drawable.text_view_rx_border);
-        } else if ("OTHER".equalsIgnoreCase(otc)) {
+        }
+        else if ("OTC".equalsIgnoreCase(otc)) {
+            textView.setText("OTC");
+            textView.setTextColor(ContextCompat.getColor(context, R.color.otc));
+            textView.setBackgroundResource(R.drawable.text_view_otc_border);
+        }
+        else if ("OTHER".equalsIgnoreCase(otc)) {
             textView.setText("其它");
             textView.setTextColor(ContextCompat.getColor(context, R.color.dark_gray));
             textView.setBackgroundResource(R.drawable.text_view_other_border);

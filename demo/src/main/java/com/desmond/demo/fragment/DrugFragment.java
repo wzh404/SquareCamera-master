@@ -187,6 +187,9 @@ public class DrugFragment extends Fragment {
                 drug.setTime(new Date());
                 drug.setSync(false);
                 drug.setState(Constants.DRUG_STATE_NORMAL);
+                drug.setDosage("支");
+                drug.setMeal("无餐饮说明");
+                drug.setStock(0);
 
                 final Realm realm = Realm.getDefaultInstance();
 //                Log.e("Drug", "query code [" + drug.getCode() + "]-" + context + " - " + Thread.currentThread().getId());

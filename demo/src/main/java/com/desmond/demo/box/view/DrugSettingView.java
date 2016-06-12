@@ -41,6 +41,23 @@ public class DrugSettingView extends AbstractRecyclerView {
         toolbar.setTitle("药品详情");
     }
 
+    private String getOtcName(String otc){
+        String name = "其他";
+        if (otc == null) {
+            name = "其他";
+        }
+        else if ("RX".equalsIgnoreCase(otc)){
+            name = "处方";
+        }
+        else if ("OTC".equalsIgnoreCase(otc)){
+            name = "非处方";
+        }
+        else{
+            name = "其他";
+        }
+        return name;
+    }
+
     @Override
     public RecyclerView.Adapter createAdapter(Context context) {
         String json = AndroidUtil.getFromAssets(context, "drug_setting.json");
@@ -48,25 +65,11 @@ public class DrugSettingView extends AbstractRecyclerView {
 
         setItemDesc("name", drug.getName());
         setItemDesc("company", drug.getCompany());
-
-        String otc = drug.getOtc();
-        if (otc == null)
-            otc = "其他";
-        else if ("RX".equalsIgnoreCase(otc)){
-            otc = "处方";
-        }
-        else if ("OTC".equalsIgnoreCase(otc)){
-            otc = "非处方";
-        }
-        else{
-            otc = "其他";
-        }
-
-        setItemDesc("otc", otc);
+        setItemDesc("otc", getOtcName(drug.getOtc()));
         setItemDesc("category", drug.getCategory());
         setItemDesc("form", drug.getForm());
-        setItemDesc("meal", "无餐饮说明");
-        setItemDesc("dosage", "1片");
+        setItemDesc("meal", drug.getMeal());
+        setItemDesc("dosage", drug.getStock() + drug.getDosage());
 
         return new DefaultItemRecyclerAdapter(context, items, listener);
     }
@@ -78,8 +81,12 @@ public class DrugSettingView extends AbstractRecyclerView {
                 continue;
             }
 
-            String c = element.getAsJsonObject().get("code").getAsString();
-            if (code.equalsIgnoreCase(c)){
+            String elementCode = element.getAsJsonObject().get("code").getAsString();
+            if ("otc".equalsIgnoreCase(elementCode) && !desc.equalsIgnoreCase("其它")){
+                element.getAsJsonObject().addProperty("type", "TEXT");
+            }
+
+            if (code.equalsIgnoreCase(elementCode)){
                 element.getAsJsonObject().addProperty("desc", desc);
                 break;
             }
