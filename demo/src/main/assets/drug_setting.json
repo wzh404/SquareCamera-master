@@ -25,7 +25,7 @@
   },
   {
     "type": "TEXT",
-    "title": "剂型",
+    "title": "药品剂型",
     "code": "form"
   },
   {
@@ -35,23 +35,9 @@
     "select": ["饭前","饭后","随饭服用", "无餐饮说明"]
   },
   {
-    "type": "TEXT",
-
+    "type": "DEFAULT",
     "title": "剩余剂量",
     "code": "dosage"
-  },
-  {
-    "type": "DEFAULT",
-    "title": "服用原因",
-    "desc": "其他",
-    "code": "reason",
-    "select": ["感冒","降压","鼻炎", "糖尿病", "其他"]
-  },
-  {
-    "type": "TEXT",
-    "title": "其他说明",
-    "desc": "无",
-    "code": "desc"
   },
   {
     "type": "BUTTON",

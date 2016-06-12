@@ -1,0 +1,27 @@
+[
+  {
+    "type": "TEXT",
+    "title": "药品名称",
+    "code": "name"
+  },
+  {
+    "type": "TEXT",
+    "title": "生产厂商",
+    "code": "company"
+  },
+  {
+    "type": "MARGIN"
+  },
+  {
+    "type": "DEFAULT",
+    "title": "服用原因",
+    "desc": "其他",
+    "code": "reason",
+    "select": ["感冒","降压","鼻炎", "糖尿病", "其他"]
+  },
+  {
+    "type": "BUTTON",
+    "title": "保存",
+    "code": "plan"
+  }
+]

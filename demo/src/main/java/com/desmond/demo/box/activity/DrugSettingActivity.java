@@ -2,8 +2,12 @@ package com.desmond.demo.box.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.desmond.demo.R;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.view.DrugSettingView;
 import com.google.gson.JsonObject;
@@ -25,11 +29,25 @@ public class DrugSettingActivity extends AppCompatActivity {
         setSupportActionBar(view.getToolbar());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         view.setToolbarOnBackPressed();
+        view.getToolbar().setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                return true;
+            }
+        });
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_drug_setting, menu);
+
+        return true;
     }
 }

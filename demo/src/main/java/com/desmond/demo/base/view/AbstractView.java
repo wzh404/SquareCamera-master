@@ -8,30 +8,15 @@ import android.view.ViewGroup;
 /**
  * Created by WIN10 on 2015/11/14.
  */
-public abstract class AbstractView implements IView {
-//    private SweetAlertDialog dialog;
+public class AbstractView implements IView {
     protected View view;
     private Context context;
+    private OnSelectListener listener;
 
     public void init(Context context, ViewGroup container, int res){
         this.context = context;
         view = LayoutInflater.from(context).inflate(res, container, false);
     }
-
-//    public void initDialog(){
-//        dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
-//        dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        dialog.setTitleText("Loading");
-//        dialog.setCancelable(false);
-//    }
-//
-//    public void showDialog(){
-//        dialog.show();
-//    }
-//
-//    public void dismissDialog(){
-//        dialog.dismiss();
-//    }
 
     @Override
     public View getView() {
@@ -41,5 +26,16 @@ public abstract class AbstractView implements IView {
     @Override
     public <T extends View> T get(int id){
         return (T)getView().findViewById(id);
+    }
+
+    public void setListener(OnSelectListener listener){
+        this.listener = listener;
+    }
+
+    public OnSelectListener getListener(){
+        return listener;
+    }
+    public interface OnSelectListener{
+        public void onSelected(String ...arg);
     }
 }

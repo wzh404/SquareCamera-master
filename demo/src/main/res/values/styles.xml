@@ -9,7 +9,9 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorHint">@android:color/white</item>
         <item name="android:textSize">13sp</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
         <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="ActionTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -26,6 +28,11 @@
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="android:textColorPrimary">@android:color/black</item>
         <item name="android:textSize">16sp</item>
     </style>
 

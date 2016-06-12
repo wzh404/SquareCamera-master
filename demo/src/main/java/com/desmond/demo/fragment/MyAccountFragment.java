@@ -40,7 +40,7 @@ public class MyAccountFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new SpacesItemDecoration(0));
 
-        recyclerView.setAdapter(new DefaultItemRecyclerAdapter(getContext(), items));
+        recyclerView.setAdapter(new DefaultItemRecyclerAdapter(getContext(), items, null));
 
         return view;
     }

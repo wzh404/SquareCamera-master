@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import com.desmond.demo.BR;
 import com.desmond.demo.base.RecyclerViewType;
+import com.desmond.demo.base.view.AbstractView;
 import com.desmond.demo.base.view.DefaultButtonItemView;
 import com.desmond.demo.base.view.DefaultItemView;
 import com.desmond.demo.base.view.DefaultTextItemView;
@@ -22,11 +23,12 @@ import com.google.gson.JsonObject;
 public class DefaultItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     private JsonArray items;
     private Context context;
-//    private int currentPosition = 0;
+    private AbstractView.OnSelectListener listener;
 
-    public DefaultItemRecyclerAdapter(Context context, JsonArray items){
+    public DefaultItemRecyclerAdapter(Context context, JsonArray items, AbstractView.OnSelectListener listener){
         this.items = items;
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
@@ -74,6 +76,7 @@ public class DefaultItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
 
         if (holder.getIView() instanceof DefaultItemView){
             DefaultItemView v = (DefaultItemView)holder.getIView();
+            v.setListener(listener);
             v.onBindView(obj);
         }
     }

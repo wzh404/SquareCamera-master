@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/layout_selector"
-        android:clickable="true">
+        android:clickable="false">
 
         <TextView
             android:id="@+id/item_my_name"

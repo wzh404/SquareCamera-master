@@ -13,6 +13,7 @@ import com.desmond.demo.R;
 import com.desmond.demo.base.adapter.DefaultItemRecyclerAdapter;
 import com.desmond.demo.base.view.AbstractRecyclerView;
 import com.desmond.demo.base.view.AbstractSwipeRefresh;
+import com.desmond.demo.base.view.AbstractView;
 import com.desmond.demo.box.adapter.DrugRecyclerAdapter;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.util.AndroidUtil;
@@ -37,7 +38,7 @@ public class DrugSettingView extends AbstractRecyclerView {
         super.init(context, null, R.layout.activity_drug_setting);
 
         Toolbar toolbar = get(R.id.toolbar);
-        toolbar.setTitle("增加药品剂量");
+        toolbar.setTitle("药品详情");
     }
 
     @Override
@@ -67,7 +68,7 @@ public class DrugSettingView extends AbstractRecyclerView {
         setItemDesc("meal", "无餐饮说明");
         setItemDesc("dosage", "1片");
 
-        return new DefaultItemRecyclerAdapter(context, items);
+        return new DefaultItemRecyclerAdapter(context, items, listener);
     }
 
     private void setItemDesc(String code, String desc){
@@ -84,6 +85,16 @@ public class DrugSettingView extends AbstractRecyclerView {
             }
         }
     }
+
+    private AbstractView.OnSelectListener listener = new AbstractView.OnSelectListener(){
+        @Override
+        public void onSelected(String... arg) {
+            String code = arg[0];
+            String val = arg[1];
+
+            Log.e("Drug", code + " - " + val);
+        }
+    };
 
     @Override
     public RecyclerView getRecyclerView() {
