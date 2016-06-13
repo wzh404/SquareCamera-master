@@ -31,9 +31,8 @@
         <activity
             android:theme="@style/ActionTheme"
             android:name="com.desmond.squarecamera.CameraActivity" />
-        <activity
-            android:name="com.desmond.demo.box.activity.DrugSettingActivity" />
-
+        <activity android:name="com.desmond.demo.box.activity.DrugSettingActivity" />
+        <activity android:name="com.desmond.demo.base.webview.WebViewActivity" />
     </application>
 
 </manifest>

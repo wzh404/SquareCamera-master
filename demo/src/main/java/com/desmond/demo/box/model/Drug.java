@@ -55,9 +55,12 @@ public class Drug extends RealmObject implements Parcelable{
 
     private Integer stock; // 库存量
 
+    private String icon; //图标
+
     public Drug(){}
 
     protected Drug(Parcel in) {
+        id = in.readInt();
         name = in.readString();
         company = in.readString();
         otc = in.readString();
@@ -70,6 +73,7 @@ public class Drug extends RealmObject implements Parcelable{
         meal = in.readString();
         dosage = in.readString();
         stock = in.readInt();
+        icon = in.readString();
     }
 
     public static final Creator<Drug> CREATOR = new Creator<Drug>() {
@@ -204,6 +208,14 @@ public class Drug extends RealmObject implements Parcelable{
         this.stock = stock;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -211,6 +223,7 @@ public class Drug extends RealmObject implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(name);
         dest.writeString(company);
         dest.writeString(otc);
@@ -223,5 +236,6 @@ public class Drug extends RealmObject implements Parcelable{
         dest.writeString(meal);
         dest.writeString(dosage);
         dest.writeInt(stock);
+        dest.writeString(icon);
     }
 }

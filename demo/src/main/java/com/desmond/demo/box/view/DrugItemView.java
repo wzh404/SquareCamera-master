@@ -46,24 +46,10 @@ public class DrugItemView extends AbstractView {
         }
     }
 
-    public void setDrugForm(String form){
-        int[][] f = {
-                {R.array.select_jiao_lang, R.mipmap.ic_jiaolang},
-                {R.array.select_pian_ji, R.mipmap.ic_yaopian},
-                {R.array.select_ke_li, R.mipmap.ic_chongji},
-                {R.array.select_hun_xuan, R.mipmap.ic_koufuye}
-        };
-
+    public void setDrugIcon(String icon){
+        int res = context.getResources().getIdentifier("ic_" + icon, "mipmap", context.getPackageName());
         ImageView imageView = get(R.id.item_drug_form);
-        for (int i = 0; i < f.length; i++){
-            String[] arr = context.getResources().getStringArray(f[i][0]);
-            for (String s : arr) {
-                if (form.contains(s)) {
-                    imageView.setImageResource(f[i][1]);
-                    return;
-                }
-            }
-        }
+        imageView.setImageResource(res);
     }
 
     public void setOnClick(final Drug drug, final ClickListener listener) {
@@ -80,7 +66,7 @@ public class DrugItemView extends AbstractView {
             @Override
             public boolean onLongClick(View v) {
                 new MaterialDialog.Builder(v.getContext())
-                        .items(new String[]{"创建用药计划", "增加剂量", "删除"})
+                        .items(new String[]{"创建用药计划", "删除该药品"})
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {

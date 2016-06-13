@@ -51,7 +51,7 @@ public class DrugRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         Drug drug = items.get(position);
         DrugItemView view = (DrugItemView)holder.getIView();
         view.setDrugOtc(drug.getOtc());
-        view.setDrugForm(drug.getForm());
+        view.setDrugIcon(drug.getIcon());
         view.setOnClick(drug, listener);
 
         holder.getBinding().setVariable(BR.drug, drug);

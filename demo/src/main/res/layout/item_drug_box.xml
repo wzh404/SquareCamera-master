@@ -10,7 +10,7 @@
         android:id="@+id/item_drug_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/layout_selector"
         android:clickable="true"
         android:longClickable="true">
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/drug_company"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:text="@{drug.showCode()}"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="13sp" />
@@ -91,7 +91,7 @@
                 android:layout_below="@+id/drug_company"
                 android:layout_alignBottom="@+id/drug_no"
                 android:layout_toRightOf="@id/drug_no"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
                 android:text="@{drug.category}"
                 android:textColor="@android:color/darker_gray"

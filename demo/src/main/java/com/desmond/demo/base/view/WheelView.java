@@ -224,14 +224,14 @@ public class WheelView extends ScrollView {
 
         refreshItemView(t);
 
-        if (t > oldt) {
-//            Log.d(TAG, "向下滚动");
-            scrollDirection = SCROLL_DIRECTION_DOWN;
-        } else {
-//            Log.d(TAG, "向上滚动");
-            scrollDirection = SCROLL_DIRECTION_UP;
-
-        }
+//        if (t > oldt) {
+////            Log.d(TAG, "向下滚动");
+//            scrollDirection = SCROLL_DIRECTION_DOWN;
+//        } else {
+////            Log.d(TAG, "向上滚动");
+//            scrollDirection = SCROLL_DIRECTION_UP;
+//
+//        }
 
 
     }
@@ -291,19 +291,19 @@ public class WheelView extends ScrollView {
     /**
      * 获取选中区域的边界
      */
-    int[] selectedAreaBorder;
+//    int[] selectedAreaBorder;
 
-    private int[] obtainSelectedAreaBorder() {
-        if (null == selectedAreaBorder) {
-            selectedAreaBorder = new int[2];
-            selectedAreaBorder[0] = itemHeight * offset;
-            selectedAreaBorder[1] = itemHeight * (offset + 1);
-        }
-        return selectedAreaBorder;
-    }
+//    private int[] obtainSelectedAreaBorder() {
+//        if (null == selectedAreaBorder) {
+//            selectedAreaBorder = new int[2];
+//            selectedAreaBorder[0] = itemHeight * offset;
+//            selectedAreaBorder[1] = itemHeight * (offset + 1);
+//        }
+//        return selectedAreaBorder;
+//    }
 
 
-    private int scrollDirection = -1;
+//    private int scrollDirection = -1;
     private static final int SCROLL_DIRECTION_UP = 0;
     private static final int SCROLL_DIRECTION_DOWN = 1;
 
@@ -370,7 +370,18 @@ public class WheelView extends ScrollView {
 
     }
 
-    public void setSeletion(int position) {
+    public void setSelection(String item){
+        int i = 0;
+        for (String s : items){
+            if (item.equalsIgnoreCase(s)){
+                setSelection(i - 1);
+                return;
+            }
+            i++;
+        }
+    }
+
+    public void setSelection(int position) {
         final int p = position;
         selectedIndex = p + offset;
         this.post(new Runnable() {

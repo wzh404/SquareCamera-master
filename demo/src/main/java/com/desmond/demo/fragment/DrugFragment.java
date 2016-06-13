@@ -67,7 +67,7 @@ public class DrugFragment extends Fragment {
                 if (view instanceof IconCenterEditText){
                     String code = ((IconCenterEditText) view).getText().toString();
                     if (code.length() <= 0){
-                        Toast.makeText(view.getContext(), "请输入正确的批准文号", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(view.getContext(), R.string.please_input_drug_code, Toast.LENGTH_SHORT).show();
                     }
                     else{
                         dialog = builder.show();
@@ -106,7 +106,7 @@ public class DrugFragment extends Fragment {
                 .backgroundColorRes(R.color.white)
                 .contentColorRes(R.color.black)
                 .titleColorRes(R.color.black)
-                .content("请稍后...")
+                .content(R.string.please_wait)
                 .progress(true, 0)
                 .progressIndeterminateStyle(horizontal)
                 .canceledOnTouchOutside(false);
@@ -169,14 +169,11 @@ public class DrugFragment extends Fragment {
     }
 
     private Action1 drugAction1 = new Action1<Result>() {
-
         @Override
         public void call(final Result result) {
             if (result.isResult("drug", "OK")) {
                 JsonObject jsonObject = result.getObj().getAsJsonObject("drug");
                 final Drug drug = new Drug();
-                Log.e("Drug", "----drugAction1----" + drug);
-
                 drug.setId(jsonObject.get("id").getAsInt());
                 drug.setName(jsonObject.get("name").getAsString());
                 drug.setCompany(jsonObject.get("manufacturer").getAsString());
@@ -184,22 +181,23 @@ public class DrugFragment extends Fragment {
                 drug.setForm(jsonObject.get("form").getAsString());
                 drug.setOtc(jsonObject.get("otc").isJsonNull() ? "OTHER" : jsonObject.get("otc").getAsString());
                 drug.setCategory(jsonObject.get("category").getAsString());
+                drug.setIcon(jsonObject.get("icon").getAsString());
+                drug.setDosage(jsonObject.get("dosage").getAsString());
                 drug.setTime(new Date());
                 drug.setSync(false);
                 drug.setState(Constants.DRUG_STATE_NORMAL);
-                drug.setDosage("支");
-                drug.setMeal("无餐饮说明");
-                drug.setStock(0);
+                drug.setMeal(Constants.DRUG_DEFAULT_MEAL);
+                drug.setStock(1);
 
                 final Realm realm = Realm.getDefaultInstance();
-//                Log.e("Drug", "query code [" + drug.getCode() + "]-" + context + " - " + Thread.currentThread().getId());
                 long count = realm.where(Drug.class).equalTo("id", drug.getId()).count();
                 if (count > 0){
                     if (dialog != null) dialog.dismiss();
-                    Toast.makeText(context, "药品已存在", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.drug_exists, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                // 异步插入
                 realmAsyncTask = realm.executeTransactionAsync(
                         new Realm.Transaction() {
                             @Override
@@ -238,14 +236,9 @@ public class DrugFragment extends Fragment {
             Log.e("Drug", "drug item onclick " + drug);
             switch (which){
                 case 0:
-
                     break;
 
                 case 1:
-                    startDrugSetting(drug);
-                    break;
-
-                case 2:
                     view.deleteItem(drug);
                     presenter.deleteDrug(drug);
                     break;

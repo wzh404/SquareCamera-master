@@ -39,7 +39,7 @@ public class DefaultItemView extends AbstractView {
             @Override
             public void onClick(View v) {
                 if ("dosage".equalsIgnoreCase(code)){
-                    showDosage();
+                    showDosage(object);
                 }
                 else {
                     showList(object);
@@ -48,9 +48,11 @@ public class DefaultItemView extends AbstractView {
         });
     }
 
-    private void showDosage(){
+    private void showDosage(JsonObject object){
+        final String code = object.get("code").getAsString();
+
         MaterialDialog dialog = new MaterialDialog.Builder(this.context)
-                .title("药品剂量")
+                .title(R.string.dialog_dosage_title)
                 .customView(R.layout.dialog_drug_dosage, true)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
@@ -60,8 +62,11 @@ public class DefaultItemView extends AbstractView {
                         TextView tv = get(R.id.item_my_desc);
                         NumberPicker picker = (NumberPicker)dialog.getCustomView().findViewById(R.id.dosage_value);
                         WheelView wheelView = (WheelView)dialog.getCustomView().findViewById(R.id.main_wv);
-
                         tv.setText(picker.getValue() + wheelView.getSeletedItem());
+
+                        if (getListener() != null){
+                            getListener().onSelected(code, picker.getValue() + "", wheelView.getSeletedItem());
+                        }
                     }
                 })
                 .backgroundColorRes(R.color.white)
@@ -76,8 +81,8 @@ public class DefaultItemView extends AbstractView {
 
         WheelView wheelView = (WheelView)dialog.getCustomView().findViewById(R.id.main_wv);
         wheelView.setOffset(1);
-        wheelView.setSeletion(1);
         wheelView.setItems(Arrays.asList(context.getResources().getStringArray(R.array.spinner_dosage)));
+        wheelView.setSelection(object.get("dosage").getAsString());
         dialog.show();
     }
 

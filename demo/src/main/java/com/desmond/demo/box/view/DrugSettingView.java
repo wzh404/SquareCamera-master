@@ -24,6 +24,9 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 /**
  * Created by WIN10 on 2016/5/30.
  */
@@ -38,24 +41,37 @@ public class DrugSettingView extends AbstractRecyclerView {
         super.init(context, null, R.layout.activity_drug_setting);
 
         Toolbar toolbar = get(R.id.toolbar);
-        toolbar.setTitle("药品详情");
+        toolbar.setTitle(R.string.toolbar_drug_detail_title);
     }
 
     private String getOtcName(String otc){
-        String name = "其他";
+        String[] arrOtcName = {"处方", "非处方", "其他"};
+        String[] arrOtcCode = {"RX", "OTC", "OTHER"};
+
         if (otc == null) {
-            name = "其他";
+            return "其他";
         }
-        else if ("RX".equalsIgnoreCase(otc)){
-            name = "处方";
+
+        for (int i = 0; i < arrOtcCode.length; i++){
+            if (arrOtcCode[i].equalsIgnoreCase(otc)){
+                return arrOtcName[i];
+            }
         }
-        else if ("OTC".equalsIgnoreCase(otc)){
-            name = "非处方";
+
+        return "其他";
+    }
+
+    private String getOtc(String otcName){
+        String[] arrOtcName = {"处方", "非处方", "其他"};
+        String[] arrOtcCode = {"RX", "OTC", "OTHER"};
+
+        for (int i = 0; i < arrOtcName.length; i++){
+            if (arrOtcName[i].equalsIgnoreCase(otcName)){
+                return arrOtcCode[i];
+            }
         }
-        else{
-            name = "其他";
-        }
-        return name;
+
+        return "OTHER";
     }
 
     @Override
@@ -65,16 +81,39 @@ public class DrugSettingView extends AbstractRecyclerView {
 
         setItemDesc("name", drug.getName());
         setItemDesc("company", drug.getCompany());
-        setItemDesc("otc", getOtcName(drug.getOtc()));
+
+        setItemDesc("code", "国药准字" + drug.getCode());
+        setOtcDesc(getOtcName(drug.getOtc()));
         setItemDesc("category", drug.getCategory());
         setItemDesc("form", drug.getForm());
         setItemDesc("meal", drug.getMeal());
+
         setItemDesc("dosage", drug.getStock() + drug.getDosage());
+        addItemProperty("dosage", "dosage", drug.getDosage());
 
         return new DefaultItemRecyclerAdapter(context, items, listener);
     }
 
+    private void addItemProperty(String code, String key, String val){
+        for (JsonElement element : items) {
+            if (element.getAsJsonObject().get("code") == null ||
+                    element.getAsJsonObject().get("code").isJsonNull()) {
+                continue;
+            }
+
+            String elementCode = element.getAsJsonObject().get("code").getAsString();
+            if (code.equalsIgnoreCase(elementCode)){
+                element.getAsJsonObject().addProperty(key, val);
+                break;
+            }
+        }
+    }
+
     private void setItemDesc(String code, String desc){
+        addItemProperty(code, "desc", desc);
+    }
+
+    private void setOtcDesc(String desc){
         for (JsonElement element : items){
             if (element.getAsJsonObject().get("code") == null ||
                 element.getAsJsonObject().get("code").isJsonNull()){
@@ -82,12 +121,12 @@ public class DrugSettingView extends AbstractRecyclerView {
             }
 
             String elementCode = element.getAsJsonObject().get("code").getAsString();
-            if ("otc".equalsIgnoreCase(elementCode) && !desc.equalsIgnoreCase("其它")){
-                element.getAsJsonObject().addProperty("type", "TEXT");
-            }
-
-            if (code.equalsIgnoreCase(elementCode)){
+            if ("otc".equalsIgnoreCase(elementCode)){
                 element.getAsJsonObject().addProperty("desc", desc);
+                if (!desc.equalsIgnoreCase("其它")) {
+                    element.getAsJsonObject().addProperty("type", "TEXT");
+                }
+
                 break;
             }
         }
@@ -95,11 +134,31 @@ public class DrugSettingView extends AbstractRecyclerView {
 
     private AbstractView.OnSelectListener listener = new AbstractView.OnSelectListener(){
         @Override
-        public void onSelected(String... arg) {
-            String code = arg[0];
-            String val = arg[1];
+        public void onSelected(final String... arg) {
+            Realm realm = Realm.getDefaultInstance();
+            RealmResults<Drug> result = realm.where(Drug.class).equalTo("id", drug.getId()).findAll();
+            if (result.size() <= 0) return;
 
-            Log.e("Drug", code + " - " + val);
+            final Drug realmDrug = result.get(0);
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    String code = arg[0];
+                    String val = arg[1];
+
+                    if ("meal".equalsIgnoreCase(code)){
+                        realmDrug.setMeal(val);
+                        drug.setMeal(val);
+                    }
+                    else if ("dosage".equalsIgnoreCase(code)){
+                        realmDrug.setDosage(arg[2]);
+                        realmDrug.setStock(Integer.parseInt(arg[1]));
+                    }
+                    else if ("otc".equalsIgnoreCase(code)){
+                        realmDrug.setOtc(getOtc(val));
+                    }
+                }
+            });
         }
     };
 

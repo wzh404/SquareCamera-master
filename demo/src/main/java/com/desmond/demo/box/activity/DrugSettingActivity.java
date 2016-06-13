@@ -1,5 +1,6 @@
 package com.desmond.demo.box.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,8 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.desmond.demo.R;
+import com.desmond.demo.base.view.AbstractView;
+import com.desmond.demo.base.webview.WebViewActivity;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.view.DrugSettingView;
+import com.desmond.demo.common.AppConfig;
 import com.google.gson.JsonObject;
 
 /**
@@ -17,11 +21,12 @@ import com.google.gson.JsonObject;
  */
 public class DrugSettingActivity extends AppCompatActivity {
     private DrugSettingView view;
+    private Drug drug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Drug drug = getIntent().getParcelableExtra("drug");
+        drug = getIntent().getParcelableExtra("drug");
 
         view = new DrugSettingView(this, drug);
         setContentView(view.getView());
@@ -34,6 +39,10 @@ public class DrugSettingActivity extends AppCompatActivity {
         view.getToolbar().setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(getBaseContext(), WebViewActivity.class);
+                intent.putExtra("title", drug.getName());
+                intent.putExtra("url", AppConfig.WEB_URL + "/screening/manual/" + drug.getCode());
+                startActivity(intent);
                 return true;
             }
         });

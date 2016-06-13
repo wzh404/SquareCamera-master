@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.AppConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,7 +34,7 @@ public class DrugApplication extends Application {
     private static Retrofit retrofit;
     private Integer versionCode = 0;
     public static String token = "0";
-    private Integer realmVersion = 1;
+    private Integer realmVersion = 2;
 
     public static Retrofit getRetrofit() {
         return retrofit;
@@ -63,9 +64,9 @@ public class DrugApplication extends Application {
 //                Log.e("Drug", name);
 //            }
 
-//            if (oldVersion == 1) {
-//
-//            }
+            if (oldVersion == 1) {
+                schema.get("Drug").addField("icon", String.class);
+            }
         }
     };
 

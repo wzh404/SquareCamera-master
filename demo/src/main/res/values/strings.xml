@@ -6,4 +6,10 @@
 
     <string name="empty_pill">你的药箱暂时没有药品</string>
     <string name="empty_plan">你还没有添加用药计划</string>
+    <string name="drug_exists">药品已存在</string>
+    <string name="please_input_drug_code">请输入正确的批准文号</string>
+    <string name="please_wait">请稍后...</string>
+
+    <string name="dialog_dosage_title">药品剂量</string>
+    <string name="toolbar_drug_detail_title">药品详情</string>
 </resources>

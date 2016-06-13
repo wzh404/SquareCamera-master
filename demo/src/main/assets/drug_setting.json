@@ -13,6 +13,11 @@
     "type": "MARGIN"
   },
   {
+    "type": "TEXT",
+    "title": "批准文号",
+    "code": "code"
+  },
+  {
     "type": "DEFAULT",
     "title": "药品类型",
     "code": "otc",
@@ -32,7 +37,7 @@
     "type": "DEFAULT",
     "title": "餐饮说明",
     "code": "meal",
-    "select": ["饭前","饭后","随饭服用", "无餐饮说明"]
+    "select": ["饭前","饭后","饭中", "无说明"]
   },
   {
     "type": "DEFAULT",
