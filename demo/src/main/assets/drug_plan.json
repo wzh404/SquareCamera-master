@@ -2,26 +2,45 @@
   {
     "type": "TEXT",
     "title": "药品名称",
-    "code": "name"
+    "code": "drug"
   },
   {
-    "type": "TEXT",
-    "title": "生产厂商",
-    "code": "company"
+    "type": "DEFAULT",
+    "title": "服药人员",
+    "code": "user"
   },
   {
     "type": "MARGIN"
   },
   {
     "type": "DEFAULT",
-    "title": "服用原因",
-    "desc": "其他",
-    "code": "reason",
-    "select": ["感冒","降压","鼻炎", "糖尿病", "其他"]
+    "title": "间隔时间",
+    "code": "interval",
+    "select": ["一次性","每日","每周", "间隔天", "间隔小时"]
+  },
+  {
+    "type": "DEFAULT",
+    "title": "服用时间",
+    "code": "dose",
+    "select": ["9:30 2片","每次2片","每8小时,每次3片"]
+  },
+  {
+    "type": "MARGIN"
+  },
+  {
+    "type": "TEXT",
+    "title": "开始日期",
+    "code": "date"
+  },
+  {
+    "type": "TEXT",
+    "title": "持续时间",
+    "desc": "一周",
+    "code": "days"
   },
   {
     "type": "BUTTON",
-    "title": "保存",
+    "title": "确认完成",
     "code": "plan"
   }
 ]

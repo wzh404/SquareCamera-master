@@ -42,11 +42,12 @@
   {
     "type": "DEFAULT",
     "title": "剩余剂量",
-    "code": "dosage"
+    "code": "dosage",
+    "select": "dosage"
   },
   {
     "type": "BUTTON",
-    "title": "设置服用时间",
+    "title": "创建服药计划",
     "code": "plan"
   }
 ]

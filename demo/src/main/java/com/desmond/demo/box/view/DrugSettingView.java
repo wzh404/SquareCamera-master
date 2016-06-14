@@ -1,6 +1,7 @@
 package com.desmond.demo.box.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +15,11 @@ import com.desmond.demo.base.adapter.DefaultItemRecyclerAdapter;
 import com.desmond.demo.base.view.AbstractRecyclerView;
 import com.desmond.demo.base.view.AbstractSwipeRefresh;
 import com.desmond.demo.base.view.AbstractView;
+import com.desmond.demo.base.view.IView;
 import com.desmond.demo.box.adapter.DrugRecyclerAdapter;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.util.AndroidUtil;
+import com.desmond.demo.plan.activity.NewPlanActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -134,7 +137,7 @@ public class DrugSettingView extends AbstractRecyclerView {
 
     private AbstractView.OnSelectListener listener = new AbstractView.OnSelectListener(){
         @Override
-        public void onSelected(final String... arg) {
+        public void onSelected(IView view, final String code, final String... arg) {
             Realm realm = Realm.getDefaultInstance();
             RealmResults<Drug> result = realm.where(Drug.class).equalTo("id", drug.getId()).findAll();
             if (result.size() <= 0) return;
@@ -143,19 +146,21 @@ public class DrugSettingView extends AbstractRecyclerView {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    String code = arg[0];
-                    String val = arg[1];
-
                     if ("meal".equalsIgnoreCase(code)){
+                        String val = arg[0];
                         realmDrug.setMeal(val);
                         drug.setMeal(val);
                     }
                     else if ("dosage".equalsIgnoreCase(code)){
-                        realmDrug.setDosage(arg[2]);
-                        realmDrug.setStock(Integer.parseInt(arg[1]));
+                        realmDrug.setDosage(arg[1]);
+                        realmDrug.setStock(Integer.parseInt(arg[0]));
                     }
                     else if ("otc".equalsIgnoreCase(code)){
+                        String val = arg[0];
                         realmDrug.setOtc(getOtc(val));
+                    }
+                    else if ("plan".equalsIgnoreCase(code)){
+                        startNewPlan();
                     }
                 }
             });
@@ -180,5 +185,11 @@ public class DrugSettingView extends AbstractRecyclerView {
                 ((AppCompatActivity)context).onBackPressed();
             }
         });
+    }
+
+    private void startNewPlan(){
+        Intent intent = new Intent(context, NewPlanActivity.class);
+        intent.putExtra("drug", drug);
+        context.startActivity(intent);
     }
 }

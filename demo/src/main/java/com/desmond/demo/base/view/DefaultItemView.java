@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.desmond.demo.R;
 import com.desmond.demo.common.util.AndroidUtil;
+import com.desmond.demo.common.util.MaterialDialogUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -38,11 +39,18 @@ public class DefaultItemView extends AbstractView {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ("dosage".equalsIgnoreCase(code)){
+                if (object.get("select") == null || object.get("select").isJsonNull()){
+                    return;
+                }
+
+                if (object.get("select").isJsonArray()) {
+                    showList(object);
+                }
+                else if ("dosage".equalsIgnoreCase(object.get("select").getAsString())){
                     showDosage(object);
                 }
-                else {
-                    showList(object);
+                else if ("date".equalsIgnoreCase(object.get("select").getAsString())){
+
                 }
             }
         });
@@ -50,6 +58,7 @@ public class DefaultItemView extends AbstractView {
 
     private void showDosage(JsonObject object){
         final String code = object.get("code").getAsString();
+        final IView view = this;
 
         MaterialDialog dialog = new MaterialDialog.Builder(this.context)
                 .title(R.string.dialog_dosage_title)
@@ -65,7 +74,7 @@ public class DefaultItemView extends AbstractView {
                         tv.setText(picker.getValue() + wheelView.getSeletedItem());
 
                         if (getListener() != null){
-                            getListener().onSelected(code, picker.getValue() + "", wheelView.getSeletedItem());
+                            getListener().onSelected(view, code, picker.getValue() + "", wheelView.getSeletedItem());
                         }
                     }
                 })
@@ -87,10 +96,6 @@ public class DefaultItemView extends AbstractView {
     }
 
     private void showList(JsonObject object){
-        if (object.get("select") == null || object.get("select").getAsJsonArray().isJsonNull()){
-            return;
-        }
-
         final String code = object.get("code").getAsString();
         int  mores = object.get("select").getAsJsonArray().size();
         final String[] selection = new String[mores];
@@ -99,21 +104,37 @@ public class DefaultItemView extends AbstractView {
             selection[i++] = element.getAsString();
         }
 
-        new MaterialDialog.Builder(this.context)
-                .items(selection)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        TextView tv = get(R.id.item_my_desc);
-                        tv.setText(text);
+        final IView view = this;
+//        new MaterialDialog.Builder(this.context)
+//                .items(selection)
+//                .itemsCallback(new MaterialDialog.ListCallback() {
+//                    @Override
+//                    public void onSelection(MaterialDialog dialog, View v, int which, CharSequence text) {
+//                        TextView tv = get(R.id.item_my_desc);
+//                        tv.setText(text);
+//
+//                        if (getListener() != null){
+//                            getListener().onSelected(view, code, text.toString());
+//                        }
+//                    }
+//                })
+//                .backgroundColorRes(R.color.white)
+//                .contentColorRes(R.color.black)
+//                .show();
+        MaterialDialog.ListCallback callback = new MaterialDialog.ListCallback() {
+            @Override
+            public void onSelection(MaterialDialog dialog, View v, int which, CharSequence text) {
+                TextView tv = get(R.id.item_my_desc);
+                tv.setText(text);
 
-                        if (getListener() != null){
-                            getListener().onSelected(code, text.toString());
-                        }
-                    }
-                })
-                .backgroundColorRes(R.color.white)
-                .contentColorRes(R.color.black)
-                .show();
+                if (getListener() != null){
+                    getListener().onSelected(view, code, text.toString());
+                }
+            }
+        };
+
+        MaterialDialogUtil.showList(this.getView(), selection, callback);
     }
+
+
 }

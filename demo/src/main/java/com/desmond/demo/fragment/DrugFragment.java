@@ -25,6 +25,7 @@ import com.desmond.demo.box.view.DrugView;
 import com.desmond.demo.common.action.Result;
 import com.desmond.demo.common.util.Constants;
 import com.desmond.demo.common.util.IconCenterEditText;
+import com.desmond.demo.plan.activity.NewPlanActivity;
 import com.desmond.squarecamera.CameraActivity;
 import com.google.gson.JsonObject;
 
@@ -236,6 +237,7 @@ public class DrugFragment extends Fragment {
             Log.e("Drug", "drug item onclick " + drug);
             switch (which){
                 case 0:
+                    startNewPlan(drug);
                     break;
 
                 case 1:
@@ -248,6 +250,12 @@ public class DrugFragment extends Fragment {
 
     private void startDrugSetting(Drug drug){
         Intent intent = new Intent(getContext(), DrugSettingActivity.class);
+        intent.putExtra("drug", drug);
+        startActivity(intent);
+    }
+
+    private void startNewPlan(Drug drug){
+        Intent intent = new Intent(getContext(), NewPlanActivity.class);
         intent.putExtra("drug", drug);
         startActivity(intent);
     }

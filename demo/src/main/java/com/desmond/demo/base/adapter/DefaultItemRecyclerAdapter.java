@@ -79,6 +79,12 @@ public class DefaultItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
             v.setListener(listener);
             v.onBindView(obj);
         }
+        else if (holder.getIView() instanceof DefaultButtonItemView){
+            DefaultButtonItemView v = (DefaultButtonItemView)holder.getIView();
+
+            v.setListener(listener);
+            v.onClick(obj);
+        }
     }
 
     @Override
