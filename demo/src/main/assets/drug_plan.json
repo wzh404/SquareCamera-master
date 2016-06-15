@@ -28,12 +28,12 @@
     "type": "MARGIN"
   },
   {
-    "type": "TEXT",
+    "type": "DEFAULT",
     "title": "开始日期",
     "code": "date"
   },
   {
-    "type": "TEXT",
+    "type": "DEFAULT",
     "title": "持续时间",
     "desc": "一周",
     "code": "days"

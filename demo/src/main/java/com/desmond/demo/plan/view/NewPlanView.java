@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -43,6 +44,7 @@ public class NewPlanView extends AbstractRecyclerView {
     private Context context;
     private Drug drug;
     private DrugPlan plan;
+    private DefaultItemRecyclerAdapter adapter;
 
     public NewPlanView(final Context context, Drug drug) {
         this.context = context;
@@ -51,14 +53,15 @@ public class NewPlanView extends AbstractRecyclerView {
         plan = new DrugPlan();
         plan.setId(System.currentTimeMillis());
         plan.setInterval("everyday");
+        plan.setDefaultDosageOfDay(drug.getDosage());
 
-        List<TimeAndDosage> list = new ArrayList<TimeAndDosage>();
-        list.add(new TimeAndDosage("08:00", 2, drug.getDosage()));
-        list.add(new TimeAndDosage("12:00", 2, drug.getDosage()));
-        list.add(new TimeAndDosage("16:00", 2, drug.getDosage()));
-
-        Gson gson = new Gson();
-        plan.setDosages(gson.toJson(list));
+//        List<TimeAndDosage> list = new ArrayList<TimeAndDosage>();
+//        list.add(new TimeAndDosage("08:00", 2, drug.getDosage()));
+//        list.add(new TimeAndDosage("12:00", 2, drug.getDosage()));
+//        list.add(new TimeAndDosage("16:00", 2, drug.getDosage()));
+//
+//        Gson gson = new Gson();
+//        plan.setDosages(gson.toJson(list));
         Log.e("Drug", "----[" + plan.getDosages() + "]");
 
         super.init(context, null, R.layout.activity_new_drug_plan);
@@ -82,7 +85,8 @@ public class NewPlanView extends AbstractRecyclerView {
         setItemDesc("date", sdf.format(new Date()));
         setItemDesc("days", "一周");
 
-        return new DefaultItemRecyclerAdapter(context, items, listener);
+        adapter = new DefaultItemRecyclerAdapter(context, items, listener);
+        return adapter;
     }
 
     private void addItemProperty(String code, String key, String val) {
@@ -100,6 +104,26 @@ public class NewPlanView extends AbstractRecyclerView {
         }
     }
 
+//    private void setDefaultDosageOfDay(){
+//        List<TimeAndDosage> list = new ArrayList<TimeAndDosage>();
+//        list.add(new TimeAndDosage("08:00", 2, drug.getDosage()));
+//        list.add(new TimeAndDosage("12:00", 2, drug.getDosage()));
+//        list.add(new TimeAndDosage("16:00", 2, drug.getDosage()));
+//
+//        Gson gson = new Gson();
+//        plan.setDosages(gson.toJson(list));
+//    }
+//
+//    private void setDefaultDosageOfTemp(){
+//        TimeAndDosage timeAndDosage = new TimeAndDosage("12:00", 2, drug.getDosage());
+//        plan.setDosages((new Gson()).toJson(timeAndDosage));
+//    }
+//
+//    private void setDefaultDosageOfHours(){
+//        TimeAndDosage timeAndDosage = new TimeAndDosage("no", 2, drug.getDosage());
+//        plan.setDosages((new Gson()).toJson(timeAndDosage));
+//    }
+
     private void setItemDesc(String code, String desc) {
         addItemProperty(code, "desc", desc);
     }
@@ -111,6 +135,9 @@ public class NewPlanView extends AbstractRecyclerView {
                 String val = arg[0];
                 if ("每日".equalsIgnoreCase(val)) {
                     plan.setInterval("everyday");
+                    plan.setDefaultDosageOfDay(drug.getDosage());
+                    setItemDesc("time", plan.getDosageDesc());
+                    adapter.notifyDataSetChanged();
                 }
                 else if ("每周".equalsIgnoreCase(val)) {
                     plan.setInterval("week");
@@ -126,6 +153,9 @@ public class NewPlanView extends AbstractRecyclerView {
                 }
                 else if ("一次性".equalsIgnoreCase(val)) {
                     plan.setInterval("temp");
+                    plan.setDefaultDosageOfTemp(drug.getDosage());
+                    setItemDesc("time", plan.getDosageDesc());
+                    adapter.notifyDataSetChanged();
                 }
             }
             else if ("time".equalsIgnoreCase(code)){
@@ -143,9 +173,14 @@ public class NewPlanView extends AbstractRecyclerView {
         MaterialDialog.ListCallback callback = new MaterialDialog.ListCallback() {
             @Override
             public void onSelection(MaterialDialog dialog, View v, int which, CharSequence text) {
-                TextView tv = view.get(R.id.item_my_desc);
-                tv.setText(text);
+//                TextView tv = view.get(R.id.item_my_desc);
+//                tv.setText(text);
+                setItemDesc("interval", text.toString());
                 plan.setIntervalDetails((which + 1) + "");
+
+                plan.setDefaultDosageOfHours(drug.getDosage());
+                setItemDesc("time", plan.getDosageDesc());
+                adapter.notifyDataSetChanged();
             }
         };
 
@@ -164,9 +199,14 @@ public class NewPlanView extends AbstractRecyclerView {
         MaterialDialog.ListCallback callback = new MaterialDialog.ListCallback() {
             @Override
             public void onSelection(MaterialDialog dialog, View v, int which, CharSequence text) {
-                TextView tv = view.get(R.id.item_my_desc);
-                tv.setText(text);
+//                TextView tv = view.get(R.id.item_my_desc);
+//                tv.setText(text);
+                setItemDesc("interval", text.toString());
                 plan.setIntervalDetails((which + 1) + "");
+
+                plan.setDefaultDosageOfDay(drug.getDosage());
+                setItemDesc("time", plan.getDosageDesc());
+                adapter.notifyDataSetChanged();
             }
         };
         String[] items = new String[5];
@@ -178,21 +218,29 @@ public class NewPlanView extends AbstractRecyclerView {
     }
 
     private void showWeek(final IView view){
+        final String[] weeks ={"一", "二", "三", "四", "五", "六", "日"};
         MaterialDialog.SingleButtonCallback callback = new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                String[] weeks ={"一", "二", "三", "四", "五", "六", "日"};
                 String text = "";
                 for (int k : dialog.getSelectedIndices())
                     text += weeks[k];
 
-                TextView tv = view.get(R.id.item_my_desc);
-                tv.setText("每周" + text);
-
+//                TextView tv = view.get(R.id.item_my_desc);
+//                tv.setText("每周" + text);
+                setItemDesc("interval", "每周" + text);
                 plan.setIntervalDetails(text);
+                plan.setDefaultDosageOfDay(drug.getDosage());
+                setItemDesc("time", plan.getDosageDesc());
+                adapter.notifyDataSetChanged();
             }
         };
-        String[] items = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+//        String[] items = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+
+        String[] items = new String[weeks.length];
+        for (int i = 0; i < items.length; i++){
+            items[i] = "星期" + weeks[i];
+        }
 
         MaterialDialogUtil.showMultiChoiceLimited(view.getView(), items, callback);
     }

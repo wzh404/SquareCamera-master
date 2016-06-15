@@ -35,8 +35,8 @@ public class DefaultItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == RecyclerViewType.MARGIN.ordinal()){
             MarginItemView view = new MarginItemView(context, parent);
-
             RecyclerViewHolder holder = new RecyclerViewHolder(view);
+
             return holder;
         }
         else if (viewType == RecyclerViewType.DEFAULT.ordinal()){

@@ -1,10 +1,13 @@
 package com.desmond.demo.plan.model;
 
+import com.desmond.demo.box.model.TimeAndDosage;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -121,7 +124,7 @@ public class DrugPlan {
             int dosage = jsonElement.getAsJsonObject().get("dosages").getAsInt();
             String unit = jsonElement.getAsJsonObject().get("unit").getAsString();
 
-            return desc + "," + dosage + unit;
+            return desc + ",每次" + dosage + unit;
         }
         else if ("hours".equalsIgnoreCase(interval)){
             int dosage = jsonElement.getAsJsonObject().get("dosages").getAsInt();
@@ -132,4 +135,25 @@ public class DrugPlan {
 
         return "无";
     }
+
+    public void setDefaultDosageOfDay(String unit){
+        List<TimeAndDosage> list = new ArrayList<TimeAndDosage>();
+        list.add(new TimeAndDosage("08:00", 2, unit));
+        list.add(new TimeAndDosage("12:00", 2, unit));
+        list.add(new TimeAndDosage("16:00", 2, unit));
+
+        Gson gson = new Gson();
+        setDosages(gson.toJson(list));
+    }
+
+    public void setDefaultDosageOfTemp(String unit){
+        TimeAndDosage timeAndDosage = new TimeAndDosage("12:00", 2, unit);
+        setDosages((new Gson()).toJson(timeAndDosage));
+    }
+
+    public void setDefaultDosageOfHours(String unit){
+        TimeAndDosage timeAndDosage = new TimeAndDosage("no", 2, unit);
+        setDosages((new Gson()).toJson(timeAndDosage));
+    }
+
 }
