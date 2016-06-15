@@ -80,7 +80,6 @@ public class DrugPresenter extends DefaultPresenter {
         RealmResults<Drug> result = realm.where(Drug.class)
                 .equalTo("state", Constants.DRUG_STATE_NORMAL)
                 .findAllSortedAsync("time", Sort.DESCENDING);
-
         return result;
     }
 }

@@ -34,7 +34,9 @@ public class DefaultItemView extends AbstractView {
     }
 
     public void onBindView(final JsonObject object){
+        final IView view = this;
         final String code = object.get("code").getAsString();
+
         RelativeLayout layout = get(R.id.item_default_layout);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,8 +51,10 @@ public class DefaultItemView extends AbstractView {
                 else if ("dosage".equalsIgnoreCase(object.get("select").getAsString())){
                     showDosage(object);
                 }
-                else if ("date".equalsIgnoreCase(object.get("select").getAsString())){
-
+                else{
+                    if (getListener() != null){
+                        getListener().onSelected(view, code, "");
+                    }
                 }
             }
         });
@@ -95,7 +99,7 @@ public class DefaultItemView extends AbstractView {
         dialog.show();
     }
 
-    private void showList(JsonObject object){
+    private void showList(final JsonObject object){
         final String code = object.get("code").getAsString();
         int  mores = object.get("select").getAsJsonArray().size();
         final String[] selection = new String[mores];
@@ -105,26 +109,11 @@ public class DefaultItemView extends AbstractView {
         }
 
         final IView view = this;
-//        new MaterialDialog.Builder(this.context)
-//                .items(selection)
-//                .itemsCallback(new MaterialDialog.ListCallback() {
-//                    @Override
-//                    public void onSelection(MaterialDialog dialog, View v, int which, CharSequence text) {
-//                        TextView tv = get(R.id.item_my_desc);
-//                        tv.setText(text);
-//
-//                        if (getListener() != null){
-//                            getListener().onSelected(view, code, text.toString());
-//                        }
-//                    }
-//                })
-//                .backgroundColorRes(R.color.white)
-//                .contentColorRes(R.color.black)
-//                .show();
         MaterialDialog.ListCallback callback = new MaterialDialog.ListCallback() {
             @Override
             public void onSelection(MaterialDialog dialog, View v, int which, CharSequence text) {
                 TextView tv = get(R.id.item_my_desc);
+                object.addProperty("desc", text.toString());
                 tv.setText(text);
 
                 if (getListener() != null){

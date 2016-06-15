@@ -28,7 +28,7 @@ public class DrugPlanPresenter extends DefaultPresenter implements DrugPlanView.
         List<DrugPlan> items = new ArrayList<>();
 
         DrugPlan plan = new DrugPlan();
-        plan.setId(0);
+        plan.setId(0L);
         items.add(plan);
 
         return items;

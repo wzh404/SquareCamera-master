@@ -5,21 +5,22 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.desmond.demo.box.model.Drug;
+import com.desmond.demo.plan.view.DayPlanView;
 import com.desmond.demo.plan.view.NewPlanView;
 
 /**
  * Created by wangzunhui on 2016/6/14.
  */
-public class NewPlanActivity extends AppCompatActivity {
-    private NewPlanView view;
+public class DayPlanActivity extends AppCompatActivity {
+    private DayPlanView view;
     private Drug drug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         drug = getIntent().getParcelableExtra("drug");
-
-        view = new NewPlanView(this, drug);
+        String times = getIntent().getStringExtra("dosages");
+        view = new DayPlanView(this, drug, times);
         setContentView(view.getView());
 
         setSupportActionBar(view.getToolbar());
@@ -34,10 +35,5 @@ public class NewPlanActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void startDayPlan(String dosages){
-        Intent intent = new Intent(this, DayPlanActivity.class);
-        intent.putExtra("drug", drug);
-        intent.putExtra("dosages", dosages);
-        startActivityForResult(intent, 0);
-    }
+
 }

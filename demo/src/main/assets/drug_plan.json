@@ -21,8 +21,8 @@
   {
     "type": "DEFAULT",
     "title": "服用时间",
-    "code": "dose",
-    "select": ["9:30 2片","每次2片","每8小时,每次3片"]
+    "code": "time",
+    "select": "plan"
   },
   {
     "type": "MARGIN"

@@ -1,0 +1,21 @@
+[
+  {
+    "type": "TEXT",
+    "title": "药品名称",
+    "code": "drug"
+  },
+  {
+    "type": "DEFAULT",
+    "title": "服用次数",
+    "code": "times",
+    "select": ["每日1次", "每日2次", "每日3次", "每日4次", "每日5次", "每日6次", "每日7次"]
+  },
+  {
+    "type": "MARGIN"
+  },
+  {
+    "type": "BUTTON",
+    "title": "确认完成",
+    "code": "plan"
+  }
+]

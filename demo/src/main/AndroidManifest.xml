@@ -34,6 +34,7 @@
         <activity android:name="com.desmond.demo.box.activity.DrugSettingActivity" />
         <activity android:name="com.desmond.demo.base.webview.WebViewActivity" />
         <activity android:name="com.desmond.demo.plan.activity.NewPlanActivity" />
+        <activity android:name="com.desmond.demo.plan.activity.DayPlanActivity" />
     </application>
 
 </manifest>
