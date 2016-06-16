@@ -8,8 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="服药时间"
+        android:text="时间"
         android:textColor="#000000"
         android:textSize="18sp" />
 
@@ -27,8 +26,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="服用剂量"
+        android:text="剂量"
         android:textColor="#000000"
         android:textSize="18sp" />
     <LinearLayout
@@ -38,7 +36,7 @@
         android:orientation="horizontal">
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/plan_temp_dosage"
-            android:layout_width="100dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:textColor="@color/black"
@@ -53,6 +51,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="粒"
-            android:textColor="@color/black" />
+            android:textColor="@color/gray9" />
     </LinearLayout>
 </LinearLayout>

@@ -78,7 +78,7 @@ public class MaterialDialogUtil {
         };
 
         MaterialDialog dialog = new MaterialDialog.Builder(context)
-//                .title(R.string.dialog_plan_time)
+                .title(R.string.dialog_plan_time)
                 .customView(R.layout.dialog_plan_temp, true)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)

@@ -37,6 +37,7 @@ import java.util.Map;
  * Created by WIN10 on 2016/5/30.
  */
 public class DayPlanView extends AbstractRecyclerView {
+
     private JsonArray items;
     private Context context;
     private Drug drug;
@@ -102,24 +103,28 @@ public class DayPlanView extends AbstractRecyclerView {
         public void onSelected(IView view, String code, int selected, final String... arg) {
             Log.e("Drug", "--------------Code is --------" + code);
             if ("times".equalsIgnoreCase(code)){
-                String val = arg[0].charAt(2) + "";
-                int t = Integer.parseInt(val);
-                addItems(t);
+//                String val = arg[0].charAt(2) + "";
+
+                addItems(selected + 1);
                 adapter.notifyDataSetChanged();
             }
             else if (code.startsWith("timeofday")){
                 String[] t = code.split("_");
                 int inx = Integer.parseInt(t[1]);
-                JsonElement element = items.get(inx - 1);
+
+                final JsonElement element = items.get(3 + inx - 1);
                 String time = element.getAsJsonObject().get("title").getAsString();
+                int dosage = Integer.parseInt(element.getAsJsonObject().get("dosages").getAsString());
 
                 MaterialDialogUtil.TimeAndDosageCallback callback = new MaterialDialogUtil.TimeAndDosageCallback(){
                     @Override
                     public void onClick(String time, int dosage) {
-
+                        element.getAsJsonObject().addProperty("title", time);
+                        element.getAsJsonObject().addProperty("desc", dosage + drug.getDosage());
+                        adapter.notifyDataSetChanged();
                     }
                 };
-                MaterialDialogUtil.showPlanTimeAndDosage(context, time, 2, drug.getDosage(), callback);
+                MaterialDialogUtil.showPlanTimeAndDosage(context, time, dosage, drug.getDosage(), callback);
             }
         }
     };
@@ -129,30 +134,46 @@ public class DayPlanView extends AbstractRecyclerView {
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
         for (int i = 0; i < jsonArray.size(); i++){
             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("type", "DEFAULT");
-            map.put("code", "timeofday_" + (i + 1));
-            map.put("title", jsonObject.get("time").getAsString());
-            map.put("dosages", jsonObject.get("dosages").getAsInt() + "");
-            map.put("unit", drug.getDosage());
-            map.put("select", "select");
-            map.put("desc", jsonObject.get("dosages").getAsInt() + drug.getDosage());
+            Map<String, String> map = createItem(i + 1, jsonObject.get("time").getAsString(), jsonObject.get("dosages").getAsInt());
+//            Map<String, String> map = new HashMap<String, String>();
+//            map.put("type", "DEFAULT");
+//            map.put("code", "timeofday_" + (i + 1));
+//            map.put("title", jsonObject.get("time").getAsString());
+//            map.put("dosages", jsonObject.get("dosages").getAsInt() + "");
+//            map.put("unit", drug.getDosage());
+//            map.put("select", "select");
+//            map.put("desc", jsonObject.get("dosages").getAsInt() + drug.getDosage());
             list.add(map);
         }
         removeAndAddItems(list);
+    }
+
+    private Map<String, String> createItem(int inx, String time, int dosage){
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("type", "DEFAULT");
+        map.put("code", "timeofday_" + inx);
+        map.put("title", time);
+        map.put("dosages", dosage + "");
+        map.put("unit", drug.getDosage());
+        map.put("select", "select");
+        map.put("desc", dosage + drug.getDosage());
+
+        return map;
     }
 
     private void addItems(int t){
         String[] times = timeMap.get(t);
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
         for (int i = 0; i < times.length; i++) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("type", "DEFAULT");
-            map.put("code", "timeofday_" + (i + 1));
-            map.put("title", times[i]);
-            map.put("dosages", "1");
-            map.put("unit", drug.getDosage());
-            map.put("desc", "1" + drug.getDosage());
+            Map<String, String> map = createItem(i + 1, times[i], 1);
+//            Map<String, String> map = new HashMap<String, String>();
+//            map.put("type", "DEFAULT");
+//            map.put("code", "timeofday_" + (i + 1));
+//            map.put("title", times[i]);
+//            map.put("dosages", "1");
+//            map.put("select", "select");
+//            map.put("unit", drug.getDosage());
+//            map.put("desc", "1" + drug.getDosage());
             list.add(map);
         }
         removeAndAddItems(list);
