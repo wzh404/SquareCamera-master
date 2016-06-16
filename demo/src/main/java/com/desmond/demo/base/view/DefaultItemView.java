@@ -21,6 +21,8 @@ import com.google.gson.JsonObject;
 
 import java.util.Arrays;
 
+import io.realm.Realm;
+
 
 /**
  * Created by WIN10 on 2016/2/1.
@@ -49,55 +51,76 @@ public class DefaultItemView extends AbstractView {
                     showList(object);
                 }
                 else if ("dosage".equalsIgnoreCase(object.get("select").getAsString())){
-                    showDosage(object);
+                    String unit = object.get("dosage").getAsString();
+                    String stock = object.get("stock").getAsString();
+
+                    MaterialDialogUtil.showDosage(context, Integer.parseInt(stock), unit, true, new MaterialDialogUtil.DosageCallback() {
+                        @Override
+                        public void onClick(final int dosage, final String unit) {
+                            TextView tv = get(R.id.item_my_desc);
+                            tv.setText(dosage + unit);
+
+                            if (getListener() != null){
+                                getListener().onSelected(view, code, 0, dosage + "", unit);
+                            }
+                        }
+                    });
                 }
                 else{
                     if (getListener() != null){
-                        getListener().onSelected(view, code, "");
+                        getListener().onSelected(view, code, 0, "");
                     }
                 }
             }
         });
     }
 
-    private void showDosage(JsonObject object){
-        final String code = object.get("code").getAsString();
-        final IView view = this;
-
-        MaterialDialog dialog = new MaterialDialog.Builder(this.context)
-                .title(R.string.dialog_dosage_title)
-                .customView(R.layout.dialog_drug_dosage, true)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        TextView tv = get(R.id.item_my_desc);
-                        NumberPicker picker = (NumberPicker)dialog.getCustomView().findViewById(R.id.dosage_value);
-                        WheelView wheelView = (WheelView)dialog.getCustomView().findViewById(R.id.main_wv);
-                        tv.setText(picker.getValue() + wheelView.getSeletedItem());
-
-                        if (getListener() != null){
-                            getListener().onSelected(view, code, picker.getValue() + "", wheelView.getSeletedItem());
-                        }
-                    }
-                })
-                .backgroundColorRes(R.color.white)
-                .contentColorRes(R.color.black)
-                .titleColorRes(R.color.primary)
-                .build();
-        NumberPicker picker = (NumberPicker)dialog.getCustomView().findViewById(R.id.dosage_value);
-        picker.setMinValue(1);
-        picker.setMaxValue(100);
-        picker.setValue(2);
-        picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-
-        WheelView wheelView = (WheelView)dialog.getCustomView().findViewById(R.id.main_wv);
-        wheelView.setOffset(1);
-        wheelView.setItems(Arrays.asList(context.getResources().getStringArray(R.array.spinner_dosage)));
-        wheelView.setSelection(object.get("dosage").getAsString());
-        dialog.show();
-    }
+//    private void showDosage(JsonObject object){
+//        final String code = object.get("code").getAsString();
+//        final IView view = this;
+//        final String[] units = context.getResources().getStringArray(R.array.spinner_dosage);
+//
+//        MaterialDialog dialog = new MaterialDialog.Builder(this.context)
+//                .title(R.string.dialog_dosage_title)
+//                .customView(R.layout.dialog_drug_dosage, true)
+//                .positiveText(android.R.string.ok)
+//                .negativeText(android.R.string.cancel)
+//                .onPositive(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        TextView tv = get(R.id.item_my_desc);
+//                        NumberPicker picker = (NumberPicker)dialog.getCustomView().findViewById(R.id.dosage_value);
+//                        NumberPicker unitPicker = (NumberPicker)dialog.getCustomView().findViewById(R.id.dosage_value);
+//                        tv.setText(picker.getValue() + units[unitPicker.getValue()]); // wheelView.getSeletedItem());
+//
+//                        if (getListener() != null){
+//                            getListener().onSelected(view, code, picker.getValue() + "", units[unitPicker.getValue()]);
+//                        }
+//                    }
+//                })
+//                .backgroundColorRes(R.color.white)
+//                .contentColorRes(R.color.black)
+//                .titleColorRes(R.color.primary)
+//                .build();
+//        NumberPicker picker = (NumberPicker)dialog.getCustomView().findViewById(R.id.dosage_value);
+//        picker.setMinValue(1);
+//        picker.setMaxValue(100);
+//        picker.setValue(2);
+//        picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+//
+//        NumberPicker unitPicker = (NumberPicker)dialog.getCustomView().findViewById(R.id.dosage_unit);
+//        unitPicker.setDisplayedValues(units);
+//        unitPicker.setMinValue(1);
+//        unitPicker.setMaxValue(units.length);
+//        String unit = object.get("dosage").getAsString();
+//        for (int i = 0; i < units.length; i++) {
+//            if (unit.equalsIgnoreCase(units[i]))
+//                unitPicker.setValue(i + 1);
+//        }
+//        picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+//
+//        dialog.show();
+//    }
 
     private void showList(final JsonObject object){
         final String code = object.get("code").getAsString();
@@ -117,13 +140,11 @@ public class DefaultItemView extends AbstractView {
                 tv.setText(text);
 
                 if (getListener() != null){
-                    getListener().onSelected(view, code, text.toString());
+                    getListener().onSelected(view, code, which, text.toString());
                 }
             }
         };
 
         MaterialDialogUtil.showList(this.getView(), selection, callback);
     }
-
-
 }

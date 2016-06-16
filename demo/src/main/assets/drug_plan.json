@@ -30,13 +30,14 @@
   {
     "type": "DEFAULT",
     "title": "开始日期",
-    "code": "date"
+    "code": "date",
+    "select": "custom"
   },
   {
     "type": "DEFAULT",
     "title": "持续时间",
-    "desc": "一周",
-    "code": "days"
+    "code": "days",
+    "select": ["按剩余剂量服用", "持续服用", "三天", "一周", "一月", "指定天数"]
   },
   {
     "type": "BUTTON",

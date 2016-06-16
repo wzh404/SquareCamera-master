@@ -19,6 +19,7 @@ import com.desmond.demo.base.view.IView;
 import com.desmond.demo.box.adapter.DrugRecyclerAdapter;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.util.AndroidUtil;
+import com.desmond.demo.common.util.MaterialDialogUtil;
 import com.desmond.demo.plan.activity.NewPlanActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -93,6 +94,7 @@ public class DrugSettingView extends AbstractRecyclerView {
 
         setItemDesc("dosage", drug.getStock() + drug.getDosage());
         addItemProperty("dosage", "dosage", drug.getDosage());
+        addItemProperty("dosage", "stock", drug.getStock() + "");
 
         return new DefaultItemRecyclerAdapter(context, items, listener);
     }
@@ -137,8 +139,8 @@ public class DrugSettingView extends AbstractRecyclerView {
 
     private AbstractView.OnSelectListener listener = new AbstractView.OnSelectListener(){
         @Override
-        public void onSelected(IView view, final String code, final String... arg) {
-            Realm realm = Realm.getDefaultInstance();
+        public void onSelected(IView view, final String code, final int selected, final String... arg) {
+            final Realm realm = Realm.getDefaultInstance();
             RealmResults<Drug> result = realm.where(Drug.class).equalTo("id", drug.getId()).findAll();
             if (result.size() <= 0) return;
 
@@ -154,6 +156,10 @@ public class DrugSettingView extends AbstractRecyclerView {
                     else if ("dosage".equalsIgnoreCase(code)){
                         realmDrug.setDosage(arg[1]);
                         realmDrug.setStock(Integer.parseInt(arg[0]));
+
+                        addItemProperty("dosage", "stock", arg[0]);
+                        addItemProperty("dosage", "dosage", arg[1]);
+                        drug.setDosage(arg[1]);
                     }
                     else if ("otc".equalsIgnoreCase(code)){
                         String val = arg[0];

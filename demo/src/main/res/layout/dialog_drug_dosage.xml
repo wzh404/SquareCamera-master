@@ -13,11 +13,20 @@
         android:theme="@style/AppTheme.Picker"
         android:gravity="center_vertical"></NumberPicker>
 
-    <com.desmond.demo.base.view.WheelView
-        android:id="@+id/main_wv"
+    <NumberPicker
+        android:id="@+id/dosage_unit"
         android:layout_width="wrap_content"
-        android:layout_marginLeft="20dp"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.Picker"/>
+        android:background="@color/white"
+        android:layout_marginLeft="20dp"
+        android:theme="@style/AppTheme.Picker"
+        android:gravity="center_vertical"></NumberPicker>
+
+    <!--<com.desmond.demo.base.view.WheelView-->
+        <!--android:id="@+id/main_wv"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:theme="@style/AppTheme.Picker"/>-->
 
 </LinearLayout>

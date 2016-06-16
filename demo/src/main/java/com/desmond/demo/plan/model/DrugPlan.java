@@ -93,6 +93,22 @@ public class DrugPlan {
         return map.get(interval);
     }
 
+    public String getDaysDesc(){
+        HashMap<Integer, String> map = new HashMap<Integer,String>();
+        map.put(-1, "按剩余剂量服用");
+        map.put(-2, "持续服用");
+        map.put(3, "三天");
+        map.put(7, "一周");
+        map.put(30, "一月");
+
+        if (map.get(days) != null){
+            return map.get(days);
+        }
+
+        return days + "天";
+    }
+
+
     public String getDosageDesc(){
         Gson gson = new Gson();
         JsonElement jsonElement = gson.fromJson(dosages, JsonElement.class);
@@ -146,14 +162,17 @@ public class DrugPlan {
         setDosages(gson.toJson(list));
     }
 
-    public void setDefaultDosageOfTemp(String unit){
-        TimeAndDosage timeAndDosage = new TimeAndDosage("12:00", 2, unit);
+    public void setDosageOfTemp(String time, Integer dosage, String unit){
+        TimeAndDosage timeAndDosage = new TimeAndDosage(time, dosage, unit);
         setDosages((new Gson()).toJson(timeAndDosage));
+    }
+
+    public void setDefaultDosageOfTemp(String unit){
+        setDosageOfTemp("12:00", 2, unit);
     }
 
     public void setDefaultDosageOfHours(String unit){
         TimeAndDosage timeAndDosage = new TimeAndDosage("no", 2, unit);
         setDosages((new Gson()).toJson(timeAndDosage));
     }
-
 }

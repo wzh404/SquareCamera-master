@@ -1,13 +1,16 @@
 package com.desmond.demo.plan.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -54,18 +57,9 @@ public class NewPlanView extends AbstractRecyclerView {
         plan.setId(System.currentTimeMillis());
         plan.setInterval("everyday");
         plan.setDefaultDosageOfDay(drug.getDosage());
-
-//        List<TimeAndDosage> list = new ArrayList<TimeAndDosage>();
-//        list.add(new TimeAndDosage("08:00", 2, drug.getDosage()));
-//        list.add(new TimeAndDosage("12:00", 2, drug.getDosage()));
-//        list.add(new TimeAndDosage("16:00", 2, drug.getDosage()));
-//
-//        Gson gson = new Gson();
-//        plan.setDosages(gson.toJson(list));
-        Log.e("Drug", "----[" + plan.getDosages() + "]");
+        plan.setDays(7);
 
         super.init(context, null, R.layout.activity_new_drug_plan);
-
         Toolbar toolbar = get(R.id.toolbar);
         toolbar.setTitle(R.string.toolbar_new_plan_title);
     }
@@ -83,7 +77,7 @@ public class NewPlanView extends AbstractRecyclerView {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         setItemDesc("date", sdf.format(new Date()));
-        setItemDesc("days", "一周");
+        setItemDesc("days", plan.getDaysDesc());
 
         adapter = new DefaultItemRecyclerAdapter(context, items, listener);
         return adapter;
@@ -104,33 +98,13 @@ public class NewPlanView extends AbstractRecyclerView {
         }
     }
 
-//    private void setDefaultDosageOfDay(){
-//        List<TimeAndDosage> list = new ArrayList<TimeAndDosage>();
-//        list.add(new TimeAndDosage("08:00", 2, drug.getDosage()));
-//        list.add(new TimeAndDosage("12:00", 2, drug.getDosage()));
-//        list.add(new TimeAndDosage("16:00", 2, drug.getDosage()));
-//
-//        Gson gson = new Gson();
-//        plan.setDosages(gson.toJson(list));
-//    }
-//
-//    private void setDefaultDosageOfTemp(){
-//        TimeAndDosage timeAndDosage = new TimeAndDosage("12:00", 2, drug.getDosage());
-//        plan.setDosages((new Gson()).toJson(timeAndDosage));
-//    }
-//
-//    private void setDefaultDosageOfHours(){
-//        TimeAndDosage timeAndDosage = new TimeAndDosage("no", 2, drug.getDosage());
-//        plan.setDosages((new Gson()).toJson(timeAndDosage));
-//    }
-
     private void setItemDesc(String code, String desc) {
         addItemProperty(code, "desc", desc);
     }
 
     private OnSelectListener listener = new OnSelectListener() {
         @Override
-        public void onSelected(IView view, String code, final String... arg) {
+        public void onSelected(IView view, String code, int selected, final String... arg) {
             if ("interval".equalsIgnoreCase(code)) {
                 String val = arg[0];
                 if ("每日".equalsIgnoreCase(val)) {
@@ -164,9 +138,74 @@ public class NewPlanView extends AbstractRecyclerView {
                         "days".equalsIgnoreCase(plan.getInterval())) {
                     ((NewPlanActivity) context).startDayPlan(plan.getDosages());
                 }
+                else if ("temp".equalsIgnoreCase(plan.getInterval())){
+                    showPlanTemp();
+                }
+                else if ("hours".equalsIgnoreCase(plan.getInterval())){
+                    MaterialDialogUtil.showDosage(context, 2, drug.getDosage(), false, new MaterialDialogUtil.DosageCallback() {
+                        @Override
+                        public void onClick(final int dosage, final String unit) {
+                            plan.setDosageOfTemp("no", dosage, drug.getDosage());
+                            setItemDesc("time", plan.getDosageDesc());
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+            else if ("date".equalsIgnoreCase(code)){
+                MaterialDialogUtil.DateCallback callback = new MaterialDialogUtil.DateCallback() {
+                    @Override
+                    public void onClick(Date date) {
+                        plan.setStartDate(date);
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        setItemDesc("date", sdf.format(date));
+                        adapter.notifyDataSetChanged();
+                    }
+                };
+                MaterialDialogUtil.showDate(context, callback);
+            }
+            else if ("days".equalsIgnoreCase(code)){
+                switch (selected){
+                    case 0:
+                        plan.setDays(-1);
+                        break;
+
+                    case 1:
+                        plan.setDays(-2);
+                        break;
+
+                    case 2:
+                        plan.setDays(3);
+                        break;
+
+                    case 3:
+                        plan.setDays(7);
+                        break;
+
+                    case 4:
+                        plan.setDays(30);
+                        break;
+
+                    case 5:
+                        break;
+                }
             }
         }
     };
+
+
+    private void showPlanTemp(){
+        MaterialDialogUtil.TimeAndDosageCallback callback = new MaterialDialogUtil.TimeAndDosageCallback(){
+            @Override
+            public void onClick(String time, int dosage) {
+                plan.setDosageOfTemp( time, dosage, drug.getDosage());
+                setItemDesc("time", plan.getDosageDesc());
+                adapter.notifyDataSetChanged();
+            }
+        };
+        MaterialDialogUtil.showPlanTimeAndDosage(context, "12:00", 2, drug.getDosage(), callback);
+    }
 
 
     private void showIntervalHours(final IView view) {
@@ -189,9 +228,6 @@ public class NewPlanView extends AbstractRecyclerView {
             items[i] = "间隔" + (i + 1) +"小时";
         }
 
-//        String[] items = {"间隔1小时", "间隔2小时", "间隔3小时", "间隔4小时", "间隔5小时", "间隔6小时",
-//                "间隔7小时", "间隔8小时", "间隔9小时", "间隔10小时", "间隔11小时", "间隔12小时",
-//        };
         MaterialDialogUtil.showList(view.getView(), items, callback);
     }
 
@@ -209,11 +245,10 @@ public class NewPlanView extends AbstractRecyclerView {
                 adapter.notifyDataSetChanged();
             }
         };
-        String[] items = new String[5];
+        String[] items = new String[6];
         for (int i = 0; i < items.length; i++){
             items[i] = "间隔" + (i + 1) +"天";
         }
-//        String[] items = {"间隔1天", "间隔2天", "间隔3天", "间隔4天", "间隔5天"};
         MaterialDialogUtil.showList(view.getView(), items, callback);
     }
 
@@ -235,7 +270,6 @@ public class NewPlanView extends AbstractRecyclerView {
                 adapter.notifyDataSetChanged();
             }
         };
-//        String[] items = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
 
         String[] items = new String[weeks.length];
         for (int i = 0; i < items.length; i++){

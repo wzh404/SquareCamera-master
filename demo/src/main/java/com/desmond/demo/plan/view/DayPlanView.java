@@ -99,12 +99,22 @@ public class DayPlanView extends AbstractRecyclerView {
 
     private OnSelectListener listener = new OnSelectListener() {
         @Override
-        public void onSelected(IView view, String code, final String... arg) {
+        public void onSelected(IView view, String code, int selected, final String... arg) {
+            Log.e("Drug", "--------------Code is --------" + code);
             if ("times".equalsIgnoreCase(code)){
                 String val = arg[0].charAt(2) + "";
                 int t = Integer.parseInt(val);
                 addItems(t);
                 adapter.notifyDataSetChanged();
+            }
+            else if (code.startsWith("timeofday")){
+                MaterialDialogUtil.TimeAndDosageCallback callback = new MaterialDialogUtil.TimeAndDosageCallback(){
+                    @Override
+                    public void onClick(String time, int dosage) {
+
+                    }
+                };
+                MaterialDialogUtil.showPlanTimeAndDosage(context, "12:00", 2, drug.getDosage(), callback);
             }
         }
     };
@@ -115,23 +125,16 @@ public class DayPlanView extends AbstractRecyclerView {
         for (int i = 0; i < jsonArray.size(); i++){
             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
             Map<String, String> map = new HashMap<String, String>();
-            map.put("type", "TEXT");
-            map.put("code", "timeofday" + (i + 1));
+            map.put("type", "DEFAULT");
+            map.put("code", "timeofday_" + (i + 1));
             map.put("title", jsonObject.get("time").getAsString());
-            map.put("desc", jsonObject.get("dosages").getAsInt() + jsonObject.get("unit").getAsString());
+            map.put("dosages", jsonObject.get("dosages").getAsInt() + "");
+            map.put("unit", drug.getDosage());
+            map.put("select", "select");
+            map.put("desc", jsonObject.get("dosages").getAsInt() + drug.getDosage());
             list.add(map);
         }
         removeAndAddItems(list);
-
-//        int max = items.size();
-//        JsonElement element = items.get(max - 1);
-//        while (items.size() > 3){
-//            items.remove(3);
-//        }
-//
-//        Gson gson = new Gson();
-//        items.addAll(gson.toJsonTree(list).getAsJsonArray());
-//        items.add(element);
     }
 
     private void addItems(int t){
@@ -139,23 +142,15 @@ public class DayPlanView extends AbstractRecyclerView {
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
         for (int i = 0; i < times.length; i++) {
             Map<String, String> map = new HashMap<String, String>();
-            map.put("type", "TEXT");
-            map.put("code", "timeofday" + (i + 1));
+            map.put("type", "DEFAULT");
+            map.put("code", "timeofday_" + (i + 1));
             map.put("title", times[i]);
+            map.put("dosages", "1");
+            map.put("unit", drug.getDosage());
             map.put("desc", "1" + drug.getDosage());
             list.add(map);
         }
         removeAndAddItems(list);
-
-//        int max = items.size();
-//        JsonElement element = items.get(max - 1);
-//        while (items.size() > 3){
-//            items.remove(3);
-//        }
-//
-//        Gson gson = new Gson();
-//        items.addAll(gson.toJsonTree(list).getAsJsonArray());
-//        items.add(element);
     }
 
     private void removeAndAddItems(List<Map<String, String>> list){

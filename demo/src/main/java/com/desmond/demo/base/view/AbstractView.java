@@ -36,6 +36,6 @@ public class AbstractView implements IView {
         return listener;
     }
     public interface OnSelectListener{
-        public void onSelected(IView view, String code , String ...arg);
+        public void onSelected(IView view, String code , int selected, String ...arg);
     }
 }
