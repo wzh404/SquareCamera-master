@@ -108,13 +108,18 @@ public class DayPlanView extends AbstractRecyclerView {
                 adapter.notifyDataSetChanged();
             }
             else if (code.startsWith("timeofday")){
+                String[] t = code.split("_");
+                int inx = Integer.parseInt(t[1]);
+                JsonElement element = items.get(inx - 1);
+                String time = element.getAsJsonObject().get("title").getAsString();
+
                 MaterialDialogUtil.TimeAndDosageCallback callback = new MaterialDialogUtil.TimeAndDosageCallback(){
                     @Override
                     public void onClick(String time, int dosage) {
 
                     }
                 };
-                MaterialDialogUtil.showPlanTimeAndDosage(context, "12:00", 2, drug.getDosage(), callback);
+                MaterialDialogUtil.showPlanTimeAndDosage(context, time, 2, drug.getDosage(), callback);
             }
         }
     };
