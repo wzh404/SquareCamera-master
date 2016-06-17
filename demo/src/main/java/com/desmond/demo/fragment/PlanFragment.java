@@ -2,20 +2,20 @@ package com.desmond.demo.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.desmond.demo.R;
-import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.action.Result;
-import com.desmond.demo.common.util.DateUtil;
+import com.desmond.demo.plan.model.DrugPlan;
 import com.desmond.demo.plan.presenter.DrugPlanPresenter;
 import com.desmond.demo.plan.view.DrugPlanView;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.functions.Action1;
 
 /**
@@ -30,6 +30,7 @@ public class PlanFragment extends Fragment {
 
         DrugPlanPresenter presenter = new DrugPlanPresenter(drugPlanAction1);
         DrugPlanView view = new DrugPlanView(getContext(), container, presenter);
+
 
         return view.getView();
     }

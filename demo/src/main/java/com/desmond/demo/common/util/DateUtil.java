@@ -31,6 +31,32 @@ public class DateUtil {
         return sdf.format(dt);
     }
 
+    public static String getMonthDay(Date date){
+        return (new SimpleDateFormat("MM-dd")).format(date);
+    }
+
+    public static Date addDate(Date start, int days){
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(start);
+        calendar.add(GregorianCalendar.DAY_OF_MONTH, days);
+
+        return calendar.getTime();
+    }
+
+    public static int getDay(Date closeDate){
+        if (closeDate == null)
+            return 0;
+
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(closeDate);
+        int day1 = calendar.get(Calendar.DAY_OF_YEAR);
+
+        calendar.setTime(new Date());
+        int day2 = calendar.get(Calendar.DAY_OF_YEAR);
+
+        return day1 - day2;
+    }
+
     public static String formatDate(Date date){
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(date);

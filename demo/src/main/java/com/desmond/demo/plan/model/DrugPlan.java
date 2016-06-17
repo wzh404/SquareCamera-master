@@ -1,6 +1,7 @@
 package com.desmond.demo.plan.model;
 
 import com.desmond.demo.box.model.TimeAndDosage;
+import com.desmond.demo.common.util.DateUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -15,15 +16,33 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by wangzunhui on 2016/6/3.
  */
-public class DrugPlan {
-//    @PrimaryKey
+public class DrugPlan extends RealmObject{
+    @PrimaryKey
     private Long id;
+    private Integer drugId;
     private String user;
     private String interval; // temp:一次性,  everyday:每日,  week:每周, days: 间隔天, hours: 间隔小时
-    private String intervalDetails;
-    private String dosages; // JSON格式服用时间及剂量、单位
+    private String intervalDetails; // temp: null,  everyday:null,  week:246, days: 4, hours: 8
+    private String dosages; // JSON格式服用时间、剂量、单位
     private Date startDate; // 开始服药日期
+    private Date closeDate; // 结束日期
     private Integer days; // 服药持续天数
+
+    public Date getCloseDate() {
+        return closeDate;
+    }
+
+    public void setCloseDate(Date closeDate) {
+        this.closeDate = closeDate;
+    }
+
+    public Integer getDrugId() {
+        return drugId;
+    }
+
+    public void setDrugId(Integer drugId) {
+        this.drugId = drugId;
+    }
 
     public Date getStartDate() {
         return startDate;
@@ -93,7 +112,7 @@ public class DrugPlan {
         return map.get(interval);
     }
 
-    public String getDaysDesc(){
+    public  String getDaysDesc(){
         HashMap<Integer, String> map = new HashMap<Integer,String>();
         map.put(-1, "按剩余剂量服用");
         map.put(-2, "持续服用");
@@ -107,7 +126,6 @@ public class DrugPlan {
 
         return days + "天";
     }
-
 
     public String getDosageDesc(){
         Gson gson = new Gson();
@@ -174,5 +192,15 @@ public class DrugPlan {
     public void setDefaultDosageOfHours(String unit){
         TimeAndDosage timeAndDosage = new TimeAndDosage("no", 2, unit);
         setDosages((new Gson()).toJson(timeAndDosage));
+    }
+
+    public String getRestOfDay(){
+        int day = DateUtil.getDay(closeDate);
+        if (day <= 0){
+            return "已结束";
+        }
+        else{
+            return "剩余" + day + "天";
+        }
     }
 }

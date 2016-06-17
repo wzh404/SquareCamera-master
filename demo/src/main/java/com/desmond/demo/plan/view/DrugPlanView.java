@@ -25,7 +25,7 @@ public class DrugPlanView extends AbstractSwipeRefresh {
         super.init(context, container, R.layout.fragment_drug_plan);
 
         Toolbar toolbar = get(R.id.toolbar);
-        toolbar.setTitle("用药");
+        toolbar.setTitle("用药计划");
         toolbar.inflateMenu(R.menu.menu_drug_plan);
     }
 

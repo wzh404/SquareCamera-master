@@ -26,43 +26,12 @@ public class DrugPresenter extends DefaultPresenter {
         register("drug", action1);;
     }
 
-//    @Override
-//    public void fresh() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//    }
-//
-//    @Override
-//    public List<Drug> getItems() {
-//        List<Drug> items = new ArrayList<>();
-//
-//        Drug drug = new Drug();
-//        drug.setId(0);
-//        items.add(drug);
-//
-//        return items;
-//    }
 
     public void drug(String code) {
         Observable<JsonObject> observable = getWebService().drug(code);
         call(observable, "drug");
     }
 
-//    public void queryDrugAsync(String name, RealmChangeListener callback){
-//        Realm realm = Realm.getDefaultInstance();
-//        RealmResults<Drug> result = realm.where(Drug.class)
-//                .contains("name", name)
-//                .findAllAsync();
-//        result.addChangeListener(callback);
-//    }
 
     public void deleteDrug(final Drug drug){
         Realm realm = Realm.getDefaultInstance();

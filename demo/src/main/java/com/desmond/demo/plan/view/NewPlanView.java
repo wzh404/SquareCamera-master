@@ -21,6 +21,7 @@ import com.desmond.demo.base.view.IView;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.model.TimeAndDosage;
 import com.desmond.demo.common.util.AndroidUtil;
+import com.desmond.demo.common.util.DateUtil;
 import com.desmond.demo.common.util.MaterialDialogUtil;
 import com.desmond.demo.plan.activity.NewPlanActivity;
 import com.desmond.demo.plan.model.DrugPlan;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 /**
@@ -49,15 +51,10 @@ public class NewPlanView extends AbstractRecyclerView {
     private DrugPlan plan;
     private DefaultItemRecyclerAdapter adapter;
 
-    public NewPlanView(final Context context, Drug drug) {
+    public NewPlanView(final Context context, Drug drug, DrugPlan plan) {
         this.context = context;
         this.drug = drug;
-
-        plan = new DrugPlan();
-        plan.setId(System.currentTimeMillis());
-        plan.setInterval("everyday");
-        plan.setDefaultDosageOfDay(drug.getDosage());
-        plan.setDays(7);
+        this.plan = plan;
 
         super.init(context, null, R.layout.activity_new_drug_plan);
         Toolbar toolbar = get(R.id.toolbar);
@@ -157,6 +154,7 @@ public class NewPlanView extends AbstractRecyclerView {
                     @Override
                     public void onClick(Date date) {
                         plan.setStartDate(date);
+                        plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), plan.getDays()));
 
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         setItemDesc("date", sdf.format(date));
@@ -168,28 +166,54 @@ public class NewPlanView extends AbstractRecyclerView {
             else if ("days".equalsIgnoreCase(code)){
                 switch (selected){
                     case 0:
-                        plan.setDays(-1);
+                        plan.setDays(-1);  // 剩余剂量服用时间
+                        plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 0));
                         break;
 
                     case 1:
-                        plan.setDays(-2);
+                        plan.setDays(-2); // 持续服用
+                        plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 365));
                         break;
 
                     case 2:
-                        plan.setDays(3);
+                        plan.setDays(3);  // 3天
+                        plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 3));
                         break;
 
                     case 3:
-                        plan.setDays(7);
+                        plan.setDays(7);  // 一周
+                        plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 7));
                         break;
 
                     case 4:
-                        plan.setDays(30);
+                        plan.setDays(30); // 一月
+                        plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 30));
                         break;
 
                     case 5:
+                        MaterialDialogUtil.InputCallback callback = new MaterialDialogUtil.InputCallback() {
+                            @Override
+                            public void onClick(String value) {
+                                plan.setDays(Integer.parseInt(value));
+                                plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), plan.getDays()));
+                                setItemDesc("days", value + "天");
+                                adapter.notifyDataSetChanged();
+                            }
+                        };
+                        MaterialDialogUtil.showInputDialog(context, callback);
                         break;
                 }
+            }
+            else if ("plan".equalsIgnoreCase(code)){
+                Realm realm = Realm.getDefaultInstance();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealm(plan);
+                    }
+                });
+
+                ((NewPlanActivity)context).finish();
             }
         }
     };
@@ -212,8 +236,6 @@ public class NewPlanView extends AbstractRecyclerView {
         MaterialDialog.ListCallback callback = new MaterialDialog.ListCallback() {
             @Override
             public void onSelection(MaterialDialog dialog, View v, int which, CharSequence text) {
-//                TextView tv = view.get(R.id.item_my_desc);
-//                tv.setText(text);
                 setItemDesc("interval", text.toString());
                 plan.setIntervalDetails((which + 1) + "");
 
@@ -228,15 +250,13 @@ public class NewPlanView extends AbstractRecyclerView {
             items[i] = "间隔" + (i + 1) +"小时";
         }
 
-        MaterialDialogUtil.showList(view.getView(), items, callback);
+        MaterialDialogUtil.showList(view.getView(), null,items, callback);
     }
 
     private void showIntervalDays(final IView view) {
         MaterialDialog.ListCallback callback = new MaterialDialog.ListCallback() {
             @Override
             public void onSelection(MaterialDialog dialog, View v, int which, CharSequence text) {
-//                TextView tv = view.get(R.id.item_my_desc);
-//                tv.setText(text);
                 setItemDesc("interval", text.toString());
                 plan.setIntervalDetails((which + 1) + "");
 
@@ -249,7 +269,7 @@ public class NewPlanView extends AbstractRecyclerView {
         for (int i = 0; i < items.length; i++){
             items[i] = "间隔" + (i + 1) +"天";
         }
-        MaterialDialogUtil.showList(view.getView(), items, callback);
+        MaterialDialogUtil.showList(view.getView(), null, items, callback);
     }
 
     private void showWeek(final IView view){
@@ -261,8 +281,6 @@ public class NewPlanView extends AbstractRecyclerView {
                 for (int k : dialog.getSelectedIndices())
                     text += weeks[k];
 
-//                TextView tv = view.get(R.id.item_my_desc);
-//                tv.setText("每周" + text);
                 setItemDesc("interval", "每周" + text);
                 plan.setIntervalDetails(text);
                 plan.setDefaultDosageOfDay(drug.getDosage());

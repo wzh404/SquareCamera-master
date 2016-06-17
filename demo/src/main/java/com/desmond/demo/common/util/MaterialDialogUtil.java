@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.InputType;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.NumberPicker;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.desmond.demo.R;
 import com.desmond.demo.base.view.IView;
 import com.desmond.demo.base.view.WheelView;
@@ -25,12 +27,14 @@ import java.util.GregorianCalendar;
  * Created by wangzunhui on 2016/6/14.
  */
 public class MaterialDialogUtil {
-    public static void showList(View view, String[] items, MaterialDialog.ListCallback callback){
+    public static void showList(View view, String title, String[] items, MaterialDialog.ListCallback callback){
         new MaterialDialog.Builder(view.getContext())
+                .title(title)
                 .items(items)
                 .itemsCallback(callback)
                 .backgroundColorRes(R.color.white)
                 .contentColorRes(R.color.black)
+                .titleColorRes(R.color.primary)
                 .show();
     }
 
@@ -54,6 +58,7 @@ public class MaterialDialogUtil {
                 .backgroundColorRes(R.color.white)
                 .contentColorRes(R.color.black)
                 .itemsColorRes(R.color.black)
+                .theme(Theme.LIGHT)
                 .show();
     }
 
@@ -171,6 +176,26 @@ public class MaterialDialogUtil {
         dialog.show();
     }
 
+    public static void showInputDialog(Context context, final MaterialDialogUtil.InputCallback callback) {
+        new MaterialDialog.Builder(context)
+                .title("输入")
+                .content("请输入服药间隔时间(小时)")
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .inputRange(1, 4)
+                .positiveText("确定")
+                .input("间隔天数", "", false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        callback.onClick(input.toString());
+                    }
+                })
+                .backgroundColorRes(R.color.white)
+                .contentColorRes(R.color.black)
+                .titleColorRes(R.color.primary)
+                .show();
+    }
+
+
     public interface TimeAndDosageCallback{
         public void onClick(String time, int dosage);
     }
@@ -181,5 +206,9 @@ public class MaterialDialogUtil {
 
     public interface DosageCallback{
         public void onClick(int dosage, String unit);
+    }
+
+    public interface InputCallback{
+        public void onClick(String value);
     }
 }

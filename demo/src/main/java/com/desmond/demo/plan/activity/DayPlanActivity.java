@@ -3,6 +3,7 @@ package com.desmond.demo.plan.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.plan.view.DayPlanView;
@@ -19,8 +20,8 @@ public class DayPlanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         drug = getIntent().getParcelableExtra("drug");
-        String times = getIntent().getStringExtra("dosages");
-        view = new DayPlanView(this, drug, times);
+        String dosages = getIntent().getStringExtra("dosages");
+        view = new DayPlanView(this, drug, dosages);
         setContentView(view.getView());
 
         setSupportActionBar(view.getToolbar());
@@ -34,6 +35,4 @@ public class DayPlanActivity extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
     }
-
-
 }

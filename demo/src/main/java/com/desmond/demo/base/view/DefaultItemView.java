@@ -145,6 +145,6 @@ public class DefaultItemView extends AbstractView {
             }
         };
 
-        MaterialDialogUtil.showList(this.getView(), selection, callback);
+        MaterialDialogUtil.showList(this.getView(), null, selection, callback);
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <import type="com.desmond.demo.common.util.DateUtil"/>
         <variable
             name="plan"
             type="com.desmond.demo.plan.model.DrugPlan" />
@@ -10,7 +11,65 @@
         android:id="@+id/item_drug_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@drawable/layout_selector"
         android:clickable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/drug_plan_start_date"
+            android:text="@{DateUtil.getMonthDay(plan.startDate)}"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif"
+            android:padding="2dp"
+            android:background="@color/primary"
+            android:textSize="36sp"/>
+
+        <TextView
+            android:id="@+id/drug_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="阿莫斯林"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/drug_plan_start_date"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/drug_plan_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:text="@{plan.getRestOfDay()}"
+            android:layout_marginTop="16dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/drug_plan_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/drug_name"
+            android:layout_toRightOf="@+id/drug_plan_start_date"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="8dp"
+            android:text="@{plan.getIntervalDesc() + plan.getDosageDesc()}"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp" />
+
+        <View
+            android:id="@+id/item_v1_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/drug_plan_start_date"
+            android:background="@color/common_line_gray"></View>
     </RelativeLayout>
 </layout>
