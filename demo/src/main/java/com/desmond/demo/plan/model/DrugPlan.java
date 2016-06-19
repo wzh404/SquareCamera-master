@@ -1,5 +1,6 @@
 package com.desmond.demo.plan.model;
 
+import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.model.TimeAndDosage;
 import com.desmond.demo.common.util.DateUtil;
 import com.google.gson.Gson;
@@ -19,7 +20,7 @@ import io.realm.annotations.PrimaryKey;
 public class DrugPlan extends RealmObject{
     @PrimaryKey
     private Long id;
-    private Integer drugId;
+    private Drug drug;
     private String user;
     private String interval; // temp:一次性,  everyday:每日,  week:每周, days: 间隔天, hours: 间隔小时
     private String intervalDetails; // temp: null,  everyday:null,  week:246, days: 4, hours: 8
@@ -36,12 +37,12 @@ public class DrugPlan extends RealmObject{
         this.closeDate = closeDate;
     }
 
-    public Integer getDrugId() {
-        return drugId;
+    public Drug getDrug() {
+        return drug;
     }
 
-    public void setDrugId(Integer drugId) {
-        this.drugId = drugId;
+    public void setDrug(Drug drug) {
+        this.drug = drug;
     }
 
     public Date getStartDate() {
@@ -105,9 +106,9 @@ public class DrugPlan extends RealmObject{
         HashMap<String, String> map = new HashMap<String,String>();
         map.put("temp", "一次性");
         map.put("everyday", "每日");
-        map.put("week", "每周");
-        map.put("days", "间隔天");
-        map.put("hours", "间隔小时");
+        map.put("week", "每周" + intervalDetails);
+        map.put("days", "间隔" + intervalDetails + "天");
+        map.put("hours", "间隔" + intervalDetails + "小时");
 
         return map.get(interval);
     }

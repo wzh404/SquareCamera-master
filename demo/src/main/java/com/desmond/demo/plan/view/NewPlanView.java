@@ -206,6 +206,11 @@ public class NewPlanView extends AbstractRecyclerView {
             }
             else if ("plan".equalsIgnoreCase(code)){
                 Realm realm = Realm.getDefaultInstance();
+                RealmResults<Drug> result = realm.where(Drug.class).equalTo("id", drug.getId()).findAll();
+                if (result.size() <= 0) return;
+
+                final Drug realmDrug = result.get(0);
+                plan.setDrug(realmDrug);
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -281,10 +286,10 @@ public class NewPlanView extends AbstractRecyclerView {
                 for (int k : dialog.getSelectedIndices())
                     text += weeks[k];
 
-                setItemDesc("interval", "每周" + text);
                 plan.setIntervalDetails(text);
                 plan.setDefaultDosageOfDay(drug.getDosage());
                 setItemDesc("time", plan.getDosageDesc());
+                setItemDesc("interval", plan.getIntervalDesc());
                 adapter.notifyDataSetChanged();
             }
         };

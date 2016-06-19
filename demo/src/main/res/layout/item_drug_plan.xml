@@ -33,7 +33,7 @@
             android:id="@+id/drug_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="阿莫斯林"
+            android:text="@{plan.drug.name}"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/drug_plan_start_date"
@@ -59,7 +59,7 @@
             android:layout_toRightOf="@+id/drug_plan_start_date"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="8dp"
-            android:text="@{plan.getIntervalDesc() + plan.getDosageDesc()}"
+            android:text="@{plan.getIntervalDesc() + ',' + plan.getDosageDesc()}"
             android:layout_marginTop="8dp"
             android:textColor="@android:color/darker_gray"
             android:textSize="13sp" />

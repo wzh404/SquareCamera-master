@@ -28,7 +28,7 @@ public class NewPlanActivity extends AppCompatActivity {
         plan = new DrugPlan();
         plan.setId(System.currentTimeMillis());
 
-        plan.setDrugId(drug.getId());
+        plan.setDrug(drug);
         plan.setUser("self");
 
         plan.setInterval("everyday");
