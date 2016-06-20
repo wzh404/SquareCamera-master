@@ -152,6 +152,7 @@ public class DrugSettingView extends AbstractRecyclerView {
                         String val = arg[0];
                         realmDrug.setMeal(val);
                         drug.setMeal(val);
+                        getAdapter().notifyDataSetChanged();
                     }
                     else if ("dosage".equalsIgnoreCase(code)){
                         realmDrug.setDosage(arg[1]);
@@ -160,10 +161,12 @@ public class DrugSettingView extends AbstractRecyclerView {
                         addItemProperty("dosage", "stock", arg[0]);
                         addItemProperty("dosage", "dosage", arg[1]);
                         drug.setDosage(arg[1]);
+                        getAdapter().notifyDataSetChanged();
                     }
                     else if ("otc".equalsIgnoreCase(code)){
                         String val = arg[0];
                         realmDrug.setOtc(getOtc(val));
+                        getAdapter().notifyDataSetChanged();
                     }
                     else if ("plan".equalsIgnoreCase(code)){
                         startNewPlan();

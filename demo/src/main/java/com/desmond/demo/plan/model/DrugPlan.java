@@ -28,6 +28,24 @@ public class DrugPlan extends RealmObject{
     private Date startDate; // 开始服药日期
     private Date closeDate; // 结束日期
     private Integer days; // 服药持续天数
+    private String reason; // 服药原因
+    private String state; // 状态
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public Date getCloseDate() {
         return closeDate;

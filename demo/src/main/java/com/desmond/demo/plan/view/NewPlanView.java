@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -20,6 +21,8 @@ import com.desmond.demo.base.view.AbstractRecyclerView;
 import com.desmond.demo.base.view.IView;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.model.TimeAndDosage;
+import com.desmond.demo.common.action.Result;
+import com.desmond.demo.common.rxbus.RxBus;
 import com.desmond.demo.common.util.AndroidUtil;
 import com.desmond.demo.common.util.DateUtil;
 import com.desmond.demo.common.util.MaterialDialogUtil;
@@ -204,8 +207,20 @@ public class NewPlanView extends AbstractRecyclerView {
                         break;
                 }
             }
-            else if ("plan".equalsIgnoreCase(code)){
+            else if ("plan".equalsIgnoreCase(code)){ // 确认计划
                 Realm realm = Realm.getDefaultInstance();
+                Long count = realm.where(DrugPlan.class)
+                        .equalTo("drug.id", drug.getId())
+                        .greaterThanOrEqualTo("closeDate", plan.getStartDate())
+                        .equalTo("state", "N")
+                        .count();
+
+                if (count > 0 ){
+                    String content = String.format("日期%s至%s内已经存在了另外一个服用计划。", DateUtil.getDate(plan.getStartDate()), DateUtil.getDate(plan.getCloseDate()));
+                    MaterialDialogUtil.showMessage(context, drug.getName(), content);
+                    return;
+                }
+
                 RealmResults<Drug> result = realm.where(Drug.class).equalTo("id", drug.getId()).findAll();
                 if (result.size() <= 0) return;
 
@@ -218,6 +233,12 @@ public class NewPlanView extends AbstractRecyclerView {
                     }
                 });
 
+                Result r = new Result();
+                r.setTag("plan");
+                r.setCode("OK");
+                r.setMsg(plan.getId().toString());
+
+                RxBus.get().post("plan", r);
                 ((NewPlanActivity)context).finish();
             }
         }

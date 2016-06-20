@@ -1,6 +1,7 @@
 package com.desmond.demo.common.rxbus;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +16,7 @@ import rx.subjects.Subject;
 public class RxBus {
     private static final String TAG = RxBus.class.getSimpleName();
     private static RxBus instance;
-    public static boolean DEBUG = true;
+//    public static boolean DEBUG = true;
 
     public static synchronized RxBus get() {
         if (null == instance) {
@@ -97,6 +98,7 @@ public class RxBus {
 //        }
         Subject subject = subjectMapper.get(tag);
         if (subject != null){
+            Log.e("Drug", "Next______________" + tag);
             subject.onNext(content);
         }
 

@@ -18,10 +18,13 @@ import java.util.List;
  */
 public class DrugPlanView extends AbstractSwipeRefresh {
     private List<DrugPlan> items;
-    private CallbackDrugPlan  callback;
+    private DrugPlanItemView.ClickListener clickListener;
+//    private CallbackDrugPlan  callback;
 
-    public DrugPlanView(Context context, ViewGroup container, CallbackDrugPlan callback) {
-        this.callback = callback;
+    public DrugPlanView(Context context, ViewGroup container, List<DrugPlan> items, DrugPlanItemView.ClickListener clickListener) {
+//        this.callback = callback;
+        this.clickListener = clickListener;
+        this.items = items;
         super.init(context, container, R.layout.fragment_drug_plan);
 
         Toolbar toolbar = get(R.id.toolbar);
@@ -31,13 +34,13 @@ public class DrugPlanView extends AbstractSwipeRefresh {
 
     @Override
     public void freshData() {
-        callback.fresh();
+//        callback.fresh();
     }
 
     @Override
     public RecyclerView.Adapter createAdapter(Context context) {
-        this.items = callback.getItems();
-        return new DrugPlanRecyclerAdapter(context, items);
+//        this.items = callback.getItems();
+        return new DrugPlanRecyclerAdapter(context, items, clickListener);
     }
 
     @Override
@@ -55,12 +58,17 @@ public class DrugPlanView extends AbstractSwipeRefresh {
             items.clear();
         }
 
-        items.add(plan);
+        items.add(0, plan);
         getAdapter().notifyDataSetChanged();
     }
 
-    public interface CallbackDrugPlan{
-        public void fresh();
-        public List<DrugPlan> getItems();
+    public void deleteItem(DrugPlan plan){
+        items.remove(plan);
+        getAdapter().notifyDataSetChanged();
     }
+
+//    public interface CallbackDrugPlan{
+//        public void fresh();
+//        public List<DrugPlan> getItems();
+//    }
 }

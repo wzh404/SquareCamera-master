@@ -3,6 +3,7 @@ package com.desmond.demo.plan.presenter;
 import android.util.Log;
 
 import com.desmond.demo.base.presenter.DefaultPresenter;
+import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.action.Result;
 import com.desmond.demo.plan.model.DrugPlan;
 import com.desmond.demo.plan.view.DrugPlanView;
@@ -17,26 +18,17 @@ import rx.functions.Action1;
 /**
  * Created by WIN10 on 2016/5/30.
  */
-public class DrugPlanPresenter extends DefaultPresenter implements DrugPlanView.CallbackDrugPlan{
+public class DrugPlanPresenter extends DefaultPresenter {
     public DrugPlanPresenter(Action1<Result> action1){
         super();
-//        register("plan", action1);
+        register("plan", action1);
     }
 
-    @Override
-    public void fresh() {
-    }
-
-    @Override
     public List<DrugPlan> getItems() {
         List<DrugPlan> items = new ArrayList<>();
         Realm realm = Realm.getDefaultInstance();
         RealmResults<DrugPlan> result = realm.where(DrugPlan.class).findAll();
 
-//        for (int i = 0; i < result.size(); i++) {
-//            DrugPlan plan = result.get(i);
-//            Log.e("Drug", "result2 is " + plan.getDosages() + " - " + plan.getCloseDate() + " - " + plan.getStartDate());
-//        }
         if (result.size() <= 0) {
             DrugPlan plan = new DrugPlan();
             plan.setId(0L);
@@ -51,8 +43,27 @@ public class DrugPlanPresenter extends DefaultPresenter implements DrugPlanView.
         return items;
     }
 
-//    public void drug(String code) {
-//        Observable<JsonObject> observable = getWebService().drug(code);
-//        call(observable, "drug");
-//    }
+    public void deleteDrug(final DrugPlan plan){
+        Realm realm = Realm.getDefaultInstance();
+        final RealmResults<DrugPlan> result = realm.where(DrugPlan.class).equalTo("id", plan.getId()).findAll();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                if (result.size() > 0) result.deleteFromRealm(0);
+            }
+        });
+    }
+
+    public void cancelPlan(final DrugPlan plan){
+        Realm realm = Realm.getDefaultInstance();
+        final RealmResults<DrugPlan> result = realm.where(DrugPlan.class).equalTo("id", plan.getId()).findAll();
+        if (result.size() <= 0) return;
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                result.get(0).setState("C");
+            }
+        });
+    }
 }

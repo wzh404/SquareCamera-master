@@ -20,6 +20,11 @@ public class DateUtil {
         return sdf.format(dt);
     }
 
+    public static String getDate(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
+
     /**
      * 获取当前时间HHMM
      *

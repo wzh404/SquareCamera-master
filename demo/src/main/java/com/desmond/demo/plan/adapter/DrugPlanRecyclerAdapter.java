@@ -23,10 +23,12 @@ public class DrugPlanRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHo
 
     private List<DrugPlan> items;
     private Context context;
+    private DrugPlanItemView.ClickListener clickListener;
 
-    public DrugPlanRecyclerAdapter(Context context, List<DrugPlan> items){
+    public DrugPlanRecyclerAdapter(Context context, List<DrugPlan> items, DrugPlanItemView.ClickListener clickListener){
         this.items = items;
         this.context = context;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -44,6 +46,10 @@ public class DrugPlanRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHo
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         if (holder.getItemViewType() == emptyType)
             return;
+
+        DrugPlan plan = items.get(position);
+        DrugPlanItemView view = (DrugPlanItemView)holder.getIView();
+        view.setOnClick(plan, clickListener);
 
         holder.getBinding().setVariable(BR.plan, items.get(position));
         holder.getBinding().executePendingBindings();

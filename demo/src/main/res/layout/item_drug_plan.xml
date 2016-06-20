@@ -8,7 +8,7 @@
     </data>
 
     <RelativeLayout
-        android:id="@+id/item_drug_root"
+        android:id="@+id/item_drug_plan_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/layout_selector"

@@ -37,6 +37,8 @@ public class NewPlanActivity extends AppCompatActivity {
         plan.setStartDate(new Date());
         plan.setDays(7);
         plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 7));
+        plan.setState("N");
+        plan.setReason("其它");
 
         view = new NewPlanView(this, drug, plan);
         setContentView(view.getView());

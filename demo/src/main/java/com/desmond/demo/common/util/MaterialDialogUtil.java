@@ -1,5 +1,6 @@
 package com.desmond.demo.common.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -61,6 +62,7 @@ public class MaterialDialogUtil {
                 .theme(Theme.LIGHT)
                 .show();
     }
+
 
     public static void showPlanTimeAndDosage(Context context, String time, int dosage, String unit, final MaterialDialogUtil.TimeAndDosageCallback callback){
         MaterialDialog.SingleButtonCallback singleButtonCallback = new MaterialDialog.SingleButtonCallback() {
@@ -189,6 +191,17 @@ public class MaterialDialogUtil {
                         callback.onClick(input.toString());
                     }
                 })
+                .backgroundColorRes(R.color.white)
+                .contentColorRes(R.color.black)
+                .titleColorRes(R.color.primary)
+                .show();
+    }
+
+    public static void showMessage(Context context, String title, String content){
+        new MaterialDialog.Builder(context)
+                .title(title)
+                .content(content)
+                .positiveText("确定")
                 .backgroundColorRes(R.color.white)
                 .contentColorRes(R.color.black)
                 .titleColorRes(R.color.primary)

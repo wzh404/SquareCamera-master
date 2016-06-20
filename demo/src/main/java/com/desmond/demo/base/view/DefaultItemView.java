@@ -57,9 +57,9 @@ public class DefaultItemView extends AbstractView {
                     MaterialDialogUtil.showDosage(context, Integer.parseInt(stock), unit, true, new MaterialDialogUtil.DosageCallback() {
                         @Override
                         public void onClick(final int dosage, final String unit) {
-                            TextView tv = get(R.id.item_my_desc);
-                            tv.setText(dosage + unit);
-
+//                            TextView tv = get(R.id.item_my_desc);
+//                            tv.setText(dosage + unit);
+                            object.addProperty("desc", dosage + unit);
                             if (getListener() != null){
                                 getListener().onSelected(view, code, 0, dosage + "", unit);
                             }
@@ -135,9 +135,9 @@ public class DefaultItemView extends AbstractView {
         MaterialDialog.ListCallback callback = new MaterialDialog.ListCallback() {
             @Override
             public void onSelection(MaterialDialog dialog, View v, int which, CharSequence text) {
-                TextView tv = get(R.id.item_my_desc);
+//                TextView tv = get(R.id.item_my_desc);
                 object.addProperty("desc", text.toString());
-                tv.setText(text);
+//                tv.setText(text);
 
                 if (getListener() != null){
                     getListener().onSelected(view, code, which, text.toString());
