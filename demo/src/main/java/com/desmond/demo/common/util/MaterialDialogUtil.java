@@ -1,6 +1,5 @@
 package com.desmond.demo.common.util;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -17,9 +16,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.desmond.demo.R;
-import com.desmond.demo.base.view.IView;
-import com.desmond.demo.base.view.WheelView;
-import com.google.gson.JsonObject;
 
 import java.util.Date;
 import java.util.GregorianCalendar;

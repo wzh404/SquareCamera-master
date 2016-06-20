@@ -5,6 +5,7 @@ import com.desmond.demo.common.action.Result;
 import com.desmond.demo.box.view.DrugView;
 import com.desmond.demo.base.presenter.DefaultPresenter;
 import com.desmond.demo.common.util.Constants;
+import com.desmond.demo.plan.model.DrugPlan;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -50,5 +51,15 @@ public class DrugPresenter extends DefaultPresenter {
                 .equalTo("state", Constants.DRUG_STATE_NORMAL)
                 .findAllSortedAsync("time", Sort.DESCENDING);
         return result;
+    }
+
+    public boolean allowDelete(Drug drug){
+        Realm realm = Realm.getDefaultInstance();
+        Long count = realm.where(DrugPlan.class)
+                .equalTo("drug.id", drug.getId())
+                .equalTo("state", "N")
+                .count();
+
+        return count <= 0;
     }
 }

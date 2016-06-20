@@ -25,6 +25,7 @@ import com.desmond.demo.box.view.DrugView;
 import com.desmond.demo.common.action.Result;
 import com.desmond.demo.common.util.Constants;
 import com.desmond.demo.common.util.IconCenterEditText;
+import com.desmond.demo.common.util.MaterialDialogUtil;
 import com.desmond.demo.plan.activity.NewPlanActivity;
 import com.desmond.squarecamera.CameraActivity;
 import com.google.gson.JsonObject;
@@ -234,15 +235,19 @@ public class DrugFragment extends Fragment {
 
         @Override
         public void onLongClick(View v, int which, Drug drug) {
-            Log.e("Drug", "drug item onclick " + drug);
-            switch (which){
+             switch (which){
                 case 0:
                     startNewPlan(drug);
                     break;
 
                 case 1:
-                    view.deleteItem(drug);
-                    presenter.deleteDrug(drug);
+                    if (presenter.allowDelete(drug)) {
+                        view.deleteItem(drug);
+                        presenter.deleteDrug(drug);
+                    }
+                    else{
+                        MaterialDialogUtil.showMessage(context, drug.getName(), "用药计划正在执行,不能删除!");
+                    }
                     break;
             }
         }
