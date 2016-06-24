@@ -1,0 +1,33 @@
+[
+  {
+    "type": "TEXT",
+    "title": "药品名称",
+    "code": "drug"
+  },
+  {
+    "type": "TEXT",
+    "title": "服药人员",
+    "code": "user"
+  },
+  {
+    "type": "MARGIN"
+  },
+  {
+    "type": "TEXT",
+    "title": "开始日期",
+    "code": "startDate"
+  },
+  {
+    "type": "TEXT",
+    "title": "完成日期",
+    "code": "closeDate"
+  },
+  {
+    "type": "MARGIN"
+  },
+  {
+    "type": "TEXT",
+    "title": "间隔时间",
+    "code": "interval"
+  }
+]

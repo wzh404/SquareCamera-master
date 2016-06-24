@@ -1,5 +1,8 @@
 package com.desmond.demo.plan.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.model.TimeAndDosage;
 import com.desmond.demo.common.util.DateUtil;
@@ -17,7 +20,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by wangzunhui on 2016/6/3.
  */
-public class DrugPlan extends RealmObject{
+public class DrugPlan extends RealmObject implements Parcelable{
     @PrimaryKey
     private Long id;
     private Drug drug;
@@ -30,6 +33,33 @@ public class DrugPlan extends RealmObject{
     private Integer days; // 服药持续天数
     private String reason; // 服药原因
     private String state; // 状态
+
+    public DrugPlan(){}
+    protected DrugPlan(Parcel in) {
+        id = in.readLong();
+        drug = in.readParcelable(Drug.class.getClassLoader());
+        user = in.readString();
+        interval = in.readString();
+        intervalDetails = in.readString();
+        dosages = in.readString();
+        startDate = (Date)in.readSerializable();
+        closeDate = (Date)in.readSerializable();
+        days = in.readInt();
+        reason = in.readString();
+        state = in.readString();
+    }
+
+    public static final Creator<DrugPlan> CREATOR = new Creator<DrugPlan>() {
+        @Override
+        public DrugPlan createFromParcel(Parcel in) {
+            return new DrugPlan(in);
+        }
+
+        @Override
+        public DrugPlan[] newArray(int size) {
+            return new DrugPlan[size];
+        }
+    };
 
     public String getReason() {
         return reason;
@@ -221,5 +251,25 @@ public class DrugPlan extends RealmObject{
         else{
             return "剩余" + day + "天";
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeParcelable(drug, flags);
+        dest.writeString(user);
+        dest.writeString(interval);
+        dest.writeString(intervalDetails);
+        dest.writeString(dosages);
+        dest.writeSerializable(startDate);
+        dest.writeSerializable(closeDate);
+        dest.writeInt(days);
+        dest.writeString(reason);
+        dest.writeString(state);
     }
 }

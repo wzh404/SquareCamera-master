@@ -216,7 +216,7 @@ public class NewPlanView extends AbstractRecyclerView {
                         .count();
 
                 if (count > 0 ){
-                    String content = String.format("%s至%s内已经存在了另外一个用药计划。", DateUtil.getDate(plan.getStartDate()), DateUtil.getDate(plan.getCloseDate()));
+                    String content = String.format("%s至%s已经存在了另外一个用药计划。", DateUtil.getDate(plan.getStartDate()), DateUtil.getDate(plan.getCloseDate()));
                     MaterialDialogUtil.showMessage(context, drug.getName(), content);
                     return;
                 }

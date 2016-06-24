@@ -27,7 +27,9 @@ public class DefaultButtonItemView extends AbstractView {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getListener().onSelected(DefaultButtonItemView.this, code, 0, "");
+                if (getListener() != null) {
+                    getListener().onSelected(DefaultButtonItemView.this, code, 0, "");
+                }
             }
         });
     }

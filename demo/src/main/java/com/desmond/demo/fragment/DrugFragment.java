@@ -26,6 +26,7 @@ import com.desmond.demo.common.action.Result;
 import com.desmond.demo.common.util.Constants;
 import com.desmond.demo.common.util.IconCenterEditText;
 import com.desmond.demo.common.util.MaterialDialogUtil;
+import com.desmond.demo.common.util.NetworkUtil;
 import com.desmond.demo.plan.activity.NewPlanActivity;
 import com.desmond.squarecamera.CameraActivity;
 import com.google.gson.JsonObject;
@@ -83,7 +84,12 @@ public class DrugFragment extends Fragment {
         vt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(v);
+                if (NetworkUtil.isMobileConnected(context) || NetworkUtil.isNetworkConnected(context)) {
+                    start(v);
+                }
+                else{
+                    Toast.makeText(context, "无网络连接!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -249,7 +255,7 @@ public class DrugFragment extends Fragment {
                         MaterialDialogUtil.showMessage(context, drug.getName(), "用药计划正在执行,不能删除!");
                     }
                     break;
-            }
+             }
         }
     }
 

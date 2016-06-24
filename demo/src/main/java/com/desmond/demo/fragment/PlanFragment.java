@@ -1,5 +1,6 @@
 package com.desmond.demo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.desmond.demo.base.view.IView;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.action.Result;
+import com.desmond.demo.plan.activity.DrugPlanDetailActivity;
 import com.desmond.demo.plan.model.DrugPlan;
 import com.desmond.demo.plan.presenter.DrugPlanPresenter;
 import com.desmond.demo.plan.view.DrugPlanItemView;
@@ -72,7 +74,7 @@ public class PlanFragment extends Fragment {
     private DrugPlanItemView.ClickListener clickListener = new DrugPlanItemView.ClickListener(){
         @Override
         public void onClick(View v, DrugPlan plan) {
-
+            startPlanDetail(plan);
         }
 
         @Override
@@ -85,4 +87,10 @@ public class PlanFragment extends Fragment {
             }
         }
     };
+
+    private void startPlanDetail(DrugPlan plan){
+        Intent intent = new Intent(getContext(), DrugPlanDetailActivity.class);
+        intent.putExtra("plan", plan);
+        startActivity(intent);
+    }
 }
