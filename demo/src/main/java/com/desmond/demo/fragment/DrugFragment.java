@@ -180,7 +180,7 @@ public class DrugFragment extends Fragment {
         @Override
         public void call(final Result result) {
             if (result.isResult("drug", "OK")) {
-                JsonObject jsonObject = result.getObj().getAsJsonObject("drug");
+                JsonObject jsonObject = result.getObj().getAsJsonObject("data");
                 final Drug drug = new Drug();
                 drug.setId(jsonObject.get("id").getAsInt());
                 drug.setName(jsonObject.get("name").getAsString());
