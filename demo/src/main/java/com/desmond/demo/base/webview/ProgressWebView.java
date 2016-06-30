@@ -3,10 +3,12 @@ package com.desmond.demo.base.webview;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.http.SslError;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -49,6 +51,10 @@ public class ProgressWebView extends WebView {
         {
 //            paramAnonymousWebView.loadUrl("javascript:bindData('10EE39D2-54F0-458D-A6E7-D3EFC504A1D2')");
             super.onPageFinished(paramAnonymousWebView, paramAnonymousString);
+        }
+
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error){
+            handler.proceed();
         }
     }
 

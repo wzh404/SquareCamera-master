@@ -41,7 +41,7 @@ public class DrugSettingActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent = new Intent(getBaseContext(), WebViewActivity.class);
                 intent.putExtra("title", drug.getName());
-                intent.putExtra("url", AppConfig.WEB_URL + "/screening/manual/" + drug.getCode());
+                intent.putExtra("url", AppConfig.WEB_URL + "/manual/" + drug.getCode());
                 startActivity(intent);
                 return true;
             }
