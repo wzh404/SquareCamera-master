@@ -71,7 +71,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
         // onCreate() -> onSavedInstanceState() instead of going through onCreateView()
         if (savedInstanceState == null) {
             mCameraID = getBackCameraID();
-            mFlashMode = CameraSettingPreferences.getCameraFlashMode(getActivity());
+//            mFlashMode = CameraSettingPreferences.getCameraFlashMode(getActivity());
             mImageParameters = new ImageParameters();
         } else {
             mCameraID = savedInstanceState.getInt(CAMERA_ID_KEY);
@@ -477,7 +477,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
             mCamera = null;
         }
 
-        CameraSettingPreferences.saveCameraFlashMode(getActivity(), mFlashMode);
+//        CameraSettingPreferences.saveCameraFlashMode(getActivity(), mFlashMode);
 
         super.onStop();
     }

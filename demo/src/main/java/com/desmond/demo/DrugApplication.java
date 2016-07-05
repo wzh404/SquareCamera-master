@@ -43,6 +43,8 @@ public class DrugApplication extends Application {
     private Integer versionCode = 0;
     public static String token = "0";
     private Integer realmVersion = 2;
+    public static double longitude;
+    public static double latitude;
 
     public static Retrofit getRetrofit() {
         return retrofit;
@@ -123,6 +125,8 @@ public class DrugApplication extends Application {
                         Request newRequest = chain.request().newBuilder()
                                 .addHeader("platform", "android")
                                 .addHeader("appVersion", versionCode.toString())
+                                .addHeader("latitude", new Double(DrugApplication.latitude).toString())
+                                .addHeader("longitude", new Double(DrugApplication.longitude).toString())
                                 .addHeader("authorization", token == null ? "0" : token)
                                 .build();
                         return chain.proceed(newRequest);
