@@ -27,7 +27,6 @@ public class DrugPresenter extends DefaultPresenter {
         register("drug", action1);;
     }
 
-
     public void drug(String code) {
         Observable<JsonObject> observable = getWebService().drug(code);
         call(observable, "drug");

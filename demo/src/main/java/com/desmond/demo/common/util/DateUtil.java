@@ -14,9 +14,9 @@ public class DateUtil {
      *
      * @return
      */
-    public static String getCurrentDate(){
+    public static String getCurrentDatetime(){
         Date dt = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return sdf.format(dt);
     }
 
@@ -49,6 +49,22 @@ public class DateUtil {
     }
 
     public static int getDay(Date closeDate){
+        return diffDay(new Date(), closeDate);
+    }
+
+    public static int getCurrentWeek(){
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+
+        int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        if (0 == week) {
+            week = 7;
+        }
+        return week;
+    }
+
+    public static int diffDay(Date startDate, Date closeDate){
         if (closeDate == null)
             return 0;
 
@@ -56,7 +72,7 @@ public class DateUtil {
         calendar.setTime(closeDate);
         int day1 = calendar.get(Calendar.DAY_OF_YEAR);
 
-        calendar.setTime(new Date());
+        calendar.setTime(startDate);
         int day2 = calendar.get(Calendar.DAY_OF_YEAR);
 
         return day1 - day2;

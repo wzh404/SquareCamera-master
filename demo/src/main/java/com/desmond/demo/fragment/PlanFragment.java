@@ -20,17 +20,19 @@ import com.desmond.demo.plan.view.DrugPlanView;
 import com.google.gson.Gson;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import rx.functions.Action1;
 
 /**
  * 用药
- *
+ * <p/>
  * Created by wangzunhui on 2016/6/2.
  */
 public class PlanFragment extends Fragment {
     private DrugPlanPresenter presenter;
     private DrugPlanView view;
+//    private RealmResults<DrugPlan> result;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +40,23 @@ public class PlanFragment extends Fragment {
 
         presenter = new DrugPlanPresenter(drugPlanAction1);
         view = new DrugPlanView(getContext(), container, presenter.getItems(), clickListener);
+
+        RealmResults<DrugPlan> result = presenter.queryPlanAsync();
+        Log.e("Drug", "----queryPlanAsync----" + result.size());
+        for (DrugPlan plan : result) {
+            plan.getPlanOfDays();
+            Log.e("Drug", "reminder----" + plan.reminder());
+        }
+//        result.addChangeListener(new RealmChangeListener<RealmResults<DrugPlan>>() {
+//            @Override
+//            public void onChange(RealmResults<DrugPlan> element) {
+//                Log.e("Drug", "----onChange----" + element.size());
+//                for (DrugPlan plan : element){
+//                    Log.e("Drug", "----" + plan.reminder());
+//                }
+//                result.removeChangeListener(this);
+//            }
+//        });
 
         return view.getView();
     }
@@ -66,12 +85,12 @@ public class PlanFragment extends Fragment {
     };
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         presenter.destroy();
     }
 
-    private DrugPlanItemView.ClickListener clickListener = new DrugPlanItemView.ClickListener(){
+    private DrugPlanItemView.ClickListener clickListener = new DrugPlanItemView.ClickListener() {
         @Override
         public void onClick(View v, DrugPlan plan) {
             startPlanDetail(plan);
@@ -79,8 +98,8 @@ public class PlanFragment extends Fragment {
 
         @Override
         public void onLongClick(View v, int which, DrugPlan plan) {
-            switch(which){
-                case 2 : // delete
+            switch (which) {
+                case 2: // delete
                     view.deleteItem(plan);
                     presenter.deleteDrug(plan);
                     break;
@@ -88,7 +107,7 @@ public class PlanFragment extends Fragment {
         }
     };
 
-    private void startPlanDetail(DrugPlan plan){
+    private void startPlanDetail(DrugPlan plan) {
         Intent intent = new Intent(getContext(), DrugPlanDetailActivity.class);
         intent.putExtra("plan", plan);
         startActivity(intent);

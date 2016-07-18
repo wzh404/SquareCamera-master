@@ -2,6 +2,7 @@ package com.desmond.demo.plan.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.model.TimeAndDosage;
@@ -9,8 +10,11 @@ import com.desmond.demo.common.util.DateUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -161,6 +165,27 @@ public class DrugPlan extends RealmObject implements Parcelable{
         return map.get(interval);
     }
 
+    /* 当天日期有效,过滤提醒计划 */
+    public boolean reminder(){
+        final String[] weeks ={"一", "二", "三", "四", "五", "六", "日"};
+        if ("week".equalsIgnoreCase(interval)){
+            int week = DateUtil.getCurrentWeek();
+            String weekText = weeks[week - 1];
+            Log.e("Drug", weekText + "__" + intervalDetails);
+            return intervalDetails.contains(weekText);
+        }
+
+        if ("days".equalsIgnoreCase(interval)){
+            int days = DateUtil.diffDay(startDate, new Date());
+            int day = Integer.valueOf(intervalDetails);
+
+            Log.e("Drug", day + "__" + days);
+            return (days % day) == 0;
+        }
+
+        return true;
+    }
+
     public  String getDaysDesc(){
         HashMap<Integer, String> map = new HashMap<Integer,String>();
         map.put(-1, "按剩余剂量服用");
@@ -219,6 +244,30 @@ public class DrugPlan extends RealmObject implements Parcelable{
         return "无";
     }
 
+    /**
+     * 根据间隔小时计算当天的提醒时间
+     */
+    public void getPlanOfDays(){
+        if ("hours".equalsIgnoreCase(interval)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.setTime(new Date());
+            int day = calendar.get(Calendar.DAY_OF_YEAR);
+
+            calendar.setTime(startDate);
+            int day0 = calendar.get(Calendar.DAY_OF_YEAR);
+
+            while (day0 <= day) {
+                calendar.add(Calendar.HOUR, Integer.valueOf(intervalDetails));
+                day0 = calendar.get(Calendar.DAY_OF_YEAR);
+                if (day == day0) {
+                    Log.e("Drug", intervalDetails + "__" + sdf.format(calendar.getTime()));
+                }
+            }
+        }
+    }
+
     public void setDefaultDosageOfDay(String unit){
         List<TimeAndDosage> list = new ArrayList<TimeAndDosage>();
         list.add(new TimeAndDosage("08:00", 2, unit));
@@ -239,7 +288,7 @@ public class DrugPlan extends RealmObject implements Parcelable{
     }
 
     public void setDefaultDosageOfHours(String unit){
-        TimeAndDosage timeAndDosage = new TimeAndDosage("no", 2, unit);
+        TimeAndDosage timeAndDosage = new TimeAndDosage(DateUtil.getCurrentTime(), 2, unit);
         setDosages((new Gson()).toJson(timeAndDosage));
     }
 

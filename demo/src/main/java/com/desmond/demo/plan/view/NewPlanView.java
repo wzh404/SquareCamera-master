@@ -145,7 +145,7 @@ public class NewPlanView extends AbstractRecyclerView {
                     MaterialDialogUtil.showDosage(context, 2, drug.getDosage(), false, new MaterialDialogUtil.DosageCallback() {
                         @Override
                         public void onClick(final int dosage, final String unit) {
-                            plan.setDosageOfTemp("no", dosage, drug.getDosage());
+                            plan.setDosageOfTemp(DateUtil.getCurrentTime(), dosage, drug.getDosage());
                             setItemDesc("time", plan.getDosageDesc());
                             adapter.notifyDataSetChanged();
                         }

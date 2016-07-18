@@ -5,14 +5,17 @@ import android.util.Log;
 import com.desmond.demo.base.presenter.DefaultPresenter;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.action.Result;
+import com.desmond.demo.common.util.Constants;
 import com.desmond.demo.plan.model.DrugPlan;
 import com.desmond.demo.plan.view.DrugPlanView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import rx.functions.Action1;
 
 /**
@@ -65,5 +68,14 @@ public class DrugPlanPresenter extends DefaultPresenter {
                 result.get(0).setState("C");
             }
         });
+    }
+
+    public RealmResults<DrugPlan> queryPlanAsync(){
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<DrugPlan> result = realm.where(DrugPlan.class)
+                .lessThanOrEqualTo("startDate", new Date())
+                .greaterThanOrEqualTo("closeDate", new Date())
+                .findAll();
+        return result;
     }
 }

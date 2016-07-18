@@ -97,10 +97,11 @@ public class DrugFragment extends Fragment {
         result.addChangeListener(new RealmChangeListener<RealmResults<Drug>>() {
             @Override
             public void onChange(RealmResults<Drug> element) {
-                Log.e("Drug", "----onChange----" + element.size());
+//                Log.e("Drug", "----onChange----" + element.size());
                 if (query){
                     view.addItem(element);
                     query = false;
+                    result.removeChangeListener(this);
                 }
             }
         });
