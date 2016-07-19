@@ -123,6 +123,7 @@
     <color name="menu_backgroud">#f2ebedee</color>
     <color name="menu_item_dark">#f2dee1e3</color>
     <color name="menu_text">#ff555555</color>
+    <color name="bgGray">#EAEAEA</color>
     <color name="menu_border">#ffdddddd</color>
     <color name="sharecard_bg">#ffffefb8</color>
     <color name="download_progressbar_bg">#4c000000</color>

@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -166,7 +168,7 @@ public class DrugPlan extends RealmObject implements Parcelable{
     }
 
     /* 当天日期有效,过滤提醒计划 */
-    public boolean reminder(){
+    public boolean filter(){
         final String[] weeks ={"一", "二", "三", "四", "五", "六", "日"};
         if ("week".equalsIgnoreCase(interval)){
             int week = DateUtil.getCurrentWeek();
@@ -174,13 +176,17 @@ public class DrugPlan extends RealmObject implements Parcelable{
             Log.e("Drug", weekText + "__" + intervalDetails);
             return intervalDetails.contains(weekText);
         }
-
-        if ("days".equalsIgnoreCase(interval)){
+        else if ("days".equalsIgnoreCase(interval)){
             int days = DateUtil.diffDay(startDate, new Date());
             int day = Integer.valueOf(intervalDetails);
 
             Log.e("Drug", day + "__" + days);
             return (days % day) == 0;
+        }
+        else if ("temp".equalsIgnoreCase(interval)){
+            int days = DateUtil.diffDay(startDate, new Date());
+
+            return days == 0;
         }
 
         return true;
@@ -247,10 +253,16 @@ public class DrugPlan extends RealmObject implements Parcelable{
     /**
      * 根据间隔小时计算当天的提醒时间
      */
-    public void getPlanOfDays(){
-        if ("hours".equalsIgnoreCase(interval)) {
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+    public void createCurrentReminder(TreeMap<String, List<String>> map){
+        if (! filter()) return;
 
+        if ("hours".equalsIgnoreCase(interval)) {
+            Gson gson = new Gson();
+            JsonElement jsonElement = gson.fromJson(dosages, JsonElement.class);
+            int dosage = jsonElement.getAsJsonObject().get("dosages").getAsInt();
+            String unit = jsonElement.getAsJsonObject().get("unit").getAsString();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             GregorianCalendar calendar = new GregorianCalendar();
             calendar.setTime(new Date());
             int day = calendar.get(Calendar.DAY_OF_YEAR);
@@ -262,9 +274,48 @@ public class DrugPlan extends RealmObject implements Parcelable{
                 calendar.add(Calendar.HOUR, Integer.valueOf(intervalDetails));
                 day0 = calendar.get(Calendar.DAY_OF_YEAR);
                 if (day == day0) {
-                    Log.e("Drug", intervalDetails + "__" + sdf.format(calendar.getTime()));
+                    String time = sdf.format(calendar.getTime());
+                    List<String> list = map.get(time);
+                    if (list == null){
+                        list = new ArrayList<String>();
+                    }
+                    list.add(drug.getName() + "," + dosage + unit);
+                    map.put(time, list);
                 }
             }
+        }
+        else if ("everyday".equalsIgnoreCase(interval) ||
+                 "week".equalsIgnoreCase(interval) ||
+                 "days".equalsIgnoreCase(interval)){
+            Gson gson = new Gson();
+            JsonElement jsonElement = gson.fromJson(dosages, JsonElement.class);
+            for (JsonElement element : jsonElement.getAsJsonArray()) {
+                String time = element.getAsJsonObject().get("time").getAsString();
+                String unit = element.getAsJsonObject().get("unit").getAsString();
+                int dosage = element.getAsJsonObject().get("dosages").getAsInt();
+
+                List<String> list = map.get(time);
+                if (list == null){
+                    list = new ArrayList<String>();
+                }
+                list.add(drug.getName() + "," + dosage + unit);
+                map.put(time, list);
+            }
+        }
+        else if ("temp".equalsIgnoreCase(interval)){
+            Gson gson = new Gson();
+            JsonElement element = gson.fromJson(dosages, JsonElement.class);
+
+            String time = element.getAsJsonObject().get("time").getAsString();
+            String unit = element.getAsJsonObject().get("unit").getAsString();
+            int dosage = element.getAsJsonObject().get("dosages").getAsInt();
+
+            List<String> list = map.get(time);
+            if (list == null){
+                list = new ArrayList<String>();
+            }
+            list.add(drug.getName() + "," + dosage + unit);
+            map.put(time, list);
         }
     }
 

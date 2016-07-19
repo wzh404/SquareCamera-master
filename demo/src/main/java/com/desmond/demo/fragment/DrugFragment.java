@@ -58,7 +58,7 @@ public class DrugFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        Log.e("Drug", "----onCreateView----");
+//        Log.e("Drug", "----onCreateView----");
         this.context = getContext();
         this.presenter = new DrugPresenter(drugAction1);
         this.view = new DrugView(context, null, new DrugOnClickListener());
@@ -124,14 +124,14 @@ public class DrugFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("Drug", "----onCreate----");
+//        Log.e("Drug", "----onCreate----");
         setHasOptionsMenu(true);
         createProgressDialog(false);
     }
 
     @Override
     public void onStop(){
-        Log.e("Drug", "----onStop----");
+//        Log.e("Drug", "----onStop----");
         if (realmAsyncTask != null && !realmAsyncTask.isCancelled()) {
             realmAsyncTask.cancel();
         }
@@ -142,7 +142,7 @@ public class DrugFragment extends Fragment {
 
     @Override
     public void onDestroy(){
-        Log.e("Drug", "----OnDestroy----");
+//        Log.e("Drug", "----OnDestroy----");
         this.presenter.destroy();
         super.onDestroy();
     }

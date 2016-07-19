@@ -10,7 +10,6 @@
         android:id="@+id/item_drug_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:background="@drawable/layout_selector"
         android:clickable="true"
         android:longClickable="true">
@@ -22,6 +21,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
             android:src="@mipmap/ic_jiaolang" />
 
         <RelativeLayout
@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
             android:layout_toRightOf="@id/item_drug_form"
             android:orientation="vertical">
 
@@ -57,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/drug_name"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:text="@{drug.company}"
@@ -116,6 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp"
                 android:layout_below="@+id/drug_no"
                 android:background="@color/common_line_gray"></View>
         </RelativeLayout>

@@ -19,6 +19,11 @@ import com.desmond.demo.plan.view.DrugPlanItemView;
 import com.desmond.demo.plan.view.DrugPlanView;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -41,18 +46,23 @@ public class PlanFragment extends Fragment {
         presenter = new DrugPlanPresenter(drugPlanAction1);
         view = new DrugPlanView(getContext(), container, presenter.getItems(), clickListener);
 
-        RealmResults<DrugPlan> result = presenter.queryPlanAsync();
-        Log.e("Drug", "----queryPlanAsync----" + result.size());
-        for (DrugPlan plan : result) {
-            plan.getPlanOfDays();
-            Log.e("Drug", "reminder----" + plan.reminder());
-        }
+//        result = presenter.queryPlanAsync();
 //        result.addChangeListener(new RealmChangeListener<RealmResults<DrugPlan>>() {
 //            @Override
 //            public void onChange(RealmResults<DrugPlan> element) {
-//                Log.e("Drug", "----onChange----" + element.size());
-//                for (DrugPlan plan : element){
-//                    Log.e("Drug", "----" + plan.reminder());
+////                Log.e("Drug", "----queryPlanAsync----" + result.size());
+//                TreeMap<String, List<String>> map = new TreeMap<>();
+//                for (DrugPlan plan : result) {
+//                    plan.createCurrentReminder(map);
+//                }
+//
+//                for (Map.Entry<String, List<String>>  entry: map.entrySet()){
+//                    String key = entry.getKey();
+//                    List<String> val = entry.getValue();
+//
+//                    for (String s : val){
+//                        Log.e("Drug", key + " : " + s);
+//                    }
 //                }
 //                result.removeChangeListener(this);
 //            }
@@ -70,7 +80,7 @@ public class PlanFragment extends Fragment {
         @Override
         public void call(Result result) {
             if (result.isResult("plan", "OK")) {
-                Log.e(PlanFragment.class.getSimpleName(), "---------" + result.getMsg());
+//                Log.e(PlanFragment.class.getSimpleName(), "---------" + result.getMsg());
                 Long id = Long.parseLong(result.getMsg());
 
                 Realm realm = Realm.getDefaultInstance();

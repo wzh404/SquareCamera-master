@@ -75,7 +75,7 @@ public class DrugPlanPresenter extends DefaultPresenter {
         RealmResults<DrugPlan> result = realm.where(DrugPlan.class)
                 .lessThanOrEqualTo("startDate", new Date())
                 .greaterThanOrEqualTo("closeDate", new Date())
-                .findAll();
+                .findAllAsync();
         return result;
     }
 }

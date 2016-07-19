@@ -55,7 +55,7 @@ public class DrugView extends AbstractSwipeRefresh {
     }
 
     public void addItem(Drug drug){
-        Log.e("Drug", "----addItem1----");
+//        Log.e("Drug", "----addItem1----");
         if (items.size() == 1 && items.get(0).getId().intValue() == 0){
             items.clear();
         }
@@ -68,7 +68,7 @@ public class DrugView extends AbstractSwipeRefresh {
         if (drugs.size() == 0)
             return;
 
-        Log.e("Drug", "----addItem2----");
+//        Log.e("Drug", "----addItem2----");
         if (items.size() == 1 && items.get(0).getId().intValue() == 0){
             items.clear();
         }

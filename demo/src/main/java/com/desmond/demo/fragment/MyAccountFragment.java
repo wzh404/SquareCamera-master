@@ -14,8 +14,20 @@ import com.desmond.demo.R;
 import com.desmond.demo.base.adapter.DefaultItemRecyclerAdapter;
 import com.desmond.demo.base.view.SpacesItemDecoration;
 import com.desmond.demo.common.util.AndroidUtil;
+import com.desmond.demo.plan.model.DrugPlan;
+import com.desmond.demo.reminder.ReminderPresenter;
+import com.desmond.demo.reminder.adapter.ReminderRecyclerAdapter;
+import com.desmond.demo.reminder.model.Reminder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * 用药
@@ -23,23 +35,64 @@ import com.google.gson.JsonParser;
  * Created by wangzunhui on 2016/6/2.
  */
 public class MyAccountFragment extends Fragment {
+    private ReminderPresenter presenter;
+    private RealmResults<DrugPlan> result;
+    private RecyclerView recyclerView;
+    private List<Reminder> items = new ArrayList<>();
+    private RecyclerView.Adapter adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
+        Reminder empty = new Reminder();
+        items.add(empty);
+
         View view = inflater.inflate(R.layout.fragment_my_account, null);
         Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
-        toolbar.setTitle("账户中心");
+        toolbar.setTitle("我的提醒");
         toolbar.inflateMenu(R.menu.menu_my_account);
 
-        String json = AndroidUtil.getFromAssets(getContext(), "my_account.json");
-        JsonArray items = (new JsonParser()).parse(json).getAsJsonArray();
-
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.my_account_recycler_view);
+        recyclerView = (RecyclerView)view.findViewById(R.id.my_account_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new SpacesItemDecoration(0));
+        adapter = new ReminderRecyclerAdapter(getContext(), items);
+        recyclerView.setAdapter(adapter);
 
-        recyclerView.setAdapter(new DefaultItemRecyclerAdapter(getContext(), items, null));
+        this.presenter = new ReminderPresenter();
+        result = presenter.queryPlanAsync();
+        result.addChangeListener(new RealmChangeListener<RealmResults<DrugPlan>>() {
+            @Override
+            public void onChange(RealmResults<DrugPlan> element) {
+                TreeMap<String, List<String>> map = new TreeMap<>();
+                for (DrugPlan plan : result) {
+                    plan.createCurrentReminder(map);
+                }
+
+                items.clear();
+                for (Map.Entry<String, List<String>>  entry: map.entrySet()){
+                    String key = entry.getKey();
+                    List<String> val = entry.getValue();
+
+                    String content = "";
+                    for (String s : val){
+                        if (! "".equalsIgnoreCase(content)){
+                            content += "\n";
+                        }
+                        content +=  s;
+                    }
+                    Reminder r = new Reminder();
+                    r.setTime(key);
+                    r.setReminders(content);
+                    Log.e("Drug", r.getTime() + " ---- " + r.getReminders());
+
+                    items.add(r);
+                }
+                adapter.notifyDataSetChanged();
+                result.removeChangeListener(this);
+            }
+        });
+
 
         return view;
     }

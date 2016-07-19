@@ -171,26 +171,41 @@ public class NewPlanView extends AbstractRecyclerView {
                     case 0:
                         plan.setDays(-1);  // 剩余剂量服用时间
                         plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 0));
+
+                        setItemDesc("days", "库存不足");
+                        adapter.notifyDataSetChanged();
                         break;
 
                     case 1:
                         plan.setDays(-2); // 持续服用
                         plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 365));
+
+                        setItemDesc("days", "一年");
+                        adapter.notifyDataSetChanged();
                         break;
 
                     case 2:
                         plan.setDays(3);  // 3天
                         plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 3));
+
+                        setItemDesc("days", "3天");
+                        adapter.notifyDataSetChanged();
                         break;
 
                     case 3:
                         plan.setDays(7);  // 一周
                         plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 7));
+
+                        setItemDesc("days", "7天");
+                        adapter.notifyDataSetChanged();
                         break;
 
                     case 4:
                         plan.setDays(30); // 一月
                         plan.setCloseDate(DateUtil.addDate(plan.getStartDate(), 30));
+
+                        setItemDesc("days", "30天");
+                        adapter.notifyDataSetChanged();
                         break;
 
                     case 5:
