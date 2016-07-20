@@ -9,17 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.desmond.demo.R;
-import com.desmond.demo.base.adapter.DefaultItemRecyclerAdapter;
 import com.desmond.demo.base.view.SpacesItemDecoration;
-import com.desmond.demo.common.util.AndroidUtil;
+import com.desmond.demo.common.action.Result;
 import com.desmond.demo.plan.model.DrugPlan;
-import com.desmond.demo.reminder.ReminderPresenter;
+import com.desmond.demo.reminder.presenter.ReminderPresenter;
 import com.desmond.demo.reminder.adapter.ReminderRecyclerAdapter;
 import com.desmond.demo.reminder.model.Reminder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +26,7 @@ import java.util.TreeMap;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import rx.functions.Action1;
 
 /**
  * 用药
@@ -59,7 +58,36 @@ public class MyAccountFragment extends Fragment {
         adapter = new ReminderRecyclerAdapter(getContext(), items);
         recyclerView.setAdapter(adapter);
 
-        this.presenter = new ReminderPresenter();
+        this.presenter = new ReminderPresenter(reminderAction1);
+        createReminderItems();
+
+        return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.destroy();
+    }
+
+    private Action1 reminderAction1 = new Action1<Result>() {
+        @Override
+        public void call(Result result) {
+            if (result.isResult("reminder", "OK")) {
+                createReminderItems();
+            } else {
+                Toast.makeText(getContext(), result.getMsg(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+    private void createReminderItems(){
         result = presenter.queryPlanAsync();
         result.addChangeListener(new RealmChangeListener<RealmResults<DrugPlan>>() {
             @Override
@@ -84,7 +112,7 @@ public class MyAccountFragment extends Fragment {
                     Reminder r = new Reminder();
                     r.setTime(key);
                     r.setReminders(content);
-                    Log.e("Drug", r.getTime() + " ---- " + r.getReminders());
+//                    Log.e("Drug", r.getTime() + " ---- " + r.getReminders());
 
                     items.add(r);
                 }
@@ -92,14 +120,5 @@ public class MyAccountFragment extends Fragment {
                 result.removeChangeListener(this);
             }
         });
-
-
-        return view;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 }

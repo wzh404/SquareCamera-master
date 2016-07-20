@@ -14,7 +14,7 @@
         android:background="@drawable/layout_selector"
         android:clickable="true">
 
-        <TextView
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/drug_plan_start_date"
@@ -27,16 +27,21 @@
             android:fontFamily="sans-serif"
             android:padding="2dp"
             android:background="@color/primary"
-            android:textSize="36sp"/>
+            android:textSize="36sp"/>-->
+        <!--<View-->
+            <!--android:id="@+id/item_v1_line"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0.5dp"-->
+            <!--android:background="@color/common_line_gray"></View>-->
 
         <TextView
             android:id="@+id/drug_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{plan.drug.name}"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/drug_plan_start_date"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
@@ -47,7 +52,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
             android:text="@{plan.getRestOfDay()}"
-            android:layout_marginTop="16dp"
+            android:layout_alignBottom="@id/drug_name"
             android:textColor="@android:color/darker_gray"
             android:textSize="13sp" />
 
@@ -56,20 +61,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/drug_name"
-            android:layout_toRightOf="@+id/drug_plan_start_date"
             android:layout_marginRight="16dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="16dp"
             android:text="@{plan.getIntervalDesc() + ',' + plan.getDosageDesc()}"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:textColor="@android:color/darker_gray"
             android:textSize="13sp" />
 
-        <View
-            android:id="@+id/item_v1_line"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="8dp"
-            android:layout_below="@+id/drug_plan_start_date"
-            android:background="@color/common_line_gray"></View>
+
     </RelativeLayout>
 </layout>

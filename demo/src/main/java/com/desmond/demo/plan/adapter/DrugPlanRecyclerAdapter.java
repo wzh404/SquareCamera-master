@@ -11,6 +11,7 @@ import com.desmond.demo.box.view.DrugItemView;
 import com.desmond.demo.base.view.RecyclerViewHolder;
 import com.desmond.demo.plan.model.DrugPlan;
 import com.desmond.demo.plan.view.DrugPlanItemView;
+import com.desmond.demo.plan.view.PlanGroupItemView;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
 public class DrugPlanRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     final int defaultType = 1;
     final int emptyType = 0;
+    final int groupType = 2;
 
     private List<DrugPlan> items;
     private Context context;
@@ -38,6 +40,11 @@ public class DrugPlanRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHo
             v.setHintText(R.mipmap.empty_plan, R.string.empty_plan);
             return new RecyclerViewHolder(v);
         }
+        else if (viewType == groupType){
+            PlanGroupItemView v = new PlanGroupItemView(context, parent);
+
+            return new RecyclerViewHolder(v);
+        }
 
         return new RecyclerViewHolder(new DrugPlanItemView(context, parent));
     }
@@ -47,9 +54,11 @@ public class DrugPlanRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHo
         if (holder.getItemViewType() == emptyType)
             return;
 
-        DrugPlan plan = items.get(position);
-        DrugPlanItemView view = (DrugPlanItemView)holder.getIView();
-        view.setOnClick(plan, clickListener);
+        if (holder.getItemViewType() == defaultType) {
+            DrugPlan plan = items.get(position);
+            DrugPlanItemView view = (DrugPlanItemView) holder.getIView();
+            view.setOnClick(plan, clickListener);
+        }
 
         holder.getBinding().setVariable(BR.plan, items.get(position));
         holder.getBinding().executePendingBindings();
@@ -62,9 +71,11 @@ public class DrugPlanRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHo
 
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position).getId() == 0)
+        if (items.get(position).getId().longValue() == 0L)
             return emptyType;
-
+        else if (items.get(position).getId().longValue() == -1L){
+            return groupType;
+        }
         return defaultType;
     }
 }

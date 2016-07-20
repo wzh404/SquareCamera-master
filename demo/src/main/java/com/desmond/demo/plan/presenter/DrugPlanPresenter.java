@@ -6,6 +6,7 @@ import com.desmond.demo.base.presenter.DefaultPresenter;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.action.Result;
 import com.desmond.demo.common.util.Constants;
+import com.desmond.demo.common.util.DateUtil;
 import com.desmond.demo.plan.model.DrugPlan;
 import com.desmond.demo.plan.view.DrugPlanView;
 
@@ -30,7 +31,8 @@ public class DrugPlanPresenter extends DefaultPresenter {
     public List<DrugPlan> getItems() {
         List<DrugPlan> items = new ArrayList<>();
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<DrugPlan> result = realm.where(DrugPlan.class).findAll();
+        RealmResults<DrugPlan> result = realm.where(DrugPlan.class)
+                .findAllSorted("startDate", Sort.DESCENDING);
 
         if (result.size() <= 0) {
             DrugPlan plan = new DrugPlan();
@@ -38,7 +40,17 @@ public class DrugPlanPresenter extends DefaultPresenter {
             items.add(plan);
         }
         else{
+            String date = "00-00";
             for (DrugPlan plan : result){
+                String d = DateUtil.getDate(plan.getStartDate());
+                if (! date.equalsIgnoreCase(d)){
+                    DrugPlan plan1 = new DrugPlan();
+                    plan1.setStartDate(plan.getStartDate());
+                    plan1.setId(-1L);
+                    items.add(plan1);
+
+                    date = d;
+                }
                 items.add(plan);
             }
         }
@@ -57,25 +69,25 @@ public class DrugPlanPresenter extends DefaultPresenter {
         });
     }
 
-    public void cancelPlan(final DrugPlan plan){
-        Realm realm = Realm.getDefaultInstance();
-        final RealmResults<DrugPlan> result = realm.where(DrugPlan.class).equalTo("id", plan.getId()).findAll();
-        if (result.size() <= 0) return;
-
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                result.get(0).setState("C");
-            }
-        });
-    }
-
-    public RealmResults<DrugPlan> queryPlanAsync(){
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<DrugPlan> result = realm.where(DrugPlan.class)
-                .lessThanOrEqualTo("startDate", new Date())
-                .greaterThanOrEqualTo("closeDate", new Date())
-                .findAllAsync();
-        return result;
-    }
+//    public void cancelPlan(final DrugPlan plan){
+//        Realm realm = Realm.getDefaultInstance();
+//        final RealmResults<DrugPlan> result = realm.where(DrugPlan.class).equalTo("id", plan.getId()).findAll();
+//        if (result.size() <= 0) return;
+//
+//        realm.executeTransaction(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                result.get(0).setState("C");
+//            }
+//        });
+//    }
+//
+//    public RealmResults<DrugPlan> queryPlanAsync(){
+//        Realm realm = Realm.getDefaultInstance();
+//        RealmResults<DrugPlan> result = realm.where(DrugPlan.class)
+//                .lessThanOrEqualTo("startDate", new Date())
+//                .greaterThanOrEqualTo("closeDate", new Date())
+//                .findAllAsync();
+//        return result;
+//    }
 }

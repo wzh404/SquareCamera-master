@@ -65,7 +65,7 @@ public class NewPlanActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == 0 && resultCode == 9){
-            Log.e("Drug", "************" + data.getStringExtra("dosages"));
+//            Log.e("Drug", "************" + data.getStringExtra("dosages"));
             plan.setDosages(data.getStringExtra("dosages"));
         }
     }

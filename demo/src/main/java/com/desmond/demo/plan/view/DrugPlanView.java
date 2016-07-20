@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 
 import com.desmond.demo.R;
 import com.desmond.demo.base.view.AbstractSwipeRefresh;
+import com.desmond.demo.common.action.Result;
+import com.desmond.demo.common.rxbus.RxBus;
+import com.desmond.demo.common.util.DateUtil;
 import com.desmond.demo.plan.adapter.DrugPlanRecyclerAdapter;
 import com.desmond.demo.plan.model.DrugPlan;
 
@@ -58,17 +61,63 @@ public class DrugPlanView extends AbstractSwipeRefresh {
             items.clear();
         }
 
-        items.add(0, plan);
+        /* 日期分组 */
+        int groupIndex = getGroupIndex(plan);
+        if (groupIndex == -1){
+            DrugPlan p = new DrugPlan();
+            p.setId(-1L);
+            p.setStartDate(plan.getStartDate());
+            items.add(0, p);
+            groupIndex = 1;
+        }
+
+        items.add(groupIndex + 1, plan);
+        notifyReminder();
         getAdapter().notifyDataSetChanged();
     }
 
     public void deleteItem(DrugPlan plan){
+        int groupIndex = getGroupIndex(plan);
+        int itemsCount = getItemsByGroup(plan);
+        if (itemsCount == 1){
+            items.remove(groupIndex);
+        }
         items.remove(plan);
+        notifyReminder();
         getAdapter().notifyDataSetChanged();
     }
 
-//    public interface CallbackDrugPlan{
-//        public void fresh();
-//        public List<DrugPlan> getItems();
-//    }
+    private int getGroupIndex(DrugPlan plan){
+        for (int i = 0; i < items.size(); i++){
+            int days = DateUtil.diffDay(plan.getStartDate(), items.get(i).getStartDate());
+            if (days == 0 && items.get(i).getId().longValue() == -1L){
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private int getItemsByGroup(DrugPlan plan){
+        int cnt = 0;
+        for (int i = 0; i < items.size(); i++){
+            int days = DateUtil.diffDay(plan.getStartDate(), items.get(i).getStartDate());
+            if (days == 0 && items.get(i).getId().longValue() != -1L){
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
+
+    /**
+     * 通知提醒更新
+     */
+    private void notifyReminder(){
+        Result r = new Result();
+        r.setTag("reminder");
+        r.setCode("OK");
+
+        RxBus.get().post("reminder", r);
+    }
 }

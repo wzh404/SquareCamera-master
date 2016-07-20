@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="com.desmond.demo.common.util.DateUtil"/>
+        <variable
+            name="plan"
+            type="com.desmond.demo.plan.model.DrugPlan" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/item_drug_plan_root"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:clickable="false">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/drug_plan_start_date"
+            android:text="@{DateUtil.getMonthDay(plan.startDate)}"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif"
+            android:padding="3dp"
+            android:background="@drawable/text_view_radius_border"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+</layout>

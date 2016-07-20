@@ -140,7 +140,7 @@ public class DayPlanView extends AbstractRecyclerView {
                 DayPlanActivity activity = (DayPlanActivity)context;
                 Intent data = new Intent(context, NewPlanActivity.class);
                 data.putExtra("dosages", getDosages());
-                Log.e("Drug", "Destroy: " + getDosages());
+//                Log.e("Drug", "Destroy: " + getDosages());
                 activity.setResult(9, data);
 
                 activity.finish();

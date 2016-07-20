@@ -13,7 +13,7 @@ import com.desmond.demo.plan.view.DrugPlanDetailView;
  */
 public class DrugPlanDetailActivity extends AppCompatActivity {
     private DrugPlanDetailView view;
-    private DrugPlan plan;
+//    private DrugPlan plan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
