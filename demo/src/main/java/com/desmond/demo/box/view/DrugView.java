@@ -3,7 +3,9 @@ package com.desmond.demo.box.view;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.desmond.demo.R;
@@ -19,6 +21,7 @@ import java.util.List;
  */
 public class DrugView extends AbstractSwipeRefresh {
     private List<Drug> items;
+    private Toolbar toolbar;
 //    private CallbackDrugView  callback;
     private DrugItemView.ClickListener listener;
 
@@ -26,11 +29,20 @@ public class DrugView extends AbstractSwipeRefresh {
 //        this.callback = callback;
         this.listener = listener;
         super.init(context, container, R.layout.fragment_drug_box);
+
+        toolbar = get(R.id.toolbar);
+        toolbar.setTitle("家庭药箱");
+        toolbar.inflateMenu(R.menu.menu_drug_box);
+
     }
 
     @Override
     public void freshData() {
 //        callback.fresh();
+    }
+
+    public void setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener listener){
+        toolbar.setOnMenuItemClickListener(listener);
     }
 
     @Override

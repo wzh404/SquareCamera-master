@@ -34,11 +34,14 @@
             android:theme="@style/ActionTheme"
             android:name="com.desmond.squarecamera.CameraActivity" />
         <activity android:name="com.desmond.demo.box.activity.DrugSettingActivity" />
+        <activity android:name="com.desmond.demo.box.activity.DrugAddActivity" />
+
         <activity android:name="com.desmond.demo.base.webview.WebViewActivity" />
 
         <activity android:name="com.desmond.demo.plan.activity.NewPlanActivity" />
         <activity android:name="com.desmond.demo.plan.activity.DayPlanActivity" />
         <activity android:name="com.desmond.demo.plan.activity.DrugPlanDetailActivity" />
+
 
         <receiver android:name="com.desmond.demo.common.broadcast.NetworkBroadCastReceiver">
             <intent-filter android:priority="20">

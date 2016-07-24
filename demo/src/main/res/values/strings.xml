@@ -15,6 +15,7 @@
     <string name="dialog_plan_date">服药开始日期</string>
 
     <string name="toolbar_drug_detail_title">药品详情</string>
+    <string name="toolbar_drug_add_title">添加药品</string>
     <string name="toolbar_new_plan_title">创建用药计划</string>
     <string name="toolbar_day_plan_title">每日用药计划</string>
     <string name="toolbar_plan_detail_title">用药计划详情</string>

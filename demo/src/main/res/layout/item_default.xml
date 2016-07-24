@@ -51,7 +51,7 @@
         <ImageView
             android:id="@+id/item_v1_more"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="12dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"

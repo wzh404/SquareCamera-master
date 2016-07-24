@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_help"
+    <item android:id="@+id/action_add_drug"
         android:title="添加"
         android:orderInCategory="1"
         app:showAsAction="always"/>

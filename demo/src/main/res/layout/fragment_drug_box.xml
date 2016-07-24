@@ -5,48 +5,47 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:background="@color/primary"
-        android:gravity="center_vertical"
-        >
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:text="药箱"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="56dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:background="@color/primary"-->
+        <!--android:gravity="center_vertical"-->
+        <!--&gt;-->
+        <!--<TextView-->
+            <!--android:id="@+id/title"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:text="药箱"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:textSize="16sp" />-->
 
-        <com.desmond.demo.common.util.IconCenterEditText
-            android:id="@+id/icet_search"
-            style="@style/StyleEditText"
-            android:layout_height="32dp"
-            android:layout_width="200dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:hint="请输入国药准字号"
-            android:textColor="@color/black"
-            android:focusableInTouchMode="true"
-            android:layout_weight="1" />
+        <!--<com.desmond.demo.common.util.IconCenterEditText-->
+            <!--android:id="@+id/icet_search"-->
+            <!--style="@style/StyleEditText"-->
+            <!--android:layout_height="32dp"-->
+            <!--android:layout_width="200dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:hint="请输入国药准字号"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:focusableInTouchMode="true"-->
+            <!--android:layout_weight="1" />-->
 
-        <ImageView
-            android:id="@+id/sao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"
-            android:gravity="right"
-            android:clickable="true"
-            android:src="@mipmap/ic_camera_white_48dp">
-
-        </ImageView>
+        <!--<ImageView-->
+            <!--android:id="@+id/sao"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="16dp"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:gravity="right"-->
+            <!--android:clickable="true"-->
+            <!--android:src="@mipmap/ic_camera_white_48dp">-->
+        <!--</ImageView>-->
         <!--<TextView-->
             <!--android:id="@+id/sao"-->
             <!--android:layout_width="wrap_content"-->
@@ -60,7 +59,11 @@
             <!--android:layout_weight="1"-->
             <!--android:gravity="right"-->
             <!--android:layout_marginRight="16dp" />-->
-    </LinearLayout>
+    <!--</LinearLayout>-->
+    <include
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/drug_box_swipe_refresh"

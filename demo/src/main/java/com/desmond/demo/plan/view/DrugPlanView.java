@@ -68,7 +68,7 @@ public class DrugPlanView extends AbstractSwipeRefresh {
             p.setId(-1L);
             p.setStartDate(plan.getStartDate());
             items.add(0, p);
-            groupIndex = 1;
+            groupIndex = 0;
         }
 
         items.add(groupIndex + 1, plan);

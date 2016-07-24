@@ -1,0 +1,44 @@
+[
+  {
+    "type": "DEFAULT",
+    "title": "国药准字号",
+    "code": "name"
+  },
+  {
+    "type": "DEFAULT",
+    "title": "扫一扫",
+    "code": "scan"
+  },
+  {
+    "type": "MARGIN"
+  },
+  {
+    "type": "TEXT",
+    "title": "感冒清热颗粒",
+    "code": "ganmao",
+    "desc": "北京同仁堂"
+  },
+  {
+    "type": "TEXT",
+    "title": "氟哌酸",
+    "code": "fopaisuan",
+    "desc": "哈药六厂"
+  },
+  {
+    "type": "TEXT",
+    "title": "吗丁啉",
+    "code": "madingling",
+    "desc": "西安杨森"
+  },
+  {
+    "type": "TEXT",
+    "title": "阿司匹林",
+    "code": "asipilin",
+    "desc": "德国拜耳"
+  },
+  {
+    "type": "BUTTON",
+    "title": "更多常用药品",
+    "code": "more"
+  }
+]

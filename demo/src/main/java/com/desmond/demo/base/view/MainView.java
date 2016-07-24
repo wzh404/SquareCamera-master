@@ -70,7 +70,7 @@ public class MainView extends AbstractView {
         List<TabBean> tabs = new ArrayList<TabBean>();
         tabs.add(new TabBean("首页", R.drawable.selector_tab_home, new DrugFragment()));
         tabs.add(new TabBean("用药", R.drawable.selector_tab_share, new PlanFragment()));
-        tabs.add(new TabBean("我的账户", R.drawable.selector_tab_me, new MyAccountFragment()));
+        tabs.add(new TabBean("我的", R.drawable.selector_tab_me, new MyAccountFragment()));
 
         return tabs;
     }

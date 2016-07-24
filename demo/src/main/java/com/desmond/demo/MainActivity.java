@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity  {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.e("Drug", "_______________NO_PERMISSION_GRANTED");
+//            Log.e("Drug", "_______________NO_PERMISSION_GRANTED");
 
 //            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},9);
             return;

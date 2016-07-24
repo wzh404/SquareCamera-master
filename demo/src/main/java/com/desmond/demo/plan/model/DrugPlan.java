@@ -214,7 +214,7 @@ public class DrugPlan extends RealmObject implements Parcelable{
             "days".equalsIgnoreCase(interval) ||
             "week".equalsIgnoreCase(interval)){
             int size = jsonElement.getAsJsonArray().size();
-            String desc = "每日" + size + "次, 每次";
+            String desc = "一日" + size + "次, 每次";
 
             int min = 0, max = 0;
             String unit = "";

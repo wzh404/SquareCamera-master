@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.desmond.demo.R;
+import com.desmond.demo.box.activity.DrugAddActivity;
 import com.desmond.demo.box.activity.DrugSettingActivity;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.box.presenter.DrugPresenter;
@@ -62,36 +65,36 @@ public class DrugFragment extends Fragment {
         this.context = getContext();
         this.presenter = new DrugPresenter(drugAction1);
         this.view = new DrugView(context, null, new DrugOnClickListener());
-        IconCenterEditText icet_search = view.get(R.id.icet_search);
-
-        icet_search.setOnSearchClickListener(new IconCenterEditText.OnSearchClickListener() {
-            @Override
-            public void onSearchClick(View view) {
-                if (view instanceof IconCenterEditText){
-                    String code = ((IconCenterEditText) view).getText().toString();
-                    if (code.length() <= 0){
-                        Toast.makeText(view.getContext(), R.string.please_input_drug_code, Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        dialog = builder.show();
-                        presenter.drug(code.toUpperCase());
-                    }
-                }
-            }
-        });
-
-        ImageView vt = view.get(R.id.sao);
-        vt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NetworkUtil.isMobileConnected(context) || NetworkUtil.isNetworkConnected(context)) {
-                    start(v);
-                }
-                else{
-                    Toast.makeText(context, "无网络连接!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        view.setOnMenuItemClickListener(menuItemClickListener);
+//        IconCenterEditText icet_search = view.get(R.id.icet_search);
+//        icet_search.setOnSearchClickListener(new IconCenterEditText.OnSearchClickListener() {
+//            @Override
+//            public void onSearchClick(View view) {
+//                if (view instanceof IconCenterEditText){
+//                    String code = ((IconCenterEditText) view).getText().toString();
+//                    if (code.length() <= 0){
+//                        Toast.makeText(view.getContext(), R.string.please_input_drug_code, Toast.LENGTH_SHORT).show();
+//                    }
+//                    else{
+//                        dialog = builder.show();
+//                        presenter.drug(code.toUpperCase());
+//                    }
+//                }
+//            }
+//        });
+//
+//        ImageView vt = view.get(R.id.sao);
+//        vt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (NetworkUtil.isMobileConnected(context) || NetworkUtil.isNetworkConnected(context)) {
+//                    start(v);
+//                }
+//                else{
+//                    Toast.makeText(context, "无网络连接!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         result = this.presenter.queryDrugAsync();
         result.addChangeListener(new RealmChangeListener<RealmResults<Drug>>() {
@@ -108,6 +111,24 @@ public class DrugFragment extends Fragment {
 
         return view.getView();
     }
+
+    Toolbar.OnMenuItemClickListener menuItemClickListener = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.action_add_drug:
+//                    if (NetworkUtil.isMobileConnected(context) || NetworkUtil.isNetworkConnected(context)) {
+//
+//                    }
+//                    else{
+//                        Toast.makeText(context, "无网络连接!", Toast.LENGTH_SHORT).show();
+//                    }
+                    launchDrugAddActivity();
+                    break;
+            }
+            return true;
+        }
+    };
 
     private void createProgressDialog(boolean horizontal) {
         builder = new MaterialDialog.Builder(getContext())
@@ -158,9 +179,9 @@ public class DrugFragment extends Fragment {
         }
     }
 
-    public void start(View view){
+    public void start(){
         final String permission = Manifest.permission.CAMERA;
-        if (ContextCompat.checkSelfPermission(view.getContext(), permission)
+        if (ContextCompat.checkSelfPermission(getContext(), permission)
                 != PackageManager.PERMISSION_GRANTED) {
             requestForPermission(permission);
         } else {
@@ -175,6 +196,11 @@ public class DrugFragment extends Fragment {
     private void launch() {
         Intent startCustomCameraIntent = new Intent(getContext(), CameraActivity.class);
         startActivityForResult(startCustomCameraIntent, 0);
+    }
+
+    private void launchDrugAddActivity() {
+        Intent intent = new Intent(getContext(), DrugAddActivity.class);
+        startActivityForResult(intent, 0);
     }
 
     private Action1 drugAction1 = new Action1<Result>() {
