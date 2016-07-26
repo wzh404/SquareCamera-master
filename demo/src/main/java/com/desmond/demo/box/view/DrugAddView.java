@@ -5,14 +5,17 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.desmond.demo.R;
 import com.desmond.demo.base.adapter.DefaultItemRecyclerAdapter;
 import com.desmond.demo.base.view.AbstractRecyclerView;
 import com.desmond.demo.base.view.IView;
+import com.desmond.demo.box.activity.DrugAddActivity;
 import com.desmond.demo.box.model.Drug;
 import com.desmond.demo.common.util.AndroidUtil;
+import com.desmond.demo.common.util.MaterialDialogUtil;
 import com.desmond.demo.plan.activity.NewPlanActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -63,10 +66,34 @@ public class DrugAddView extends AbstractRecyclerView {
         addItemProperty(code, "desc", desc);
     }
 
-
     private OnSelectListener listener = new OnSelectListener(){
         @Override
         public void onSelected(IView view, final String code, final int selected, final String... arg) {
+            Log.e("Drug", "----------------" + code);
+
+            if ("name".equalsIgnoreCase(code)){
+                MaterialDialogUtil.showInputDrugCode(view.getView().getContext(), new MaterialDialogUtil.InputCallback() {
+                    @Override
+                    public void onClick(String value) {
+                        if (context instanceof DrugAddActivity){
+                            ((DrugAddActivity)context).queryDrugAndFinish(value);
+                        }
+                    }
+                });
+            }
+            else if ("scan".equalsIgnoreCase(code)){
+                if (context instanceof DrugAddActivity){
+                    ((DrugAddActivity)context).scan();
+                }
+            }
+            else if ("more".equalsIgnoreCase(code)){
+
+            }
+            else if (code.length() == 9){
+                if (context instanceof DrugAddActivity){
+                    ((DrugAddActivity)context).queryDrugAndFinish(code);
+                }
+            }
         }
     };
 

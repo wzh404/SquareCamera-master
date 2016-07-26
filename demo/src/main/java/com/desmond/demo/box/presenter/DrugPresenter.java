@@ -32,7 +32,6 @@ public class DrugPresenter extends DefaultPresenter {
         call(observable, "drug");
     }
 
-
     public void deleteDrug(final Drug drug){
         Realm realm = Realm.getDefaultInstance();
         final RealmResults<Drug> result = realm.where(Drug.class).equalTo("id", drug.getId()).findAll();

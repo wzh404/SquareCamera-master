@@ -204,6 +204,25 @@ public class MaterialDialogUtil {
                 .show();
     }
 
+    public static void showInputDrugCode(Context context, final MaterialDialogUtil.InputCallback callback) {
+        new MaterialDialog.Builder(context)
+                .title("输入")
+                .content("请输入药品国药准字号)")
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .inputRange(9, 10)
+                .positiveText("查询")
+                .input("间隔天数", "", false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        callback.onClick(input.toString());
+                    }
+                })
+                .backgroundColorRes(R.color.white)
+                .contentColorRes(R.color.black)
+                .titleColorRes(R.color.primary)
+                .show();
+    }
+
 
     public interface TimeAndDosageCallback{
         public void onClick(String time, int dosage);

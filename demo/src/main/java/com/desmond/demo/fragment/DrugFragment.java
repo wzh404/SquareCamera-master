@@ -175,28 +175,28 @@ public class DrugFragment extends Fragment {
         if (requestCode == REQUEST_CAMERA) {
             dialog = builder.show();
             String code = data.getStringExtra("code");
-            this.presenter.drug(code);
+            this.presenter.drug(code.toUpperCase());
         }
     }
 
-    public void start(){
-        final String permission = Manifest.permission.CAMERA;
-        if (ContextCompat.checkSelfPermission(getContext(), permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestForPermission(permission);
-        } else {
-            launch();
-        }
-    }
-
-    private void requestForPermission(final String permission) {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, 1);
-    }
-
-    private void launch() {
-        Intent startCustomCameraIntent = new Intent(getContext(), CameraActivity.class);
-        startActivityForResult(startCustomCameraIntent, 0);
-    }
+//    public void start(){
+//        final String permission = Manifest.permission.CAMERA;
+//        if (ContextCompat.checkSelfPermission(getContext(), permission)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            requestForPermission(permission);
+//        } else {
+//            launch();
+//        }
+//    }
+//
+//    private void requestForPermission(final String permission) {
+//        ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, 1);
+//    }
+//
+//    private void launch() {
+//        Intent startCustomCameraIntent = new Intent(getContext(), CameraActivity.class);
+//        startActivityForResult(startCustomCameraIntent, 0);
+//    }
 
     private void launchDrugAddActivity() {
         Intent intent = new Intent(getContext(), DrugAddActivity.class);

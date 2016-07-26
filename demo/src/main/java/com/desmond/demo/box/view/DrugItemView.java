@@ -26,7 +26,7 @@ public class DrugItemView extends AbstractView {
     }
 
     public void setDrugOtc(String otc) {
-        if (otc == null) otc = "OTHER";
+        if (otc == null || "".equalsIgnoreCase(otc)) otc = "OTHER";
 
         TextView textView = get(R.id.drug_otc);
         if ("RX".equalsIgnoreCase(otc)) {
@@ -57,7 +57,7 @@ public class DrugItemView extends AbstractView {
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Drug", "----click-----");
+//                Log.e("Drug", "----click-----");
                 listener.onClick(v, drug);
             }
         });

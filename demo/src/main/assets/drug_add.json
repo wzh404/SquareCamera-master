@@ -2,39 +2,45 @@
   {
     "type": "DEFAULT",
     "title": "国药准字号",
-    "code": "name"
+    "code": "name",
+    "select": "custom"
   },
   {
     "type": "DEFAULT",
     "title": "扫一扫",
-    "code": "scan"
+    "code": "scan",
+    "select": "custom"
   },
   {
     "type": "MARGIN"
   },
   {
-    "type": "TEXT",
+    "type": "DEFAULT",
     "title": "感冒清热颗粒",
-    "code": "ganmao",
-    "desc": "北京同仁堂"
+    "code": "Z11020361",
+    "desc": "北京同仁堂",
+    "select": "custom"
   },
   {
-    "type": "TEXT",
-    "title": "氟哌酸",
-    "code": "fopaisuan",
-    "desc": "哈药六厂"
+    "type": "DEFAULT",
+    "title": "诺氟沙星胶囊",
+    "code": "H23020934",
+    "desc": "哈药集团",
+    "select": "custom"
   },
   {
-    "type": "TEXT",
+    "type": "DEFAULT",
     "title": "吗丁啉",
-    "code": "madingling",
-    "desc": "西安杨森"
+    "code": "H20033213",
+    "desc": "西安杨森",
+    "select": "custom"
   },
   {
-    "type": "TEXT",
+    "type": "DEFAULT",
     "title": "阿司匹林",
-    "code": "asipilin",
-    "desc": "德国拜耳"
+    "code": "J20130078",
+    "desc": "Bayer S.p.A.",
+    "select": "custom"
   },
   {
     "type": "BUTTON",
