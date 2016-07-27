@@ -48,6 +48,9 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
+
+        <receiver android:name="com.desmond.demo.plan.receiver.AlarmBroadcastReceiver">
+        </receiver>
     </application>
 
 </manifest>

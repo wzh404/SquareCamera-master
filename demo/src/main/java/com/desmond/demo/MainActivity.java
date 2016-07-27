@@ -2,7 +2,10 @@ package com.desmond.demo;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -16,12 +19,15 @@ import android.widget.Toast;
 
 import com.desmond.demo.base.view.MainView;
 import com.desmond.demo.common.util.NetworkUtil;
+import com.desmond.demo.plan.receiver.AlarmBroadcastReceiver;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity  {
     protected LocationManager locationManager;
     private String provider;
+    private PendingIntent sender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,8 @@ public class MainActivity extends AppCompatActivity  {
 
         locationManager.requestLocationUpdates(provider, 5000, 1, locationListener);
         Log.e("Drug", provider + "__________" + NetworkUtil.getNetworkType(this));
+
+        startAlarm();
     }
 
     @Override
@@ -70,6 +78,9 @@ public class MainActivity extends AppCompatActivity  {
             return;
         }
         locationManager.removeUpdates(locationListener);
+
+        AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        manager.cancel(sender);
     }
 
     LocationListener locationListener = new LocationListener() {
@@ -93,4 +104,22 @@ public class MainActivity extends AppCompatActivity  {
             Log.e("Drug", "_____________disabled");
         }
     };
+
+    private void startAlarm(){
+        Intent intent = new Intent(this, AlarmBroadcastReceiver.class);
+        intent.putExtra("ID", "201101");
+        sender = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        Calendar c= Calendar.getInstance();
+
+        c.set(Calendar.YEAR, 2016);
+        c.set(Calendar.MONTH, Calendar.JULY);//也可以填数字，0-11,一月为0
+        c.set(Calendar.DAY_OF_MONTH, 27);
+        c.set(Calendar.HOUR_OF_DAY, 17);
+        c.set(Calendar.MINUTE, 20);
+        c.set(Calendar.SECOND, 00);
+
+        manager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), sender);
+    }
 }
