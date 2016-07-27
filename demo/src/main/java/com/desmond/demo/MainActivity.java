@@ -22,6 +22,7 @@ import com.desmond.demo.common.util.NetworkUtil;
 import com.desmond.demo.plan.receiver.AlarmBroadcastReceiver;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity  {
@@ -112,12 +113,13 @@ public class MainActivity extends AppCompatActivity  {
 
         AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);
         Calendar c= Calendar.getInstance();
+        c.setTime(new Date());
 
-        c.set(Calendar.YEAR, 2016);
-        c.set(Calendar.MONTH, Calendar.JULY);//也可以填数字，0-11,一月为0
-        c.set(Calendar.DAY_OF_MONTH, 27);
+//        c.set(Calendar.YEAR, 2016);
+//        c.set(Calendar.MONTH, Calendar.JULY);//也可以填数字，0-11,一月为0
+//        c.set(Calendar.DAY_OF_MONTH, 27);
         c.set(Calendar.HOUR_OF_DAY, 17);
-        c.set(Calendar.MINUTE, 20);
+        c.set(Calendar.MINUTE, 30);
         c.set(Calendar.SECOND, 00);
 
         manager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), sender);
