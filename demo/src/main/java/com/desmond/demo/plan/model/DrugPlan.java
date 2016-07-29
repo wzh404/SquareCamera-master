@@ -256,7 +256,7 @@ public class DrugPlan extends RealmObject implements Parcelable{
     public void createCurrentReminder(TreeMap<String, List<String>> map){
         if (! filter()) return;
 
-        if ("hours".equalsIgnoreCase(interval)) {
+        if ("hours".equalsIgnoreCase(interval)) { // 每隔x小时
             Gson gson = new Gson();
             JsonElement jsonElement = gson.fromJson(dosages, JsonElement.class);
             int dosage = jsonElement.getAsJsonObject().get("dosages").getAsInt();
@@ -302,7 +302,7 @@ public class DrugPlan extends RealmObject implements Parcelable{
                 map.put(time, list);
             }
         }
-        else if ("temp".equalsIgnoreCase(interval)){
+        else if ("temp".equalsIgnoreCase(interval)){ // 临时性
             Gson gson = new Gson();
             JsonElement element = gson.fromJson(dosages, JsonElement.class);
 

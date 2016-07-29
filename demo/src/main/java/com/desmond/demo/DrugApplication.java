@@ -1,5 +1,6 @@
 package com.desmond.demo;
 
+import android.app.AlarmManager;
 import android.app.Application;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -63,6 +64,8 @@ public class DrugApplication extends Application {
         Realm.setDefaultConfiguration(realmConfig);
 
         initRetrofit();
+
+        AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);
     }
 
     RealmMigration migration = new RealmMigration() {
