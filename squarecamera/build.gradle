@@ -94,7 +94,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:support-v4:23.+'
     compile 'com.android.support:design:23.+'
-    compile 'com.rmtheis:tess-two:6.0.0'
+    compile 'com.rmtheis:tess-two:6.1.1'
 }
 
 task sourcesJar(type: Jar) {

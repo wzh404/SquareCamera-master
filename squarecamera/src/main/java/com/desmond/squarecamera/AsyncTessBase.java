@@ -17,6 +17,7 @@ public class AsyncTessBase {
         baseApi = new TessBaseAPI();
         File appDir = new File(Environment.getExternalStorageDirectory().getPath(), "Boohee");
         baseApi.init(appDir.toString(), "eng");
+        baseApi.setVariable("tessedit_char_whitelist", "0123456789HZSBTFJ");
     }
 
     public synchronized void end(){
