@@ -1,0 +1,25 @@
+package com.wannengyongyao.drug.common;
+
+import com.wannengyongyao.drug.util.AZBrainConstants;
+import lombok.Data;
+
+import javax.servlet.http.HttpSession;
+
+@Data
+public class ManagerSessionObject {
+    private Integer id;
+    private String name;
+
+    public static ManagerSessionObject fromSession(HttpSession session){
+        ManagerSessionObject mso = new ManagerSessionObject();
+        mso.setId((Integer)session.getAttribute(AZBrainConstants.SESSION_USER_ID));
+        mso.setName((String)session.getAttribute(AZBrainConstants.SESSION_USER_NAME));
+
+        return mso;
+    }
+
+    public static void toSession(HttpSession session, User user){
+        session.setAttribute(AZBrainConstants.SESSION_USER_ID, user.getId());
+        session.setAttribute(AZBrainConstants.SESSION_USER_NAME, user.getName());
+    }
+}
