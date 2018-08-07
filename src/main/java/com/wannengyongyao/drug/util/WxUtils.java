@@ -24,6 +24,7 @@ public class WxUtils {
     private final static Logger logger = LoggerFactory.getLogger(WxUtils.class);
     private final static String WxUrl = "https://api.weixin.qq.com/sns/jscode2session?grant_type=authorization_code";
     public  static String SESSION_KEY = "";
+
     /**
      * 根据小程序临时code，获取登录者的openid
      *

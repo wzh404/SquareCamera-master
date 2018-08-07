@@ -26,7 +26,7 @@ public class TokenUtil {
 
         String payload = new String(Base64.getEncoder().encode(json.getBytes()));
         StringBuilder token = new StringBuilder(payload);
-        String signed = CryptoUtil.sha256(payload, AZBrainConstants.DEFAULT_KEY);
+        String signed = CryptoUtil.sha256(payload, DrugConstants.DEFAULT_KEY);
         token.append(".");
         token.append(signed);
 
@@ -52,7 +52,7 @@ public class TokenUtil {
         }
 
         String signature = tokens[1];
-        String signed = CryptoUtil.sha256(tokens[0], AZBrainConstants.DEFAULT_KEY);
+        String signed = CryptoUtil.sha256(tokens[0], DrugConstants.DEFAULT_KEY);
         if (!signature.equalsIgnoreCase(signed)) {
             logger.error("Invalid signature data");
             return Optional.empty();

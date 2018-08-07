@@ -14,12 +14,12 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResultObject {
     private Integer code;
-    private String message;
+    private String errmsg;
     private Object data;
 
-    public ResultObject(Integer code, String error, Object data){
+    public ResultObject(Integer code, String errmsg, Object data){
         this.code = code;
-        this.message = error;
+        this.errmsg = errmsg;
         this.data = data;
     }
 
@@ -51,8 +51,8 @@ public class ResultObject {
         return new ResultObject(code.getCode(), null, null);
     }
 
-    public static ResultObject fail(ResultCode code, String error){
-        return new ResultObject(code.getCode(), error, null);
+    public static ResultObject fail(ResultCode code, String errmsg){
+        return new ResultObject(code.getCode(), errmsg, null);
     }
 
     public static ResultObject cond(boolean b, ResultCode r){

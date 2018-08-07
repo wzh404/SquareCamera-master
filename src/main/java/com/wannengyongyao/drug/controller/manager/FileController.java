@@ -36,7 +36,7 @@ public class FileController {
     public ResultObject upload(@RequestParam(value = "file") MultipartFile file){
         if (file.isEmpty()) {
             logger.warn("upload file is empty");
-            return ResultObject.fail(ResultCode.MANAGE_UPLOAD_FILE_FAILED);
+            return ResultObject.fail(ResultCode.UPLOAD_FILE_FAILED);
         }
 
         String fileName = file.getOriginalFilename();
@@ -53,7 +53,7 @@ public class FileController {
             return ResultObject.ok("file", iconUrl);
         } catch (Exception e) {
             logger.error("file", e);
-            return ResultObject.fail(ResultCode.MANAGE_UPLOAD_FILE_FAILED);
+            return ResultObject.fail(ResultCode.UPLOAD_FILE_FAILED);
         }
     }
 }
