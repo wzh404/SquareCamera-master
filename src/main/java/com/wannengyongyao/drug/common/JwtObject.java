@@ -9,24 +9,24 @@ import java.io.IOException;
  * C端token存储对象
  */
 @Data
-public class SessionObject {
+public class JwtObject {
     private Integer userId;
-    private String wxid;
+    private String openid;
     private Long timestamp;
 
-    public SessionObject(){
+    public JwtObject(){
         this.timestamp = System.currentTimeMillis();
     }
 
-    public SessionObject(int userId, String wxid){
+    public JwtObject(int userId, String openid){
         this.userId = userId;
-        this.wxid = wxid;
+        this.openid = openid;
         this.timestamp = System.currentTimeMillis();
     }
 
-    public static SessionObject of(String json){
+    public static JwtObject of(String json){
         try {
-            return (new ObjectMapper()).readValue(json, SessionObject.class);
+            return (new ObjectMapper()).readValue(json, JwtObject.class);
         } catch (IOException e) {
             return null;
         }

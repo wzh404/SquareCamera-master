@@ -60,14 +60,14 @@ public class LoginInterceptor implements HandlerInterceptor {
         String accessToken = request.getHeader("access_token");
         if (accessToken == null) {
             logger.info("access token is null");
-            sendJsonMessage(response, ResultObject.fail(ResultCode.PLEASE_LOGIN));
+            sendJsonMessage(response, ResultObject.fail(ResultCode.USER_PLEASE_LOGIN));
             return false;
         }
 
         int userId = TokenUtil.getUserId(accessToken);
         if (userId <= 0) {
             logger.info("userId is null");
-            sendJsonMessage(response, ResultObject.fail(ResultCode.PLEASE_LOGIN));
+            sendJsonMessage(response, ResultObject.fail(ResultCode.USER_PLEASE_LOGIN));
             return false;
         }
 
@@ -86,7 +86,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (session.getAttribute(DrugConstants.SESSION_USER_ID) == null ||
                 session.getAttribute(DrugConstants.SESSION_USER_NAME) == null) {
             logger.error("please login first.");
-            sendJsonMessage(response, ResultObject.fail(ResultCode.PLEASE_LOGIN));
+            sendJsonMessage(response, ResultObject.fail(ResultCode.USER_PLEASE_LOGIN));
             return false;
         }
 

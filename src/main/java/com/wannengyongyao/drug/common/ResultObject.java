@@ -43,16 +43,12 @@ public class ResultObject {
         return new ResultObject(ResultCode.OK.getCode(), null, null);
     }
 
-    public static ResultObject ok(Object r){
-        return new ResultObject(ResultCode.OK.getCode(), null, r);
+    public static ResultObject ok(Object o){
+        return new ResultObject(ResultCode.OK.getCode(), null, o);
     }
 
-    public static ResultObject fail(ResultCode code){
-        return new ResultObject(code.getCode(), null, null);
-    }
-
-    public static ResultObject fail(ResultCode code, String errmsg){
-        return new ResultObject(code.getCode(), errmsg, null);
+    public static ResultObject fail(ResultCode r){
+        return new ResultObject(r.getCode(), r.getMsg(), null);
     }
 
     public static ResultObject cond(boolean b, ResultCode r){

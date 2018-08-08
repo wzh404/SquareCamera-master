@@ -1,6 +1,6 @@
 package com.wannengyongyao.drug.util;
 
-import com.wannengyongyao.drug.common.SessionObject;
+import com.wannengyongyao.drug.common.JwtObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class TokenUtil {
     public static int getUserId(String accessToken){
         Optional<String> opt =  TokenUtil.decodeJwt(accessToken);
         if (opt.isPresent()){
-            return SessionObject.of(opt.get()).getUserId();
+            return JwtObject.of(opt.get()).getUserId();
         }
 
         return 0;
