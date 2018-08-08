@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wannengyongyao.drug.dao.DrugUserCartMapper">
+  <resultMap id="UserCart" type="com.wannengyongyao.drug.model.DrugUserCart">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice" />
+    <result column="goods_specifications" jdbcType="VARCHAR" property="goodsSpecifications" />
+    <result column="goods_number" jdbcType="INTEGER" property="goodsNumber" />
+    <result column="goods_vendor" jdbcType="VARCHAR" property="goodsVendor" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, goods_name, goods_price, goods_specifications, goods_number, goods_vendor, 
+    create_time
+  </sql>
+  <select id="get" parameterType="java.lang.Integer" resultMap="UserCart">
+    select 
+    <include refid="Base_Column_List" />
+    from drug_user_cart
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugUserCart">
+    insert into drug_user_cart (id, user_id, goods_name, 
+      goods_price, goods_specifications, goods_number, 
+      goods_vendor, create_time)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=BIGINT}, #{goodsName,jdbcType=VARCHAR}, 
+      #{goodsPrice,jdbcType=DECIMAL}, #{goodsSpecifications,jdbcType=VARCHAR}, #{goodsNumber,jdbcType=INTEGER}, 
+      #{goodsVendor,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+</mapper>

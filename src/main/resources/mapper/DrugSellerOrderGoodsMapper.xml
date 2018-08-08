@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wannengyongyao.drug.dao.DrugSellerOrderGoodsMapper">
+  <resultMap id="SellerOrderGoods" type="com.wannengyongyao.drug.model.DrugSellerOrderGoods">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="comp_id" jdbcType="BIGINT" property="compId" />
+    <result column="drug_id" jdbcType="INTEGER" property="drugId" />
+    <result column="drug_name" jdbcType="VARCHAR" property="drugName" />
+    <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="specifications" jdbcType="VARCHAR" property="specifications" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="manufacturer" jdbcType="VARCHAR" property="manufacturer" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, comp_id, drug_id, drug_name, unit_price, specifications, quantity, manufacturer
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="SellerOrderGoods">
+    select 
+    <include refid="Base_Column_List" />
+    from drug_seller_order_goods
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugSellerOrderGoods">
+    insert into drug_seller_order_goods (id, comp_id, drug_id, 
+      drug_name, unit_price, specifications, 
+      quantity, manufacturer)
+    values (#{id,jdbcType=INTEGER}, #{compId,jdbcType=BIGINT}, #{drugId,jdbcType=INTEGER}, 
+      #{drugName,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DECIMAL}, #{specifications,jdbcType=VARCHAR}, 
+      #{quantity,jdbcType=INTEGER}, #{manufacturer,jdbcType=VARCHAR})
+  </insert>
+
+</mapper>

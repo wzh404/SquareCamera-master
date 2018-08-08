@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wannengyongyao.drug.dao.DrugCityMapper">
+  <resultMap id="City" type="com.wannengyongyao.drug.model.DrugCity">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, code, name
+  </sql>
+  <select id="get" parameterType="java.lang.Integer" resultMap="City">
+    select 
+    <include refid="Base_Column_List" />
+    from drug_city
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugCity">
+    insert into drug_city (id, code, name
+      )
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
+      )
+  </insert>
+</mapper>

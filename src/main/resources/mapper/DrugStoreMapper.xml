@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wannengyongyao.drug.dao.DrugStoreMapper">
+  <resultMap id="Store" type="com.wannengyongyao.drug.model.DrugStore">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="classify" jdbcType="VARCHAR" property="classify" />
+    <result column="company_address" jdbcType="VARCHAR" property="companyAddress" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="district" jdbcType="VARCHAR" property="district" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="last_updated_time" jdbcType="TIMESTAMP" property="lastUpdatedTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, name, classify, company_address, province, city, district, remark, create_time, 
+    last_updated_time, status
+  </sql>
+
+  <select id="get" parameterType="java.lang.Integer" resultMap="Store">
+    select 
+    <include refid="Base_Column_List" />
+    from drug_store
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugStore">
+    insert into drug_store (id, name, classify, 
+      company_address, province, city, 
+      district, remark, create_time, 
+      last_updated_time, status, geom
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{classify,jdbcType=VARCHAR}, 
+      #{companyAddress,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{district,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastUpdatedTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{geom,jdbcType=BINARY}
+      )
+  </insert>
+
+</mapper>
