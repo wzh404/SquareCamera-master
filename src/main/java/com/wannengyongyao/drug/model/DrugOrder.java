@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -40,15 +41,15 @@ public class DrugOrder  {
 
     private String shippingWay;
 
-    private Date payTime;
+    private LocalDateTime payTime;
 
-    private Date shippingTime;
+    private LocalDateTime shippingTime;
 
-    private Date signTime;
+    private LocalDateTime signTime;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    private Date confirmTime;
+    private LocalDateTime confirmTime;
 
     private Integer orderStatus;
 
@@ -58,6 +59,7 @@ public class DrugOrder  {
 
     private String shippingId;
 
+    // 抢单数
     private Integer sellerNum;
 
     private String collectionStore;

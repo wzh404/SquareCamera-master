@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class DrugOrderImage implements Serializable {
+public class DrugOrderImage {
     private Long id;
 
     private Long orderId;

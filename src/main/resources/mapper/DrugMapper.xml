@@ -39,4 +39,28 @@
       #{otc,jdbcType=VARCHAR}, #{validityDay,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{book,jdbcType=LONGVARCHAR})
   </insert>
+
+  <select id="search" resultType="com.wannengyongyao.drug.model.Drug">
+    SELECT
+      id,
+      `name`,
+      specifications,
+      manufacturer
+    FROM
+      drug
+    WHERE
+      `name` LIKE CONCAT('%',#{name},'%')
+  </select>
+
+  <select id="get" resultType="com.wannengyongyao.drug.model.Drug">
+      SELECT
+        id,
+        `name`,
+        specifications,
+        manufacturer
+      FROM
+        drug
+      WHERE
+        id = #{id}
+  </select>
 </mapper>

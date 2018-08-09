@@ -18,9 +18,15 @@
   </select>
 
   <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugOrderImage">
-    insert into drug_order_image (id, order_id, image_url, 
+    insert into drug_order_image (
+      id,
+      order_id,
+      image_url,
       create_time)
-    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{imageUrl,jdbcType=VARCHAR}, 
+    values (
+      #{id,jdbcType=BIGINT},
+      #{orderId,jdbcType=BIGINT},
+      #{imageUrl,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
 
