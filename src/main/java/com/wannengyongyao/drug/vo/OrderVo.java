@@ -24,9 +24,6 @@ public class OrderVo {
     // 代收药店
     private Integer storeId;
 
-    // 药品信息
-    List<DrugVo> drugs;
-
     // 订单信息
     public DrugOrder asOrder(){
         DrugOrder order = new DrugOrder();
@@ -45,19 +42,5 @@ public class OrderVo {
         order.setLogisticsStatus(0);
 
         return order;
-    }
-
-    // 订单药品信息
-    public List<DrugOrderGoods> asGoods(){
-        List<DrugOrderGoods> goods = new ArrayList<>();
-        for (DrugVo d : drugs){
-            DrugOrderGoods g = new DrugOrderGoods();
-            g.setDrugId(d.getId());
-            g.setQuantity(d.getQuantity());
-
-            goods.add(g);
-        }
-
-        return goods;
     }
 }
