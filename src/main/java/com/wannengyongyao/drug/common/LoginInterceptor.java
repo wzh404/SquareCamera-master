@@ -42,7 +42,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             managerUri = contextPath + managerUri;
         }
 
-        logger.info(managerUri);
         if (request.getRequestURI().startsWith(managerUri)) {
             return managerHandle(request, response);
         } else {
@@ -59,12 +58,12 @@ public class LoginInterceptor implements HandlerInterceptor {
     private boolean userHandle(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = request.getHeader("access_token");
         if (accessToken == null) {
-            logger.info("access token is null");
+            logger.info("access_token is null");
             sendJsonMessage(response, ResultObject.fail(ResultCode.USER_PLEASE_LOGIN));
             return false;
         }
 
-        int userId = TokenUtil.getUserId(accessToken);
+        long userId = TokenUtil.getUserId(accessToken);
         if (userId <= 0) {
             logger.info("userId is null");
             sendJsonMessage(response, ResultObject.fail(ResultCode.USER_PLEASE_LOGIN));

@@ -29,14 +29,51 @@
     <result column="shipping_id" jdbcType="VARCHAR" property="shippingId" />
     <result column="seller_num" jdbcType="INTEGER" property="sellerNum" />
     <result column="collection_store" jdbcType="VARCHAR" property="collectionStore" />
-    <result column="contacts" jdbcType="VARCHAR" property="contacts" />
+    <result column="collection_store_id" jdbcType="INTEGER" property="collectionStoreId" />
+
+    <collection property="drugs" ofType="com.wannengyongyao.drug.model.DrugOrderGoods">
+      <id column="d_id" jdbcType="INTEGER" property="id" />
+      <result column="order_id" jdbcType="BIGINT" property="orderId" />
+      <result column="drug_id" jdbcType="INTEGER" property="drugId" />
+      <result column="drug_name" jdbcType="VARCHAR" property="drugName" />
+      <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+      <result column="specifications" jdbcType="VARCHAR" property="specifications" />
+      <result column="quantity" jdbcType="INTEGER" property="quantity" />
+      <result column="manufacturer" jdbcType="VARCHAR" property="manufacturer" />
+      <result column="photos" jdbcType="VARCHAR" property="photos" />
+      <result column="remark" jdbcType="VARCHAR" property="remark" />
+      <result column="d_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </collection>
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, user_name, seller_id, seller_name, seller_store_id, seller_store_name, 
-    payment, pay_amount, order_amount, reward_amount, discount_amount, expected_amount, 
-    service_charge, freight, shipping_way, pay_time, shipping_time, sign_time, create_time, 
-    confirm_time, order_status, logistics_status, shipping_company, shipping_id, seller_num, 
-    collection_store, contacts
+    o.id,
+    user_id,
+    user_name,
+    seller_id,
+    seller_name,
+    seller_store_id,
+    seller_store_name,
+    payment,
+    pay_amount,
+    order_amount,
+    reward_amount,
+    discount_amount,
+    expected_amount,
+    service_charge,
+    freight,
+    shipping_way,
+    pay_time,
+    shipping_time,
+    sign_time,
+    o.create_time,
+    confirm_time,
+    order_status,
+    logistics_status,
+    shipping_company,
+    shipping_id,
+    seller_num,
+    collection_store,
+    collection_store_id
   </sql>
   <select id="get" parameterType="java.lang.Long" resultMap="Order">
     select 
@@ -46,25 +83,124 @@
   </select>
 
   <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugOrder">
-    insert into drug_order (id, user_id, user_name, 
-      seller_id, seller_name, seller_store_id, 
-      seller_store_name, payment, pay_amount, 
-      order_amount, reward_amount, discount_amount, 
-      expected_amount, service_charge, freight, 
-      shipping_way, pay_time, shipping_time, 
-      sign_time, create_time, confirm_time, 
-      order_status, logistics_status, shipping_company, 
-      shipping_id, seller_num, collection_store, 
-      contacts)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, 
-      #{sellerId,jdbcType=INTEGER}, #{sellerName,jdbcType=VARCHAR}, #{sellerStoreId,jdbcType=INTEGER}, 
-      #{sellerStoreName,jdbcType=VARCHAR}, #{payment,jdbcType=VARCHAR}, #{payAmount,jdbcType=DECIMAL}, 
-      #{orderAmount,jdbcType=DECIMAL}, #{rewardAmount,jdbcType=DECIMAL}, #{discountAmount,jdbcType=DECIMAL}, 
-      #{expectedAmount,jdbcType=DECIMAL}, #{serviceCharge,jdbcType=DECIMAL}, #{freight,jdbcType=DECIMAL}, 
-      #{shippingWay,jdbcType=VARCHAR}, #{payTime,jdbcType=TIMESTAMP}, #{shippingTime,jdbcType=TIMESTAMP}, 
-      #{signTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{confirmTime,jdbcType=TIMESTAMP}, 
-      #{orderStatus,jdbcType=INTEGER}, #{logisticsStatus,jdbcType=INTEGER}, #{shippingCompany,jdbcType=VARCHAR}, 
-      #{shippingId,jdbcType=VARCHAR}, #{sellerNum,jdbcType=INTEGER}, #{collectionStore,jdbcType=VARCHAR}, 
-      #{contacts,jdbcType=VARCHAR})
+    insert into drug_order (
+      id,
+      user_id,
+      user_name,
+      payment,
+      reward_amount,
+      discount_amount,
+      expected_amount,
+      service_charge,
+      freight,
+      create_time,
+      order_status,
+      logistics_status,
+      seller_num,
+      collection_store,
+      collection_store_id)
+    values (
+      #{id,jdbcType=BIGINT},
+      #{userId,jdbcType=BIGINT},
+      #{userName,jdbcType=VARCHAR},
+      #{payment,jdbcType=VARCHAR},
+      #{rewardAmount,jdbcType=DECIMAL},
+      #{discountAmount,jdbcType=DECIMAL},
+      #{expectedAmount,jdbcType=DECIMAL},
+      #{serviceCharge,jdbcType=DECIMAL},
+      #{freight,jdbcType=DECIMAL},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{orderStatus,jdbcType=INTEGER},
+      #{logisticsStatus,jdbcType=INTEGER},
+      #{sellerNum,jdbcType=INTEGER},
+      #{collectionStore,jdbcType=VARCHAR},
+      #{collectionStoreId,jdbcType=INTEGER})
   </insert>
+
+  <select id="getOrderStatus" resultType="com.wannengyongyao.drug.model.DrugOrder">
+    SELECT
+      id,
+      user_id as userId,
+      order_status as orderStatus
+    FROM
+      drug_order
+    WHERE
+      id = #{orderId}
+  </select>
+
+  <update id="changeOrderStatus">
+    UPDATE
+      drug_order
+    SET
+      order_status = #{status, jdbcType=INTEGER}
+    WHERE
+      id = #{orderId}
+  </update>
+
+  <select id="list" resultMap="Order">
+    SELECT
+      o.*,
+      g.id as d_id,
+      g.create_time as d_create_time,
+      g.drug_id,
+      g.drug_name,
+      g.unit_price,
+      g.specifications,
+      g.quantity,
+      g.manufacturer,
+      g.photos,
+      g.remark
+    FROM
+    (
+      SELECT
+        id,
+        seller_name,
+        seller_store_name,
+        expected_amount,
+        reward_amount,
+        service_charge,
+        freight,
+        collection_store,
+        collection_store_id,
+        order_status,
+        create_time
+      FROM
+        drug_order
+      WHERE
+        order_status = #{status}
+      AND
+        user_id = #{userId}
+      ORDER BY create_time DESC
+      LIMIT #{start}, #{pageSize}
+    ) o
+    INNER join
+      drug_order_goods g
+    ON
+      o.id = g.order_id
+  </select>
+
+  <select id="orderDetail" resultMap="Order">
+    SELECT
+      <include refid="Base_Column_List" />,
+      g.id as d_id,
+      g.create_time as d_create_time,
+      g.drug_id,
+      g.drug_name,
+      g.unit_price,
+      g.specifications,
+      g.quantity,
+      g.manufacturer,
+      g.photos,
+      g.remark
+    FROM
+      drug_order o
+    INNER join
+      drug_order_goods g
+    ON
+      o.id = g.order_id
+    WHERE
+      o.id = #{orderId}
+    AND
+      o.order_status != -1
+  </select>
 </mapper>

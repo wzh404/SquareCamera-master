@@ -30,7 +30,7 @@ public class OrderVo {
         order.setOrderStatus(OrderStatus.INIT.get());
         order.setCreateTime(LocalDateTime.now());
         order.setExpectedAmount(this.expectedAmount);
-        order.setSellerStoreId(this.storeId);
+        order.setCollectionStoreId(this.storeId);
         order.setServiceCharge(this.serviceCharge);
         order.setFreight(this.freight);
         order.setRewardAmount(this.rewardAmount);

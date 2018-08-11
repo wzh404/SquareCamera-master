@@ -10,17 +10,15 @@ import java.io.IOException;
  */
 @Data
 public class JwtObject {
-    private Integer userId;
-    private String openid;
+    private long userId;
     private Long timestamp;
 
     public JwtObject(){
         this.timestamp = System.currentTimeMillis();
     }
 
-    public JwtObject(int userId, String openid){
+    public JwtObject(long userId){
         this.userId = userId;
-        this.openid = openid;
         this.timestamp = System.currentTimeMillis();
     }
 

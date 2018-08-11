@@ -22,14 +22,92 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
+  <select id="getByMobile" resultMap="User">
+    select
+    <include refid="Base_Column_List" />
+    from drug_user
+    where
+      mobile = #{mobile}
+  </select>
+
   <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugUser">
-    insert into drug_user (id, name, gender, 
-      mobile, remark, create_time, 
-      create_ip, last_updated_time, status
+    insert into drug_user (
+      `name`,
+      gender,
+      mobile,
+      remark,
+      create_time,
+      create_ip,
+      last_updated_time,
+      status
       )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, 
-      #{mobile,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createIp,jdbcType=VARCHAR}, #{lastUpdatedTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
+    values (
+      #{name,jdbcType=VARCHAR},
+      #{gender,jdbcType=INTEGER},
+      #{mobile,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{createIp,jdbcType=VARCHAR},
+      #{lastUpdatedTime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=INTEGER}
       )
   </insert>
+
+  <insert id="insertUserPharmacist" parameterType="com.wannengyongyao.drug.model.DrugUserPharmacist">
+    INSERT INTO drug_user_pharmacist(
+      user_id,
+      pharmacist_id,
+      create_time
+    )
+    VALUES(
+      #{userId},
+      #{pharmacistId},
+      #{createTime}
+    )
+  </insert>
+
+  <select id="getUserPharmacist" resultType="java.lang.Integer">
+    SELECT COUNT(0) FROM drug_user_pharmacist
+    WHERE
+      user_id = #{userId,jdbcType=BIGINT}
+    AND
+      pharmacist_id = #{pharmacistId}
+  </select>
+
+  <insert id="insertUserStore" parameterType="com.wannengyongyao.drug.model.DrugUserStore">
+    INSERT INTO drug_user_store(
+      user_id,
+      store_id,
+      create_time
+    )
+    VALUES(
+      #{userId},
+      #{storeId},
+      #{createTime}
+    )
+  </insert>
+
+  <select id="getUserStoreCount" resultType="java.lang.Integer">
+    SELECT COUNT(0) FROM drug_user_store
+    WHERE
+      user_id = #{userId, jdbcType=BIGINT}
+    AND
+      store_id = #{storeId}
+  </select>
+
+  <select id="getUserStores" resultType="com.wannengyongyao.drug.model.DrugStore">
+    SELECT
+      s.id,
+      s.name,
+      s.address,
+      s.classify
+    FROM
+      drug_user_store us
+    INNER JOIN
+      drug_store s
+    ON
+      us.store_id = s.id
+    WHERE
+      user_id = #{userId, jdbcType=BIGINT}
+  </select>
 </mapper>

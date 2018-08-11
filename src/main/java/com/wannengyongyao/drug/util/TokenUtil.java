@@ -62,7 +62,7 @@ public class TokenUtil {
         return Optional.of(payload);
     }
 
-    public static int getUserId(String accessToken){
+    public static long getUserId(String accessToken){
         Optional<String> opt =  TokenUtil.decodeJwt(accessToken);
         if (opt.isPresent()){
             return JwtObject.of(opt.get()).getUserId();

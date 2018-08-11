@@ -3,18 +3,18 @@ package com.wannengyongyao.drug.model;
 import lombok.Data;
 
 @Data
-public class DrugUserWeixin {
-    private Integer id;
+public class DrugWeixinUser {
+    private Long id;
 
-    private String name;
+    private String nickName;
 
     private Long userId;
 
-    private String unionid;
+    private String unionId;
 
-    private String openid;
+    private String openId;
 
-    private Integer gender;
+    private String gender;
 
     private String avatarUrl;
 

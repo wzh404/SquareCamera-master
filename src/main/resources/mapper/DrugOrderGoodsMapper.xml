@@ -3,16 +3,19 @@
 <mapper namespace="com.wannengyongyao.drug.dao.DrugOrderGoodsMapper">
   <resultMap id="OrderGoods" type="com.wannengyongyao.drug.model.DrugOrderGoods">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
     <result column="drug_id" jdbcType="INTEGER" property="drugId" />
     <result column="drug_name" jdbcType="VARCHAR" property="drugName" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
     <result column="specifications" jdbcType="VARCHAR" property="specifications" />
     <result column="quantity" jdbcType="INTEGER" property="quantity" />
     <result column="manufacturer" jdbcType="VARCHAR" property="manufacturer" />
+    <result column="photos" jdbcType="VARCHAR" property="photos" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, order_id, drug_id, drug_name, unit_price, specifications, quantity, manufacturer
+    id, order_id, drug_id, drug_name, unit_price, specifications, quantity, manufacturer,photos,remark,create_time
   </sql>
   <select id="get" parameterType="java.lang.Integer" resultMap="OrderGoods">
     select 
@@ -22,11 +25,31 @@
   </select>
 
   <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugOrderGoods">
-    insert into drug_order_goods (id, order_id, drug_id, 
-      drug_name, unit_price, specifications, 
-      quantity, manufacturer)
-    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{drugId,jdbcType=INTEGER}, 
-      #{drugName,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DECIMAL}, #{specifications,jdbcType=VARCHAR}, 
-      #{quantity,jdbcType=INTEGER}, #{manufacturer,jdbcType=VARCHAR})
+    insert into drug_order_goods (
+      order_id,
+      drug_id,
+      drug_name,
+      unit_price,
+      specifications,
+      quantity,
+      manufacturer,
+      photos,
+      remark,
+      create_time)
+    values
+    <foreach collection ="list" item="goods" separator =",">
+    (
+      #{goods.orderId,jdbcType=VARCHAR},
+      #{goods.drugId,jdbcType=INTEGER},
+      #{goods.drugName,jdbcType=VARCHAR},
+      #{goods.unitPrice,jdbcType=DECIMAL},
+      #{goods.specifications,jdbcType=VARCHAR},
+      #{goods.quantity,jdbcType=INTEGER},
+      #{goods.manufacturer,jdbcType=VARCHAR},
+      #{goods.photos,jdbcType=VARCHAR},
+      #{goods.remark,jdbcType=VARCHAR},
+      #{goods.createTime,jdbcType=TIMESTAMP}
+    )
+    </foreach>
   </insert>
 </mapper>

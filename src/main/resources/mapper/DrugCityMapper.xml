@@ -23,4 +23,17 @@
     values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
       )
   </insert>
+
+  <select id="banner" resultType="com.wannengyongyao.drug.model.DrugBanner">
+    SELECT
+      id,
+      image_url as imageUrl,
+      url,
+      ord
+    FROM
+      drug_banner
+    WHERE
+      classify = #{classify}
+    ORDER BY ord ASC
+  </select>
 </mapper>

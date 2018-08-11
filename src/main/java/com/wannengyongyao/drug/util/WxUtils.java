@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 //import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,30 +19,30 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.AlgorithmParameters;
+import java.security.Security;
 import java.util.Optional;
 
 public class WxUtils {
     private final static Logger logger = LoggerFactory.getLogger(WxUtils.class);
     private final static String WxUrl = "https://api.weixin.qq.com/sns/jscode2session?grant_type=authorization_code";
-    public  static String SESSION_KEY = "";
 
     /**
      * 根据小程序临时code，获取登录者的openid
      *
      * @param appid
      * @param secret
-     * @param code
+     * @param jscode
      *
      * @return openid
      */
-    public static Optional<String> getOpenId(String appid, String secret, String code) {
+    public static Optional<JSONObject> getSessionKey(String appid, String secret, String jscode) {
         StringBuilder url = new StringBuilder(WxUrl);
         url.append("&appid=");
         url.append(appid);
         url.append("&secret=");
         url.append(secret);
         url.append("&js_code=");
-        url.append(code);
+        url.append(jscode);
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpGet httpGet = new HttpGet(url.toString());
@@ -52,8 +53,8 @@ public class WxUtils {
                 return Optional.empty();
             }
 
-            try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent()))) {
+            try (BufferedReader bufReader = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()))) {
                 StringBuilder builder = new StringBuilder();
                 String line;
                 while ((line = bufReader.readLine()) != null) {
@@ -65,8 +66,7 @@ public class WxUtils {
                 JSONObject jsonObject = JSON.parseObject(builder.toString());
                 Integer errcode = jsonObject.getInteger("errcode");
                 if (errcode == null) {
-                    WxUtils.SESSION_KEY = jsonObject.getString("session_key");
-                    return Optional.ofNullable(jsonObject.getString("openid"));
+                    return Optional.of(jsonObject);
                 } else {
                     logger.warn("wx errcode is {}", errcode);
                 }
@@ -81,19 +81,19 @@ public class WxUtils {
     /**
      *
      * @param encryptedData
-     * @param sessionkey
+     * @param sessionKey
      * @param iv
      * @return
      */
-    public static String getUserInfo(String encryptedData, String sessionkey, String iv){
+    public static Optional<String> getUserInfo(String sessionKey, String encryptedData, String iv){
         // 被加密的数据
         byte[] dataByte = Base64.decodeBase64(encryptedData);
         // 加密秘钥
-        byte[] keyByte = Base64.decodeBase64(sessionkey);
+        byte[] keyByte = Base64.decodeBase64(sessionKey);
         // 偏移量
         byte[] ivByte = Base64.decodeBase64(iv);
         try {
-            //Security.addProvider(new BouncyCastleProvider());
+            Security.addProvider(new BouncyCastleProvider());
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
             SecretKeySpec spec = new SecretKeySpec(keyByte, "AES");
 
@@ -103,15 +103,12 @@ public class WxUtils {
             cipher.init(Cipher.DECRYPT_MODE, spec, parameters);
             byte[] resultByte = cipher.doFinal(dataByte);
             if (null != resultByte && resultByte.length > 0) {
-                String result = new String(resultByte, "utf-8");
-                System.out.println(result);
-                return result;
+                return Optional.of(new String(resultByte, "utf-8"));
             }
-            System.out.println("failed");
-            return null;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 }

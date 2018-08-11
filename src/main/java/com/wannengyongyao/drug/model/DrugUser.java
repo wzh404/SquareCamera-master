@@ -3,6 +3,7 @@ package com.wannengyongyao.drug.model;
 import lombok.Data;
 
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -17,11 +18,13 @@ public class DrugUser {
 
     private String remark;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
     private String createIp;
 
-    private Date lastUpdatedTime;
+    private LocalDateTime lastUpdatedTime;
+
+    private String openId;
 
     private Integer status;
 }

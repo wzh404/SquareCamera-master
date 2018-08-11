@@ -1,25 +1,24 @@
 package com.wannengyongyao.drug.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
-public class DrugOrderGoods  {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class DrugOrderGoods  extends DrugInfo{
     private Integer id;
 
-    private String orderId;
+    private Long orderId;
 
-    private Integer drugId;
+    private String photos;
 
-    private String drugName;
+    private String remark;
 
-    private BigDecimal unitPrice;
-
-    private String specifications;
-
-    private Integer quantity;
-
-    private String manufacturer;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime createTime;
 }

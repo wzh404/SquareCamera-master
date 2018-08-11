@@ -43,4 +43,27 @@
       #{status,jdbcType=INTEGER}, #{receiveStatus,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}
       )
   </insert>
+
+  <select id="myPharmacists" resultType="com.wannengyongyao.drug.model.DrugSeller">
+    SELECT
+      se.id,
+      se.name,
+      se.gender,
+      se.mobile,
+      se.store_id as storeId,
+      st.name as storeName,
+      ST_Distance_Sphere (Point (#{lon}, #{lat}), st.geom ) AS distance
+    FROM
+      drug_seller se
+    INNER JOIN
+      drug_store st
+    ON
+      se.store_id = st.id
+    INNER JOIN
+      drug_user_pharmacist p
+    ON
+      se.id = p.pharmacist_id
+    WHERE
+      p.user_id = #{userId}
+  </select>
 </mapper>

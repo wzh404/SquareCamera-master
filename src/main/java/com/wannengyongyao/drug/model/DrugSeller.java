@@ -1,5 +1,6 @@
 package com.wannengyongyao.drug.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -7,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DrugSeller {
     private Long id;
 
@@ -37,4 +39,8 @@ public class DrugSeller {
     private Integer receiveStatus;
 
     private Integer storeId;
+
+    private String storeName;
+
+    private Double distance;
 }

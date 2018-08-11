@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ImageDrugVo {
+public class PhotoDrugVo {
     private List<String> photos;
     private Integer quantity;
     private String remark;

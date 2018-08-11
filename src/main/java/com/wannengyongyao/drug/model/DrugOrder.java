@@ -1,13 +1,17 @@
 package com.wannengyongyao.drug.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DrugOrder  {
     private Long id;
 
@@ -47,6 +51,7 @@ public class DrugOrder  {
 
     private LocalDateTime signTime;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createTime;
 
     private LocalDateTime confirmTime;
@@ -62,7 +67,10 @@ public class DrugOrder  {
     // 抢单数
     private Integer sellerNum;
 
+    // 代收人情况
     private String collectionStore;
 
-    private String contacts;
+    private Integer collectionStoreId;
+
+    private List<DrugOrderGoods> drugs;
 }

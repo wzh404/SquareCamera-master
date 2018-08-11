@@ -1,13 +1,15 @@
 package com.wannengyongyao.drug.vo;
 
 import com.wannengyongyao.drug.model.DrugOrderGoods;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class DrugOrderVo extends OrderVo {
     // 药品信息
-    List<DrugVo> drugs;
+    List<DrugVo> drugs = new ArrayList<>();
 
     // 订单药品信息
     public List<DrugOrderGoods> asGoods(){
