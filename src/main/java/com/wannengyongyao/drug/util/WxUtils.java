@@ -22,8 +22,8 @@ import java.security.Security;
 import java.util.Optional;
 
 public class WxUtils {
-    private final static Logger logger = LoggerFactory.getLogger(WxUtils.class);
-    private final static String WxUrl = "https://api.weixin.qq.com/sns/jscode2session?grant_type=authorization_code";
+    private static final  Logger logger = LoggerFactory.getLogger(WxUtils.class);
+    private static final  String WxUrl = "https://api.weixin.qq.com/sns/jscode2session?grant_type=authorization_code";
 
     /**
      * 根据小程序临时code，获取登录者的openid
