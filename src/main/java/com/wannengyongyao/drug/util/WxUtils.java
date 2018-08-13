@@ -7,7 +7,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-//import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +61,7 @@ public class WxUtils {
                     builder.append(System.lineSeparator());
                 }
 
-                logger.info(builder.toString());
+                // logger.info(builder.toString());
                 JSONObject jsonObject = JSON.parseObject(builder.toString());
                 Integer errcode = jsonObject.getInteger("errcode");
                 if (errcode == null) {

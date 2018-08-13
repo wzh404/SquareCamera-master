@@ -84,7 +84,7 @@ public class PharmacistServiceImpl implements PharmacistService {
         sellerOrder.setStatus(0);
 
         // 药师抢单明细
-        BigDecimal amount = new BigDecimal(0.0);
+        BigDecimal amount = BigDecimal.valueOf(0.0);
         List<DrugSellerOrderGoods> orderGoodsList = orderVo.asSellerOrderGoods();
         for (DrugSellerOrderGoods sog : orderGoodsList){
             for (DrugOrderGoods og : order.getDrugs()){

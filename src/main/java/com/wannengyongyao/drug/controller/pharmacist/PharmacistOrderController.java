@@ -13,7 +13,6 @@ import com.wannengyongyao.drug.util.RequestUtil;
 import com.wannengyongyao.drug.util.StringUtil;
 import com.wannengyongyao.drug.vo.CollectionVo;
 import com.wannengyongyao.drug.vo.PharmacistOrderVo;
-import com.wannengyongyao.drug.vo.PharmacistVo;
 import com.wannengyongyao.drug.vo.ShippingVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

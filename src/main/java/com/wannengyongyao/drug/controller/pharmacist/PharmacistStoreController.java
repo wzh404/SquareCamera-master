@@ -5,7 +5,6 @@ import com.wannengyongyao.drug.common.ResultObject;
 import com.wannengyongyao.drug.model.DrugStore;
 import com.wannengyongyao.drug.service.pharmacist.StoreService;
 import com.wannengyongyao.drug.util.DrugConstants;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;

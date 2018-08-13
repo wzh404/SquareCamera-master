@@ -69,7 +69,6 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         long orderId = StringUtil.getOrderId(orderVo.getUserId());
         order.setId(orderId);
 
-
         // 订单药品信息
         List<DrugOrderGoods> goods = orderVo.asGoods();
         for (DrugOrderGoods g : goods){
@@ -77,11 +76,14 @@ public class DrugOrderServiceImpl implements DrugOrderService {
             g.setDrugName(drug.getName());
             g.setManufacturer(drug.getManufacturer());
             g.setSpecifications(drug.getSpecifications());
-            g.setUnitPrice(new BigDecimal(0.0));
+            g.setUnitPrice(BigDecimal.valueOf(0.0));
             g.setOrderId(orderId);
             g.setCreateTime(LocalDateTime.now());
         }
         int rows = drugOrderGoodsMapper.insert(goods);
+        if (rows < 1){
+            return -1;
+        }
 
         // 我的代收药店
         DrugUserStore userStore = new DrugUserStore();
@@ -128,8 +130,7 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         }
         drugOrderGoodsMapper.insert(goods);
 
-        int rows = orderMapper.insert(order);
-        return rows;
+        return orderMapper.insert(order);
     }
 
     /**
@@ -195,7 +196,7 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         // 确认药品单价
         List<DrugSellerOrderGoods> sogs = sellerOrderGoodsMapper.getByOrderAndSeller(orderId, sellerId);
         List<DrugOrderGoods> goods = new ArrayList<>();
-        BigDecimal amount = new BigDecimal(0.0);
+        BigDecimal amount = BigDecimal.valueOf(0.0);
         for (DrugSellerOrderGoods sog : sogs){
             DrugOrderGoods g = new DrugOrderGoods();
             g.setId(sog.getOrderDrugId());
@@ -245,5 +246,10 @@ public class DrugOrderServiceImpl implements DrugOrderService {
     @Override
     public List<DrugSellerOrder> listByOrder(Map<String, Object> conditionMap) {
         return sellerOrderMapper.listByOrder(conditionMap);
+    }
+
+    @Override
+    public DrugOrder getOrderStatus(Long orderId) {
+        return orderMapper.getOrderStatus(orderId);
     }
 }

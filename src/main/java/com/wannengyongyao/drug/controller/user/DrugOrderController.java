@@ -41,7 +41,7 @@ public class DrugOrderController {
     public ResultObject order(HttpServletRequest request, @RequestBody DrugOrderVo orderVo){
         Long userId = RequestUtil.getUserId(request);
 
-        if (orderVo.getDrugs() == null || orderVo.getDrugs().size() <= 0){
+        if (orderVo.getDrugs().isEmpty()){
             logger.error("invalid order goods");
             return ResultObject.fail(ResultCode.FAILED);
         }
@@ -63,7 +63,7 @@ public class DrugOrderController {
     public ResultObject photoOrder(HttpServletRequest request,@RequestBody PhotoOrderVo orderVo){
         Long userId = RequestUtil.getUserId(request);
 
-        if (orderVo.getDrugs() == null || orderVo.getDrugs().size() <= 0){
+        if (orderVo.getDrugs().isEmpty()){
             logger.error("invalid order photo goods");
             return ResultObject.fail(ResultCode.FAILED);
         }
@@ -241,6 +241,14 @@ public class DrugOrderController {
     public ResultObject sellerOrder(HttpServletRequest request,
                                     @RequestParam("orderId")Long orderId){
         Long userId = RequestUtil.getUserId(request);
+        DrugOrder order = orderService.getOrderStatus(orderId);
+        if (order == null){
+            return ResultObject.fail(ResultCode.ORDER_NOT_EXIST);
+        }
+        if (order.getUserId().longValue() != userId.longValue()){
+            return ResultObject.fail(ResultCode.BAD_REQUEST);
+        }
+
         Map<String, Object> conditionMap = new HashMap<>();
         conditionMap.put("orderId", orderId);
         conditionMap.put("start", 0);

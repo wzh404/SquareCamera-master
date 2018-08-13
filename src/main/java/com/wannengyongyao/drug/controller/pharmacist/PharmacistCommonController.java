@@ -1,23 +1,15 @@
 package com.wannengyongyao.drug.controller.pharmacist;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.Cache;
 import com.wannengyongyao.drug.common.JwtObject;
 import com.wannengyongyao.drug.common.ResultCode;
 import com.wannengyongyao.drug.common.ResultObject;
 import com.wannengyongyao.drug.model.DrugBanner;
 import com.wannengyongyao.drug.model.DrugSeller;
-import com.wannengyongyao.drug.model.DrugUser;
-import com.wannengyongyao.drug.model.DrugWeixinUser;
 import com.wannengyongyao.drug.service.pharmacist.PharmacistService;
 import com.wannengyongyao.drug.service.user.DrugCommonService;
-import com.wannengyongyao.drug.service.user.DrugUserService;
-import com.wannengyongyao.drug.util.StringUtil;
 import com.wannengyongyao.drug.util.TokenUtil;
-import com.wannengyongyao.drug.util.WxUtils;
 import com.wannengyongyao.drug.vo.LoginVo;
-import com.wannengyongyao.drug.vo.WeChatLoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;

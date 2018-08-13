@@ -1,11 +1,9 @@
 package com.wannengyongyao.drug.service.pharmacist;
 
-import com.github.pagehelper.Page;
 import com.wannengyongyao.drug.model.DrugOrder;
 import com.wannengyongyao.drug.model.DrugSeller;
 import com.wannengyongyao.drug.model.DrugSellerOrder;
 import com.wannengyongyao.drug.vo.PharmacistOrderVo;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;

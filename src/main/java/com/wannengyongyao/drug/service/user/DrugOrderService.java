@@ -5,7 +5,6 @@ import com.wannengyongyao.drug.model.DrugOrder;
 import com.wannengyongyao.drug.model.DrugSellerOrder;
 import com.wannengyongyao.drug.vo.DrugOrderVo;
 import com.wannengyongyao.drug.vo.PhotoOrderVo;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -69,4 +68,12 @@ public interface DrugOrderService {
      * @return
      */
     List<DrugSellerOrder> listByOrder(Map<String, Object> conditionMap);
+
+    /**
+     * 根据订单号获取订单基本信息
+     *
+     * @param orderId
+     * @return
+     */
+    DrugOrder getOrderStatus(Long orderId);
 }
