@@ -24,7 +24,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="confirm_time" jdbcType="TIMESTAMP" property="confirmTime" />
     <result column="order_status" jdbcType="INTEGER" property="orderStatus" />
-    <result column="logistics_status" jdbcType="INTEGER" property="logisticsStatus" />
+    <result column="shipping_status" jdbcType="INTEGER" property="shippingStatus" />
     <result column="shipping_company" jdbcType="VARCHAR" property="shippingCompany" />
     <result column="shipping_id" jdbcType="VARCHAR" property="shippingId" />
     <result column="seller_num" jdbcType="INTEGER" property="sellerNum" />
@@ -55,6 +55,7 @@
     seller_store_name,
     payment,
     pay_amount,
+    pay_status,
     order_amount,
     reward_amount,
     discount_amount,
@@ -68,7 +69,7 @@
     o.create_time,
     confirm_time,
     order_status,
-    logistics_status,
+    shipping_status,
     shipping_company,
     shipping_id,
     seller_num,
@@ -121,7 +122,12 @@
     SELECT
       id,
       user_id as userId,
-      order_status as orderStatus
+      seller_id as sellerId,
+      collection_store_id as collectionStoreId,
+      order_status as orderStatus,
+      pay_status as payStatus,
+      shipping_status as shippingStatus,
+      collection_code as collectionCode
     FROM
       drug_order
     WHERE
@@ -203,4 +209,178 @@
     AND
       o.order_status != -1
   </select>
+
+  <update id="confirm" parameterType="com.wannengyongyao.drug.model.DrugOrder">
+    UPDATE drug_order
+    SET
+      order_amount = #{orderAmount},
+      order_status = #{orderStatus},
+      confirm_time = #{confirmTime},
+      seller_id = #{sellerId},
+      seller_name = #{sellerName},
+      seller_store_name = #{sellerStoreName},
+      seller_store_id= #{sellerStoreId}
+    WHERE
+      id = #{id}
+  </update>
+
+  <!-- 卖家待抢订单列表 -->
+  <select id="listSellerGrab" resultMap="Order">
+    SELECT
+      o.*,
+      g.id as d_id,
+      g.create_time as d_create_time,
+      g.drug_id,
+      g.drug_name,
+      g.unit_price,
+      g.specifications,
+      g.quantity,
+      g.manufacturer,
+      g.photos,
+      g.remark
+    FROM
+    (
+      SELECT
+        id,
+        user_id,
+        user_name,
+        expected_amount,
+        reward_amount,
+        service_charge,
+        freight,
+        collection_store,
+        collection_store_id,
+        order_status,
+        create_time
+      FROM
+        drug_order
+      WHERE
+        order_status = 0
+      AND (
+          seller_id = #{sellerId}
+        OR
+          seller_id = 0
+      )
+      ORDER BY create_time DESC
+      LIMIT #{start}, #{pageSize}
+    ) o
+    INNER join
+      drug_order_goods g
+    ON
+      o.id = g.order_id
+  </select>
+
+  <!-- 卖家订单列表 -->
+  <select id="listSeller" resultMap="Order">
+    SELECT
+      o.*,
+      g.id as d_id,
+      g.create_time as d_create_time,
+      g.drug_id,
+      g.drug_name,
+      g.unit_price,
+      g.specifications,
+      g.quantity,
+      g.manufacturer,
+      g.photos,
+      g.remark
+    FROM
+    (
+      SELECT
+        id,
+        user_id,
+        user_name,
+        expected_amount,
+        reward_amount,
+        service_charge,
+        freight,
+        collection_store,
+        collection_store_id,
+        order_status,
+        create_time
+      FROM
+        drug_order
+      WHERE
+        order_status = 0
+      AND
+        seller_id = #{sellerId}
+      ORDER BY create_time DESC
+      LIMIT #{start}, #{pageSize}
+    ) o
+    INNER join
+      drug_order_goods g
+    ON
+      o.id = g.order_id
+  </select>
+
+  <!-- 待取货订单列表 -->
+  <select id="listCollection" resultMap="Order">
+    SELECT
+      o.*,
+      g.id as d_id,
+      g.create_time as d_create_time,
+      g.drug_id,
+      g.drug_name,
+      g.unit_price,
+      g.specifications,
+      g.quantity,
+      g.manufacturer,
+      g.photos,
+      g.remark
+    FROM
+    (
+      SELECT
+        id,
+        user_id,
+        user_name,
+        expected_amount,
+        order_amount,
+        reward_amount,
+        service_charge,
+        freight,
+        collection_store,
+        collection_store_id,
+        order_status,
+        create_time
+      FROM
+        drug_order
+      WHERE
+        order_status = 1008
+      AND
+        pay_status = 1
+      AND
+        collection_store_id = #{storeId}
+      ORDER BY create_time DESC
+      LIMIT #{start}, #{pageSize}
+    ) o
+    INNER join
+      drug_order_goods g
+    ON
+      o.id = g.order_id
+  </select>
+
+  <!-- 卖家发货 -->
+  <update id="sellerShipping" parameterType="com.wannengyongyao.drug.model.DrugOrder">
+    UPDATE
+      drug_order
+    SET
+      order_status = #{orderStatus},
+      shipping_status = #{shippingStatus},
+      shipping_time = #{shippingTime},
+      collection_code = #{collectionCode}
+    WHERE
+      id = #{id}
+  </update>
+
+  <!-- 确认收货 -->
+  <update id="sellerCollection" parameterType="com.wannengyongyao.drug.model.DrugOrder">
+    UPDATE
+      drug_order
+    SET
+      order_status = #{orderStatus},
+      shipping_status = #{shippingStatus},
+      sign_time = #{signTime}
+    WHERE
+      id = #{id}
+  </update>
 </mapper>

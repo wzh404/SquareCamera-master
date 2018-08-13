@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -28,11 +29,11 @@ public class DrugSeller {
 
     private String remark;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
     private String createIp;
 
-    private Date lastUpdatedTime;
+    private LocalDateTime lastUpdatedTime;
 
     private Integer status;
 
@@ -41,6 +42,5 @@ public class DrugSeller {
     private Integer storeId;
 
     private String storeName;
-
     private Double distance;
 }

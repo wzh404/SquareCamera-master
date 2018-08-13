@@ -4,7 +4,8 @@ public enum OrderStatus {
     INIT(0),
     CANCEL(-1),
     CONFIRM(1000),
-    SHIPPED(1001),
+    PAYMENT(1001),
+    SHIPPED(1008),
     COMPLETED(1009);
 
     private int code;

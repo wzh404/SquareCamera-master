@@ -17,32 +17,70 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="receive_status" jdbcType="INTEGER" property="receiveStatus" />
     <result column="store_id" jdbcType="INTEGER" property="storeId" />
+    <result column="store_name" jdbcType="VARCHAR" property="storeName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, `name`, gender, mobile, id_number, job, classify, account_balance, remark, create_time,
-    create_ip, last_updated_time, status, receive_status, store_id
+    s.id, s.name, gender, mobile, id_number, job, s.classify, account_balance, s.remark, s.create_time,
+    create_ip, s.last_updated_time, s.status, receive_status, store_id
   </sql>
+
   <select id="get" parameterType="java.lang.Long" resultMap="Seller">
     select 
-    <include refid="Base_Column_List" />
-    from drug_seller
-    where id = #{id,jdbcType=BIGINT}
+      <include refid="Base_Column_List" />,
+      st.name as store_name
+    from
+      drug_seller s
+    inner join
+      drug_store st
+    on
+      s.store_id = st.id
+    where
+      s.id = #{id,jdbcType=BIGINT}
   </select>
 
   <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugSeller">
-    insert into drug_seller (id, name, gender, 
-      mobile, id_number, job, 
-      classify, account_balance, remark, 
-      create_time, create_ip, last_updated_time, 
-      status, receive_status, store_id
+    insert into drug_seller (
+      name,
+      gender,
+      mobile,
+      id_number,
+      job,
+      classify,
+      account_balance,
+      remark,
+      create_time,
+      create_ip,
+      last_updated_time,
+      status,
+      receive_status,
+      store_id
       )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, 
-      #{mobile,jdbcType=VARCHAR}, #{idNumber,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, 
-      #{classify,jdbcType=VARCHAR}, #{accountBalance,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createIp,jdbcType=VARCHAR}, #{lastUpdatedTime,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER}, #{receiveStatus,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}
+    values (
+      #{name,jdbcType=VARCHAR},
+      #{gender,jdbcType=INTEGER},
+      #{mobile,jdbcType=VARCHAR},
+      #{idNumber,jdbcType=VARCHAR},
+      #{job,jdbcType=VARCHAR},
+      #{classify,jdbcType=VARCHAR},
+      #{accountBalance,jdbcType=DECIMAL},
+      #{remark,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{createIp,jdbcType=VARCHAR},
+      #{lastUpdatedTime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=INTEGER},
+      #{receiveStatus,jdbcType=INTEGER},
+      #{storeId,jdbcType=INTEGER}
       )
   </insert>
+
+  <select id="getPharmacitsByMobile" resultMap="Seller">
+    select
+    <include refid="Base_Column_List" />
+    from
+      drug_seller s
+    where
+      mobile = #{mobile,jdbcType=VARCHAR}
+  </select>
 
   <select id="myPharmacists" resultType="com.wannengyongyao.drug.model.DrugSeller">
     SELECT
@@ -66,4 +104,15 @@
     WHERE
       p.user_id = #{userId}
   </select>
+
+  <update id="update" parameterType="com.wannengyongyao.drug.model.DrugSeller">
+    UPDATE
+      drug_seller
+    SET
+      name = #{name},
+      job = #{job},
+      id_number = #{idNumber}
+    WHERE
+      id = #{id}
+  </update>
 </mapper>

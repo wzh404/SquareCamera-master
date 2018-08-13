@@ -72,4 +72,30 @@
       )
     ORDER BY distanceInMeters ASC
   </select>
+
+  <select id="list" resultMap="Store">
+    SELECT
+      name,
+      address,
+      classify,
+      province,
+      city,
+      district
+    FROM
+      drug_store
+    WHERE
+      status = 0
+    <if test="name != null">
+      AND name LIKE CONCAT('%',#{name},'%')
+    </if>
+    <if test="province != null">
+      AND province = #{province}
+    </if>
+    <if test="city != null">
+      AND city = #{city}
+    </if>
+    <if test="district != null">
+      AND district = #{district}
+    </if>
+  </select>
 </mapper>

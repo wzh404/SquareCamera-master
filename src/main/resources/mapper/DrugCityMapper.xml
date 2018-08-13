@@ -36,4 +36,38 @@
       classify = #{classify}
     ORDER BY ord ASC
   </select>
+
+  <select id="getProvince" resultMap="City">
+    select
+      code,
+      name
+    from
+      drug_city
+    where
+      code like '__0000'
+  </select>
+
+  <select id="getCity" resultMap="City">
+    select
+      code,
+      name
+    from
+      drug_city
+    where
+      code like concat(#{code}, '__00')
+    AND
+      code != concat(#{code}, '0000')
+  </select>
+
+  <select id="getDistrict" resultMap="City">
+    select
+      code,
+      name
+    from
+      drug_city
+    where
+      code like concat(#{code}, '__')
+    AND
+      code != concat(#{code}, '00')
+  </select>
 </mapper>

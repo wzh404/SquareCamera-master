@@ -1,6 +1,7 @@
 package com.wannengyongyao.drug.vo;
 
 import com.wannengyongyao.drug.common.status.OrderStatus;
+import com.wannengyongyao.drug.common.status.ShippingStatus;
 import com.wannengyongyao.drug.model.DrugOrder;
 import com.wannengyongyao.drug.model.DrugOrderGoods;
 import lombok.Data;
@@ -39,7 +40,7 @@ public class OrderVo {
         order.setPayment("weixin");
         order.setSellerNum(0);
         order.setUserId(this.userId);
-        order.setLogisticsStatus(0);
+        order.setShippingStatus(ShippingStatus.INIT.get());
 
         return order;
     }

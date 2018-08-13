@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class DrugUserController {
     @Autowired
     private DrugOrderService orderService;
 

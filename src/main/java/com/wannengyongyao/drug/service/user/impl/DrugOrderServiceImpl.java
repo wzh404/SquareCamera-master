@@ -1,5 +1,6 @@
 package com.wannengyongyao.drug.service.user.impl;
 
+import com.wannengyongyao.drug.common.ResultCode;
 import com.wannengyongyao.drug.common.status.OrderStatus;
 import com.wannengyongyao.drug.dao.*;
 import com.wannengyongyao.drug.model.*;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +40,21 @@ public class DrugOrderServiceImpl implements DrugOrderService {
     @Autowired
     private DrugOrderGoodsMapper drugOrderGoodsMapper;
 
+    @Autowired
+    private DrugSellerOrderMapper sellerOrderMapper;
+
+    @Autowired
+    private DrugSellerOrderGoodsMapper sellerOrderGoodsMapper;
+
+    @Autowired
+    private DrugSellerMapper sellerMapper;
+
+    /**
+     * 下单
+     *
+     * @param orderVo
+     * @return
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public Integer newOrder(DrugOrderVo orderVo) {
@@ -77,6 +94,12 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         return rows;
     }
 
+    /**
+     * 拍照下单
+     *
+     * @param orderVo
+     * @return
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public Integer newPhotoOrder(PhotoOrderVo orderVo) {
@@ -109,6 +132,13 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         return rows;
     }
 
+    /**
+     * 取消下单
+     *
+     * @param userId
+     * @param orderId
+     * @return
+     */
     @Override
     public int cancelOrder(Long userId, Long orderId) {
         DrugOrder order = orderMapper.getOrderStatus(orderId);
@@ -135,6 +165,73 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         return orderMapper.changeOrderStatus(orderId, OrderStatus.CANCEL.get());
     }
 
+    /**
+     * 确认下单
+     *
+     * @param userId
+     * @param orderId
+     * @param sellerId
+     * @return
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public ResultCode confirmOrder(Long userId, Long orderId, Long sellerId) {
+        DrugOrder o = orderMapper.getOrderStatus(orderId);
+        if (o == null){
+            return ResultCode.ORDER_NOT_EXIST;
+        }
+        if (o.getOrderStatus().intValue() != OrderStatus.INIT.get()){
+            return ResultCode.FAILED;
+        }
+        if (o.getUserId().longValue() != userId.longValue()){
+            return ResultCode.FAILED;
+        }
+
+        DrugSellerOrder sellerOrder = sellerOrderMapper.getSellerOrder(orderId, sellerId);
+        if (sellerOrder == null){
+            return ResultCode.ORDER_SELLER_NOT_EXIST;
+        }
+
+        // 确认药品单价
+        List<DrugSellerOrderGoods> sogs = sellerOrderGoodsMapper.getByOrderAndSeller(orderId, sellerId);
+        List<DrugOrderGoods> goods = new ArrayList<>();
+        BigDecimal amount = new BigDecimal(0.0);
+        for (DrugSellerOrderGoods sog : sogs){
+            DrugOrderGoods g = new DrugOrderGoods();
+            g.setId(sog.getOrderDrugId());
+            g.setUnitPrice(sog.getUnitPrice());
+
+            amount = amount.add(sog.getUnitPrice().multiply(new BigDecimal(sog.getQuantity())));
+            goods.add(g);
+        }
+        int rows = drugOrderGoodsMapper.confirm(goods);
+        if (rows < 1){
+            return ResultCode.FAILED;
+        }
+
+        // 确认订单卖家(药师),订单状态，订单确认时间
+        DrugSeller seller = sellerMapper.get(sellerId);
+        DrugOrder order = new DrugOrder();
+        order.setId(orderId);
+        order.setOrderStatus(OrderStatus.CONFIRM.get());
+        order.setConfirmTime(LocalDateTime.now());
+        order.setSellerId(sellerId);
+        order.setSellerName(seller.getName());
+        order.setSellerStoreId(seller.getStoreId());
+        order.setSellerStoreName(seller.getStoreName());
+        order.setOrderAmount(amount);
+        rows = orderMapper.confirm(order);
+        if (rows < 1){
+            return ResultCode.FAILED;
+        }
+
+        rows = sellerOrderMapper.changeStatusConfirm(orderId, sellerId);
+        if (rows < 1){
+            return ResultCode.FAILED;
+        }
+        return ResultCode.OK;
+    }
+
     @Override
     public List<DrugOrder> list(Map<String, Object> conditionMap) {
         return orderMapper.list(conditionMap);
@@ -143,5 +240,10 @@ public class DrugOrderServiceImpl implements DrugOrderService {
     @Override
     public DrugOrder orderDetail(Long orderId) {
         return orderMapper.orderDetail(orderId);
+    }
+
+    @Override
+    public List<DrugSellerOrder> listByOrder(Map<String, Object> conditionMap) {
+        return sellerOrderMapper.listByOrder(conditionMap);
     }
 }

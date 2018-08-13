@@ -99,6 +99,24 @@ public class DrugOrderController {
     }
 
     /**
+     * 订单确认
+     *
+     * @param request
+     * @param orderId
+     * @param sellerId
+     * @return
+     */
+    @RequestMapping(value="/confirm-order", method= {RequestMethod.POST})
+    public ResultObject confirmOrder(HttpServletRequest request,
+                                     @RequestParam("orderId")Long orderId,
+                                     @RequestParam("sellerId")Long sellerId){
+        Long userId = RequestUtil.getUserId(request);
+
+        ResultCode r = orderService.confirmOrder(userId, orderId, sellerId);
+        return ResultObject.cond(r == ResultCode.OK, r);
+    }
+
+    /**
      * 待抢订单
      *
      * @param request
@@ -210,5 +228,23 @@ public class DrugOrderController {
         }
 
         return ResultObject.ok(order);
+    }
+
+    /**
+     * 订单报价列表
+     *
+     * @param request
+     * @param orderId
+     * @return
+     */
+    @RequestMapping(value="/seller/orders", method= {RequestMethod.GET})
+    public ResultObject sellerOrder(HttpServletRequest request,
+                                    @RequestParam("orderId")Long orderId){
+        Long userId = RequestUtil.getUserId(request);
+        Map<String, Object> conditionMap = new HashMap<>();
+        conditionMap.put("orderId", orderId);
+        conditionMap.put("start", 0);
+        conditionMap.put("pageSize", 10);
+        return ResultObject.ok(orderService.listByOrder(conditionMap));
     }
 }

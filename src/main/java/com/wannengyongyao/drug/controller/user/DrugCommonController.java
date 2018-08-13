@@ -37,10 +37,10 @@ public class DrugCommonController {
     @Autowired
     private Cache<String, String> smsCache;
 
-    @Value("${drug.appid}")
+    @Value("${drug.user.appid}")
     private String appid;
 
-    @Value("${drug.secret}")
+    @Value("${drug.user.secret}")
     private String secret;
 
     @RequestMapping(value="/common/banners", method= {RequestMethod.GET})
@@ -51,7 +51,7 @@ public class DrugCommonController {
 
     @RequestMapping(value="/common/sms/code", method= {RequestMethod.GET})
     public ResultObject smsCode(@RequestParam("mobile")String mobile){
-        String code = StringUtil.getSmsCode(6);
+        String code = StringUtil.getRandomCode(6);
         smsCache.put(mobile, code);
 
         return ResultObject.ok(code);
@@ -109,5 +109,20 @@ public class DrugCommonController {
         DrugWeixinUser user = JSON.parseObject(jsonString.get(), DrugWeixinUser.class);
         userService.insertWeixinUser(user);
         return ResultObject.ok(openid);
+    }
+
+    @RequestMapping(value="/common/province", method= {RequestMethod.GET})
+    public ResultObject province(){
+        return ResultObject.ok(commonService.getProvince());
+    }
+
+    @RequestMapping(value="/common/city", method= {RequestMethod.GET})
+    public ResultObject city(@RequestParam("code")String code){
+        return ResultObject.ok(commonService.getCity(code.substring(0,2)));
+    }
+
+    @RequestMapping(value="/common/district", method= {RequestMethod.GET})
+    public ResultObject district(@RequestParam("code")String code){
+        return ResultObject.ok(commonService.getDistrict(code.substring(0,4)));
     }
 }

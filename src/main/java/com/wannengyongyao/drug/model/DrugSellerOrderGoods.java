@@ -11,7 +11,9 @@ import java.math.BigDecimal;
 public class DrugSellerOrderGoods  {
     private Integer id;
 
-    private Long compId;
+    private Long orderId;
+
+    private Integer orderDrugId;
 
     private Integer drugId;
 
@@ -24,4 +26,10 @@ public class DrugSellerOrderGoods  {
     private Integer quantity;
 
     private String manufacturer;
+
+    private String photos;
+
+    private String remark;
+
+    private Long sellerId;
 }

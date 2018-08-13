@@ -19,7 +19,7 @@ public class DrugOrder  {
 
     private String userName;
 
-    private Integer sellerId;
+    private Long sellerId;
 
     private String sellerName;
 
@@ -58,7 +58,9 @@ public class DrugOrder  {
 
     private Integer orderStatus;
 
-    private Integer logisticsStatus;
+    private Integer shippingStatus;
+
+    private Integer payStatus;
 
     private String shippingCompany;
 
@@ -69,6 +71,8 @@ public class DrugOrder  {
 
     // 代收人情况
     private String collectionStore;
+
+    private String collectionCode;
 
     private Integer collectionStoreId;
 

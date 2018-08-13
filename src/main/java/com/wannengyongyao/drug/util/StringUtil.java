@@ -50,7 +50,7 @@ public class StringUtil {
      * @param length
      * @return
      */
-    public static String getSmsCode(int length) {
+    public static String getRandomCode(int length) {
         String str = "0123456789";
         Random random = new Random();
         StringBuffer sb = new StringBuffer();

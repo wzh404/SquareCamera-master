@@ -52,4 +52,14 @@
     )
     </foreach>
   </insert>
+
+  <update id="confirm" parameterType="com.wannengyongyao.drug.model.DrugOrderGoods">
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+      UPDATE drug_order_goods
+      SET
+        unit_price = #{item.unitPrice}
+      WHERE
+        id = #{item.id}
+    </foreach>
+  </update>
 </mapper>

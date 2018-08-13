@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 public class LoginInterceptor implements HandlerInterceptor {
     private final Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
 
-    @Value(value = "${azbrain.whitelist.uri}")
+    @Value(value = "${drug.whitelist.uri}")
     private String[] uris;
 
 
@@ -32,6 +32,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        logger.info(request.getRequestURI());
         for (String uri : uris) {
             if (request.getRequestURI().startsWith(uri)) {
                 return true;
