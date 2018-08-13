@@ -1,6 +1,7 @@
 package com.wannengyongyao.drug.service.user;
 
 import com.wannengyongyao.drug.model.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -29,7 +30,26 @@ public interface DrugUserService {
      */
     List<DrugStore> getUserStores(Long userId);
 
+    /**
+     * 保存用户微信授权信息
+     *
+     * @param user
+     * @return
+     */
     int insertWeixinUser(DrugWeixinUser user);
 
+    /**
+     * 注册用户
+     *
+     * @param user
+     * @return
+     */
     int insertUser(DrugUser user);
+
+    /**
+     * 根据openid获取用户微信授权信息
+     * @param openId
+     * @return
+     */
+    DrugWeixinUser getByOpenId(String openId);
 }

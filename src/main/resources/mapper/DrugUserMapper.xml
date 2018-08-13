@@ -6,6 +6,8 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="gender" jdbcType="INTEGER" property="gender" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_ip" jdbcType="VARCHAR" property="createIp" />
@@ -13,19 +15,19 @@
     <result column="status" jdbcType="INTEGER" property="status" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, `name`, gender, mobile, remark, create_time, create_ip, last_updated_time, status
+    u.id, `name`, gender, mobile, remark, u.create_time, create_ip, last_updated_time, status
   </sql>
   <select id="get" parameterType="java.lang.Long" resultMap="User">
     select 
     <include refid="Base_Column_List" />
-    from drug_user
-    where id = #{id,jdbcType=BIGINT}
+    from drug_user u
+    where u.id = #{id,jdbcType=BIGINT}
   </select>
 
   <select id="getByMobile" resultMap="User">
     select
     <include refid="Base_Column_List" />
-    from drug_user
+    from drug_user u
     where
       mobile = #{mobile}
   </select>
@@ -35,6 +37,8 @@
       `name`,
       gender,
       mobile,
+      avatar,
+      openid,
       remark,
       create_time,
       create_ip,
@@ -45,6 +49,8 @@
       #{name,jdbcType=VARCHAR},
       #{gender,jdbcType=INTEGER},
       #{mobile,jdbcType=VARCHAR},
+      #{avatar,jdbcType=VARCHAR},
+      #{openid,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP},
       #{createIp,jdbcType=VARCHAR},
@@ -109,5 +115,24 @@
       us.store_id = s.id
     WHERE
       user_id = #{userId, jdbcType=BIGINT}
+  </select>
+
+  <select id="getPharmacistUsers" resultMap="User">
+    SELECT
+      u.id,
+      u.name,
+      u.gender,
+      u.mobile,
+      u.status,
+      p.create_time,
+      p.drug_num as drugNum
+    FROM
+      drug_user_pharmacist p
+    INNER JOIN
+      drug_user u
+    ON
+      p.user_id = u.id
+    WHERE
+      p.pharmacist_id = #{pharmacistId}
   </select>
 </mapper>

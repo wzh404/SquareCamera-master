@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class LoginVo {
     private String mobile;
+    // 手机验证码
     private String code;
     private String openid;
 
