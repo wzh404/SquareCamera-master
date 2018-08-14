@@ -190,10 +190,10 @@ public class DrugOrderServiceImpl implements DrugOrderService {
             return ResultCode.ORDER_NOT_EXIST;
         }
         if (o.getOrderStatus().intValue() != OrderStatus.INIT.get()){
-            return ResultCode.FAILED;
+            return ResultCode.ORDER_INVALID_STATUS;
         }
         if (o.getUserId().longValue() != userId.longValue()){
-            return ResultCode.FAILED;
+            return ResultCode.ORDER_UNAUTHORIZED;
         }
 
         DrugSellerOrder sellerOrder = sellerOrderMapper.getSellerOrder(orderId, sellerId);

@@ -22,6 +22,8 @@ public enum ResultCode {
     ORDER_NOT_PAYMENT(3006),
     ORDER_NOT_SHIPPED(3007),
     ORDER_INVALID_COLLECTION_CODE(3008),
+    ORDER_UNAUTHORIZED(3009),
+    ORDER_INVALID_STATUS(3010),
     INVALID_SMS_CODE(4001),
     NOT_REPEAT_SEND_CODE(4002),
     PHARMACIST_NOT_EXIST(5001),
@@ -58,6 +60,8 @@ public enum ResultCode {
             .put(ORDER_NOT_SHIPPED.code, "订单未发货")
             .put(ORDER_SELLER_NOT_EXIST.code, "卖家抢单不存在")
             .put(ORDER_INVALID_COLLECTION_CODE.code, "无效的订单收货码")
+            .put(ORDER_UNAUTHORIZED.code, "无权操作该订单")
+            .put(ORDER_INVALID_STATUS.code, "无效的订单状态")
 
             .put(INVALID_SMS_CODE.code, "无效的手机验证码")
             .put(NOT_REPEAT_SEND_CODE.code, "不要重复发送手机验证码")
