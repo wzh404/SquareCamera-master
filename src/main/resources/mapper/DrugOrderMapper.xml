@@ -96,7 +96,7 @@
       freight,
       create_time,
       order_status,
-      logistics_status,
+      shipping_status,
       seller_num,
       collection_store,
       collection_store_id)
@@ -112,7 +112,7 @@
       #{freight,jdbcType=DECIMAL},
       #{createTime,jdbcType=TIMESTAMP},
       #{orderStatus,jdbcType=INTEGER},
-      #{logisticsStatus,jdbcType=INTEGER},
+      #{shippingStatus,jdbcType=INTEGER},
       #{sellerNum,jdbcType=INTEGER},
       #{collectionStore,jdbcType=VARCHAR},
       #{collectionStoreId,jdbcType=INTEGER})

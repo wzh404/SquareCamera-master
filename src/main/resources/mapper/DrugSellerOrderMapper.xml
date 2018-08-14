@@ -77,11 +77,19 @@
     UPDATE
       drug_seller_order
     SET
+      status = -1
+    WHERE
+      order_id = #{orderId}
+    ;
+    UPDATE
+      drug_seller_order
+    SET
       status = 1
     WHERE
       order_id = #{orderId}
     AND
       seller_id = #{sellerId}
+    ;
   </update>
 
   <!-- 用户订单报价列表 -->
@@ -166,5 +174,4 @@
     AND
       s.seller_id = g.seller_id
   </select>
-
 </mapper>

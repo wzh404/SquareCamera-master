@@ -1,9 +1,6 @@
 package com.wannengyongyao.drug.service.pharmacist.impl;
 
-import com.wannengyongyao.drug.dao.DrugOrderMapper;
-import com.wannengyongyao.drug.dao.DrugSellerMapper;
-import com.wannengyongyao.drug.dao.DrugSellerOrderGoodsMapper;
-import com.wannengyongyao.drug.dao.DrugSellerOrderMapper;
+import com.wannengyongyao.drug.dao.*;
 import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.service.pharmacist.PharmacistService;
 import com.wannengyongyao.drug.vo.PharmacistOrderVo;
@@ -31,6 +28,9 @@ public class PharmacistServiceImpl implements PharmacistService {
     @Autowired
     private DrugSellerOrderMapper sellerOrderMapper;
 
+    @Autowired
+    private DrugUserMapper userMapper;
+
     @Override
     public DrugSeller getPharmacitsByMobile(String mobile) {
         return sellerMapper.getPharmacitsByMobile(mobile);
@@ -56,6 +56,13 @@ public class PharmacistServiceImpl implements PharmacistService {
         return sellerMapper.update(seller);
     }
 
+    /**
+     * 发送报价
+     *
+     * @param orderVo
+     * @param sellerId
+     * @return
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public int grab(PharmacistOrderVo orderVo, long sellerId) {
@@ -136,5 +143,10 @@ public class PharmacistServiceImpl implements PharmacistService {
     @Override
     public int sellerCollection(DrugOrder order) {
         return orderMapper.sellerCollection(order);
+    }
+
+    @Override
+    public List<DrugUser> getPharmacistUsers(Long pharmacistId) {
+        return userMapper.getPharmacistUsers(pharmacistId);
     }
 }

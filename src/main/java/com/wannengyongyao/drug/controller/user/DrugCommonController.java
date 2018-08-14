@@ -43,14 +43,30 @@ public class DrugCommonController {
     @Value("${drug.user.secret}")
     private String secret;
 
+    /**
+     * 用户端banner
+     *
+     * @return
+     */
     @RequestMapping(value="/common/banners", method= {RequestMethod.GET})
     public ResultObject banner(){
         List<DrugBanner> bannerList = commonService.banner(1);
         return ResultObject.ok(bannerList);
     }
 
+    /**
+     * 发送手机短信
+     *
+     * @param mobile
+     * @return
+     */
     @RequestMapping(value="/common/sms/code", method= {RequestMethod.GET})
     public ResultObject smsCode(@RequestParam("mobile")String mobile){
+        String smsCode = smsCache.getIfPresent(mobile);
+        if (smsCode != null){
+            return ResultObject.fail(ResultCode.NOT_REPEAT_SEND_CODE);
+        }
+
         String code = StringUtil.getRandomCode(6);
         smsCache.put(mobile, code);
 
@@ -65,16 +81,27 @@ public class DrugCommonController {
      */
     @RequestMapping(value="/common/login", method= {RequestMethod.POST})
     public ResultObject login(@RequestBody LoginVo loginVo){
-        String smscode = smsCache.getIfPresent(loginVo.getMobile());
-        if (smscode == null || !smscode.equalsIgnoreCase(loginVo.getCode())){
+        String smsCode = smsCache.getIfPresent(loginVo.getMobile());
+        if (smsCode == null || !smsCode.equalsIgnoreCase(loginVo.getCode())){
             return ResultObject.fail(ResultCode.INVALID_SMS_CODE);
         }
+        smsCache.invalidate(loginVo.getMobile());
+
+        // 获取用户微信授权信息
+        DrugWeixinUser wxUser = userService.getByOpenId(loginVo.getOpenid());
+        if (wxUser == null){
+            return ResultObject.fail(ResultCode.BAD_REQUEST);
+        }
+
+        // 注册用户
         DrugUser user = loginVo.asUser();
+        user.setAvatar(wxUser.getAvatarUrl());
         int rows = userService.insertUser(user);
         if (rows < 1){
             return ResultObject.fail(ResultCode.FAILED);
         }
 
+        // 生成access_token
         JwtObject jwt = new JwtObject(user.getId());
         Optional<String> token = TokenUtil.createJwtToken(jwt.toJson());
         if (!token.isPresent()){
@@ -86,13 +113,14 @@ public class DrugCommonController {
     }
 
     /**
-     * 获取微信用户信息并保存
+     * 获取微信用户信息，并保存。
      *
      * @param loginVo
      * @return
      */
     @RequestMapping(value="/common/wechat/login", method= {RequestMethod.POST})
     public ResultObject wxLogin(@RequestBody WeChatLoginVo loginVo){
+        // 根据appid和secret获取session_key
         Optional<JSONObject> json = WxUtils.getSessionKey(appid, secret, loginVo.getJscode());
         if (!json.isPresent()) {
             return ResultObject.fail(ResultCode.FAILED);
@@ -101,26 +129,48 @@ public class DrugCommonController {
         String sessionKey = json.get().getString("session_key");
         String openid = json.get().getString("openid");
 
+        // 根据session_key, encryptedData, iv解密微信用户授权信息
         Optional<String> jsonString = WxUtils.getUserInfo(sessionKey, loginVo.getEncryptedData(), loginVo.getIv());
         if (!jsonString.isPresent()) {
             return ResultObject.fail(ResultCode.FAILED);
         }
 
+        // decode json
         DrugWeixinUser user = JSON.parseObject(jsonString.get(), DrugWeixinUser.class);
-        userService.insertWeixinUser(user);
+        if (userService.insertWeixinUser(user) < 1){
+            return ResultObject.fail(ResultCode.FAILED);
+        }
+
         return ResultObject.ok(openid);
     }
 
+    /**
+     * 获取省份列表
+     *
+     * @return
+     */
     @RequestMapping(value="/common/province", method= {RequestMethod.GET})
     public ResultObject province(){
         return ResultObject.ok(commonService.getProvince());
     }
 
+    /**
+     * 根据省份获取城市列表
+     *
+     * @param code
+     * @return
+     */
     @RequestMapping(value="/common/city", method= {RequestMethod.GET})
     public ResultObject city(@RequestParam("code")String code){
         return ResultObject.ok(commonService.getCity(code.substring(0,2)));
     }
 
+    /**
+     * 根据城市获取区列表
+     *
+     * @param code
+     * @return
+     */
     @RequestMapping(value="/common/district", method= {RequestMethod.GET})
     public ResultObject district(@RequestParam("code")String code){
         return ResultObject.ok(commonService.getDistrict(code.substring(0,4)));

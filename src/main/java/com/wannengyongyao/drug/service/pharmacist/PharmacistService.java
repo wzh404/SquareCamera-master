@@ -3,6 +3,7 @@ package com.wannengyongyao.drug.service.pharmacist;
 import com.wannengyongyao.drug.model.DrugOrder;
 import com.wannengyongyao.drug.model.DrugSeller;
 import com.wannengyongyao.drug.model.DrugSellerOrder;
+import com.wannengyongyao.drug.model.DrugUser;
 import com.wannengyongyao.drug.vo.PharmacistOrderVo;
 
 import java.util.List;
@@ -105,4 +106,12 @@ public interface PharmacistService {
      * @return
      */
     int sellerCollection(DrugOrder order);
+
+    /**
+     * 药师结交的用户列表
+     *
+     * @param pharmacistId
+     * @return
+     */
+    List<DrugUser> getPharmacistUsers(Long pharmacistId);
 }

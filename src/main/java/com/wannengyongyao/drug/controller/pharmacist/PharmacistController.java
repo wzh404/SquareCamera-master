@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.wannengyongyao.drug.common.ResultCode;
 import com.wannengyongyao.drug.common.ResultObject;
 import com.wannengyongyao.drug.model.DrugSeller;
+import com.wannengyongyao.drug.model.DrugUser;
 import com.wannengyongyao.drug.service.pharmacist.PharmacistService;
 import com.wannengyongyao.drug.util.RequestUtil;
 import com.wannengyongyao.drug.vo.PharmacistVo;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/pharmacist")
@@ -76,5 +78,17 @@ public class PharmacistController {
         }
 
         return ResultObject.ok(seller);
+    }
+
+    @RequestMapping(value="/users", method= {RequestMethod.GET})
+    public ResultObject myUser(HttpServletRequest request){
+        long sellerId = RequestUtil.getUserId(request);
+        DrugSeller seller = pharmacistService.getSeller(sellerId);
+        if (seller == null){
+            return ResultObject.fail(ResultCode.PHARMACIST_NOT_EXIST);
+        }
+
+        List<DrugUser> users = pharmacistService.getPharmacistUsers(sellerId);
+        return ResultObject.ok(users);
     }
 }

@@ -66,4 +66,9 @@ public class DrugUserServiceImpl implements DrugUserService {
 
         return userMapper.insert(user);
     }
+
+    @Override
+    public DrugWeixinUser getByOpenId(String openId) {
+        return weixinMapper.getByOpenId(openId);
+    }
 }

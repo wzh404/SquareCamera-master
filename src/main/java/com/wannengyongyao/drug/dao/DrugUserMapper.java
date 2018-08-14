@@ -64,4 +64,12 @@ public interface DrugUserMapper {
      * @return
      */
     DrugUser getByMobile(@Param("mobile")String mobile);
+
+    /**
+     * 药师结交的用户列表
+     *
+     * @param pharmacistId
+     * @return
+     */
+    List<DrugUser> getPharmacistUsers(@Param("pharmacistId")Long pharmacistId);
 }
