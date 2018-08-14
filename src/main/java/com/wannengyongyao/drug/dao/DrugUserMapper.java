@@ -1,9 +1,6 @@
 package com.wannengyongyao.drug.dao;
 
-import com.wannengyongyao.drug.model.DrugStore;
-import com.wannengyongyao.drug.model.DrugUser;
-import com.wannengyongyao.drug.model.DrugUserPharmacist;
-import com.wannengyongyao.drug.model.DrugUserStore;
+import com.wannengyongyao.drug.model.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -72,4 +69,35 @@ public interface DrugUserMapper {
      * @return
      */
     List<DrugUser> getPharmacistUsers(@Param("pharmacistId")Long pharmacistId);
+
+    /**
+     * 用户长期用药列表
+     *
+     * @param userId
+     * @return
+     */
+    List<DrugUserLongterm> listUserLongTerm(@Param("userId")Long userId);
+
+    /**
+     * 新增用户长期用药
+     *
+     * @param longterm
+     * @return
+     */
+    int insertUserLongTerm(DrugUserLongterm longterm);
+
+    /**
+     * 删除用户长期用药
+     *
+     * @return
+     */
+    int deleteUserLongTerm(List<DrugUserLongterm> longterms);
+
+    /**
+     *
+     * @param userId
+     * @param drugId
+     * @return
+     */
+    DrugUserLongterm getUserLongTerm(@Param("userId")Long userId, @Param("drugId")Integer drugId);
 }

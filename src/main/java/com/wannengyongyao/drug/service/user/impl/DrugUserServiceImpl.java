@@ -1,5 +1,7 @@
 package com.wannengyongyao.drug.service.user.impl;
 
+import com.wannengyongyao.drug.dao.DrugMapper;
+import com.wannengyongyao.drug.dao.DrugUserCartMapper;
 import com.wannengyongyao.drug.dao.DrugUserMapper;
 import com.wannengyongyao.drug.dao.DrugUserWeixinMapper;
 import com.wannengyongyao.drug.model.*;
@@ -7,6 +9,7 @@ import com.wannengyongyao.drug.service.user.DrugUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service("drugUserService")
@@ -16,6 +19,12 @@ public class DrugUserServiceImpl implements DrugUserService {
 
     @Autowired
     private DrugUserWeixinMapper weixinMapper;
+
+    @Autowired
+    private DrugUserCartMapper userCartMapper;
+
+    @Autowired
+    private DrugMapper drugMapper;
 
     @Override
     public int insertUserPharmacist(DrugUserPharmacist pharmacist) {
@@ -44,7 +53,7 @@ public class DrugUserServiceImpl implements DrugUserService {
     public int insertWeixinUser(DrugWeixinUser user) {
         DrugWeixinUser u = weixinMapper.getByOpenId(user.getOpenId());
         if (u != null){
-            return -1;
+            return 1;
         }
         return weixinMapper.insert(user);
     }
@@ -62,7 +71,7 @@ public class DrugUserServiceImpl implements DrugUserService {
             return -2;
         }
         user.setName(w.getNickName());
-        user.setGender("男".equalsIgnoreCase(w.getGender()) ? 0 : 1);
+        // user.setGender("男".equalsIgnoreCase(w.getGender()) ? 0 : 1);
 
         return userMapper.insert(user);
     }
@@ -70,5 +79,66 @@ public class DrugUserServiceImpl implements DrugUserService {
     @Override
     public DrugWeixinUser getByOpenId(String openId) {
         return weixinMapper.getByOpenId(openId);
+    }
+
+    @Override
+    public int insert(DrugUserCart cart) {
+        Drug drug = drugMapper.get(cart.getDrugId());
+        if (drug == null){
+            return -1;
+        }
+
+        DrugUserCart c = userCartMapper.getUserCart(cart.getUserId(), cart.getDrugId());
+        if (c != null){
+            return -2;
+        }
+        cart.setDrugName(drug.getName());
+        cart.setManufacturer(drug.getManufacturer());
+        cart.setSpecifications(drug.getSpecifications());
+        cart.setQuantity(1);
+        cart.setUnit("件");
+        cart.setUnitPrice(BigDecimal.valueOf(0.0));
+        return userCartMapper.insert(cart);
+    }
+
+    @Override
+    public List<DrugUserCart> listUserCart(Long userId) {
+        return userCartMapper.listUserCart(userId);
+    }
+
+    @Override
+    public int deleteUserCart(List<DrugUserCart> carts) {
+        return userCartMapper.deleteUserCart(carts);
+    }
+
+    @Override
+    public List<DrugUserLongterm> listUserLongTerm(Long userId) {
+        return userMapper.listUserLongTerm(userId);
+    }
+
+    @Override
+    public int insertUserLongTerm(DrugUserLongterm longterm) {
+        Drug drug = drugMapper.get(longterm.getDrugId());
+        if (drug == null){
+            return -1;
+        }
+
+        DrugUserLongterm c = userMapper.getUserLongTerm(longterm.getUserId(), longterm.getDrugId());
+        if (c != null){
+            return -2;
+        }
+        longterm.setDrugName(drug.getName());
+        longterm.setManufacturer(drug.getManufacturer());
+        longterm.setSpecifications(drug.getSpecifications());
+        longterm.setQuantity(1);
+        longterm.setUnit("件");
+        longterm.setUnitPrice(BigDecimal.valueOf(0.0));
+
+        return userMapper.insertUserLongTerm(longterm);
+    }
+
+    @Override
+    public int deleteUserLongTerm(List<DrugUserLongterm> longterms) {
+        return userMapper.deleteUserLongTerm(longterms);
     }
 }

@@ -23,6 +23,17 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
+  <select id="getUserCart" resultMap="UserCart">
+    select
+    <include refid="Base_Column_List" />
+    from
+      drug_user_cart
+    WHERE
+      user_id = #{userId,jdbcType=BIGINT}
+    AND
+      drug_id = #{drugId,jdbcType=INTEGER}
+  </select>
+
   <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugUserCart">
     insert into drug_user_cart (
       user_id,
@@ -37,7 +48,7 @@
     values (
       #{userId,jdbcType=BIGINT},
       #{drugId,jdbcType=INTEGER},
-      #{gdrugName,jdbcType=VARCHAR},
+      #{drugName,jdbcType=VARCHAR},
       #{unit,jdbcType=VARCHAR},
       #{unitPrice,jdbcType=DECIMAL},
       #{specifications,jdbcType=VARCHAR},
@@ -46,7 +57,7 @@
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
 
-  <select id="listUserCart" parameterType="java.lang.Integer" resultMap="UserCart">
+  <select id="listUserCart" resultMap="UserCart">
     select
     <include refid="Base_Column_List" />
     from
@@ -55,7 +66,13 @@
       user_id = #{userId,jdbcType=BIGINT}
   </select>
 
-  <delete id="deleteUserCart">
-    DELETE FROM drug_user_cart WHERE id = #{id,jdbcType=INTEGER}
+  <delete id="deleteUserCart" parameterType="com.wannengyongyao.drug.model.DrugUserCart">
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+    DELETE FROM drug_user_cart
+    WHERE
+      user_id = #{item.userId,jdbcType=BIGINT}
+    AND
+      drug_id = #{item.drugId,jdbcType=INTEGER}
+    </foreach>
   </delete>
 </mapper>

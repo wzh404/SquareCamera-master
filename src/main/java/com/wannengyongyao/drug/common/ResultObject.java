@@ -51,6 +51,10 @@ public class ResultObject {
         return new ResultObject(r.getCode(), r.getMsg(), null);
     }
 
+    public static ResultObject fail(ResultCode r, String errmsg){
+        return new ResultObject(r.getCode(), errmsg, null);
+    }
+
     public static ResultObject cond(boolean b, ResultCode r){
         if (b){
             return ok();

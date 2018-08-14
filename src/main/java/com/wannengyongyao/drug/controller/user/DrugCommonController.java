@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class DrugCommonController {
      * @return
      */
     @RequestMapping(value="/common/login", method= {RequestMethod.POST})
-    public ResultObject login(@RequestBody LoginVo loginVo){
+    public ResultObject login(@Valid @RequestBody LoginVo loginVo){
         String smsCode = smsCache.getIfPresent(loginVo.getMobile());
         if (smsCode == null || !smsCode.equalsIgnoreCase(loginVo.getCode())){
             return ResultObject.fail(ResultCode.INVALID_SMS_CODE);
@@ -96,6 +97,8 @@ public class DrugCommonController {
         // 注册用户
         DrugUser user = loginVo.asUser();
         user.setAvatar(wxUser.getAvatarUrl());
+        user.setGender("1".equals(wxUser.getGender()) ? 1 : 0);
+        user.setCreateIp("localhost");
         int rows = userService.insertUser(user);
         if (rows < 1){
             return ResultObject.fail(ResultCode.FAILED);
@@ -141,7 +144,7 @@ public class DrugCommonController {
             return ResultObject.fail(ResultCode.FAILED);
         }
 
-        return ResultObject.ok(openid);
+        return ResultObject.ok("openid",openid);
     }
 
     /**

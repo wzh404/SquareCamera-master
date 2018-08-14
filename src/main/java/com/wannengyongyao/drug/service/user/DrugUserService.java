@@ -52,4 +52,51 @@ public interface DrugUserService {
      * @return
      */
     DrugWeixinUser getByOpenId(String openId);
+
+    /**
+     * 新增购物车
+     *
+     * @param record
+     * @return
+     */
+    int insert(DrugUserCart record);
+
+    /**
+     * 查询购物车
+     *
+     * @param userId
+     * @return
+     */
+    List<DrugUserCart> listUserCart(Long userId);
+
+    /**
+     * 删除购物车
+     *
+     * @param carts
+     * @return
+     */
+    int deleteUserCart(List<DrugUserCart> carts);
+
+    /**
+     * 用户长期用药列表
+     *
+     * @param userId
+     * @return
+     */
+    List<DrugUserLongterm> listUserLongTerm(Long userId);
+
+    /**
+     * 新增用户长期用药
+     *
+     * @param longterm
+     * @return
+     */
+    int insertUserLongTerm(DrugUserLongterm longterm);
+
+    /**
+     * 删除用户长期用药
+     *
+     * @return
+     */
+    int deleteUserLongTerm(List<DrugUserLongterm> longterms);
 }

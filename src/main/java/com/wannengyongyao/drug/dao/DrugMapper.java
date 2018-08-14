@@ -3,6 +3,7 @@ package com.wannengyongyao.drug.dao;
 
 import com.github.pagehelper.Page;
 import com.wannengyongyao.drug.model.Drug;
+import com.wannengyongyao.drug.model.DrugRank;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,4 +24,25 @@ public interface DrugMapper {
      * @return
      */
     Drug get(@Param("id")Integer id);
+
+    /**
+     * 关注度排行
+     *
+     * @return
+     */
+    Page<DrugRank> listDrugHotRank();
+
+    /**
+     * 稀少度排行
+     *
+     * @return
+     */
+    Page<DrugRank> listDrugRareRank();
+
+    /**
+     * 成功率排行
+     *
+     * @return
+     */
+    Page<DrugRank> listDrugSuccessRank();
 }

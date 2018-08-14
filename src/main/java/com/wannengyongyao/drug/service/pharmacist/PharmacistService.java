@@ -1,11 +1,9 @@
 package com.wannengyongyao.drug.service.pharmacist;
 
-import com.wannengyongyao.drug.model.DrugOrder;
-import com.wannengyongyao.drug.model.DrugSeller;
-import com.wannengyongyao.drug.model.DrugSellerOrder;
-import com.wannengyongyao.drug.model.DrugUser;
+import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.vo.PharmacistOrderVo;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -114,4 +112,14 @@ public interface PharmacistService {
      * @return
      */
     List<DrugUser> getPharmacistUsers(Long pharmacistId);
+
+    /**
+     * 用户收入
+     *
+     * @param sellerId
+     * @param orderId
+     * @param amount
+     * @return
+     */
+    int income(Long sellerId, Long orderId, BigDecimal amount, String remark);
 }

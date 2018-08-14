@@ -43,8 +43,8 @@
       city)
     values (
       #{nickName,jdbcType=VARCHAR},
-      #{unionid,jdbcType=VARCHAR},
-      #{openid,jdbcType=VARCHAR},
+      #{unionId,jdbcType=VARCHAR},
+      #{openId,jdbcType=VARCHAR},
       #{gender,jdbcType=INTEGER},
       #{avatarUrl,jdbcType=VARCHAR},
       #{country,jdbcType=VARCHAR},

@@ -80,6 +80,12 @@ public class PharmacistController {
         return ResultObject.ok(seller);
     }
 
+    /**
+     * 我的结交
+     *
+     * @param request
+     * @return
+     */
     @RequestMapping(value="/users", method= {RequestMethod.GET})
     public ResultObject myUser(HttpServletRequest request){
         long sellerId = RequestUtil.getUserId(request);

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wannengyongyao.drug.dao.DrugSellerBalanceMapper">
+  <resultMap id="SellerBalance" type="com.wannengyongyao.drug.model.DrugSellerBalance">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="seller_id" jdbcType="BIGINT" property="sellerId" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="debit" jdbcType="INTEGER" property="debit" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, seller_id, order_id, amount, create_time, debit, remark
+  </sql>
+  <select id="get" parameterType="java.lang.Integer" resultMap="SellerBalance">
+    select 
+    <include refid="Base_Column_List" />
+    from drug_seller_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="income" parameterType="com.wannengyongyao.drug.model.DrugSellerBalance">
+    insert into drug_seller_account (
+      seller_id,
+      order_id,
+      amount,
+      create_time,
+      debit,
+      remark)
+    values (
+      #{sellerId,jdbcType=BIGINT},
+      #{orderId,jdbcType=BIGINT},
+      #{amount,jdbcType=DECIMAL},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{debit,jdbcType=INTEGER},
+      #{remark,jdbcType=VARCHAR}
+    );
+    UPDATE
+      drug_seller
+    SET
+      account_balance = account_balance + #{amount,jdbcType=DECIMAL)
+    WHERE
+      id = #{sellerId,jdbcType=BIGINT};
+  </insert>
+</mapper>

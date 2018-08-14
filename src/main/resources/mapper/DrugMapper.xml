@@ -63,4 +63,55 @@
       WHERE
         id = #{id}
   </select>
+
+  <select id="listDrugHotRank" resultType="com.wannengyongyao.drug.model.DrugRank">
+    SELECT
+      h.id,
+      h.drug_id as drugId,
+      h.rank,
+      d.name as drugName,
+      d.specifications,
+      d.manufacturer
+    FROM
+      drug_hot_rank h
+    INNER JOIN
+      drug d
+    ON
+      h.drug_id = d.id
+    ORDER BY h.rank DESC
+  </select>
+
+  <select id="listDrugRareRank" resultType="com.wannengyongyao.drug.model.DrugRank">
+    SELECT
+      h.id,
+      h.drug_id as drugId,
+      h.rank,
+      d.name as drugName,
+      d.specifications,
+      d.manufacturer
+    FROM
+      drug_rare_rank h
+    INNER JOIN
+      drug d
+    ON
+      h.drug_id = d.id
+    ORDER BY h.rank DESC
+  </select>
+
+  <select id="listDrugSuccessRank" resultType="com.wannengyongyao.drug.model.DrugRank">
+    SELECT
+      h.id,
+      h.drug_id as drugId,
+      h.rank,
+      d.name as drugName,
+      d.specifications,
+      d.manufacturer
+    FROM
+      drug_success_rank h
+    INNER JOIN
+      drug d
+    ON
+      h.drug_id = d.id
+    ORDER BY h.rank DESC
+  </select>
 </mapper>

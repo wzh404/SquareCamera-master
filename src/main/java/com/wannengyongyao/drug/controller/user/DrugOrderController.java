@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class DrugOrderController {
      * @return
      */
     @RequestMapping(value="/order", method= {RequestMethod.POST})
-    public ResultObject order(HttpServletRequest request, @RequestBody DrugOrderVo orderVo){
+    public ResultObject order(HttpServletRequest request, @Valid @RequestBody DrugOrderVo orderVo){
         Long userId = RequestUtil.getUserId(request);
 
         if (orderVo.getDrugs().isEmpty()){
@@ -60,7 +61,7 @@ public class DrugOrderController {
      * @return
      */
     @RequestMapping(value="/photo/order", method= {RequestMethod.POST})
-    public ResultObject photoOrder(HttpServletRequest request,@RequestBody PhotoOrderVo orderVo){
+    public ResultObject photoOrder(HttpServletRequest request, @Valid @RequestBody PhotoOrderVo orderVo){
         Long userId = RequestUtil.getUserId(request);
 
         if (orderVo.getDrugs().isEmpty()){

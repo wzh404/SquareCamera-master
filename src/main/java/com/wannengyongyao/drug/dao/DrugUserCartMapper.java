@@ -24,8 +24,23 @@ public interface DrugUserCartMapper {
 
     /**
      *
+     * @param carts
+     * @return
+     */
+    int deleteUserCart(List<DrugUserCart> carts);
+
+    /**
+     *
      * @param id
      * @return
      */
-    int deleteUserCart(@Param("id")Integer id);
+    DrugUserCart get(@Param("id") Integer id);
+
+    /**
+     *
+     * @param userId
+     * @param drugId
+     * @return
+     */
+    DrugUserCart getUserCart(@Param("userId")Long userId, @Param("drugId")Integer drugId);
 }
