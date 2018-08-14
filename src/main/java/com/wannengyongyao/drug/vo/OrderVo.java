@@ -3,13 +3,10 @@ package com.wannengyongyao.drug.vo;
 import com.wannengyongyao.drug.common.status.OrderStatus;
 import com.wannengyongyao.drug.common.status.ShippingStatus;
 import com.wannengyongyao.drug.model.DrugOrder;
-import com.wannengyongyao.drug.model.DrugOrderGoods;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class OrderVo {

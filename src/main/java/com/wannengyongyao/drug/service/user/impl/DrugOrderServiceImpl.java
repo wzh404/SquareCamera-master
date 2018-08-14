@@ -66,6 +66,7 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         // 订单代收药店
         DrugStore store = drugStoreMapper.get(orderVo.getStoreId());
         order.setCollectionStore(store.getName());
+        // 生成订单
         long orderId = StringUtil.getOrderId(orderVo.getUserId());
         order.setId(orderId);
 
@@ -86,11 +87,14 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         }
 
         // 我的代收药店
-        DrugUserStore userStore = new DrugUserStore();
-        userStore.setUserId(orderVo.getUserId());
-        userStore.setStoreId(orderVo.getStoreId());
-        userStore.setCreateTime(LocalDateTime.now());
-        userMapper.insertUserStore(userStore);
+        int cnt = userMapper.getUserStoreCount(orderVo.getUserId(), orderVo.getStoreId());
+        if (cnt < 1) {
+            DrugUserStore userStore = new DrugUserStore();
+            userStore.setUserId(orderVo.getUserId());
+            userStore.setStoreId(orderVo.getStoreId());
+            userStore.setCreateTime(LocalDateTime.now());
+            userMapper.insertUserStore(userStore);
+        }
 
         rows = orderMapper.insert(order);
         return rows;
@@ -113,15 +117,19 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         // 订单代收药店
         DrugStore store = drugStoreMapper.get(orderVo.getStoreId());
         order.setCollectionStore(store.getName());
+        // 生成订单
         long orderId = StringUtil.getOrderId(orderVo.getUserId());
         order.setId(orderId);
 
         // 我的代收药店
-        DrugUserStore userStore = new DrugUserStore();
-        userStore.setUserId(orderVo.getUserId());
-        userStore.setStoreId(orderVo.getStoreId());
-        userStore.setCreateTime(LocalDateTime.now());
-        userMapper.insertUserStore(userStore);
+        int cnt = userMapper.getUserStoreCount(orderVo.getUserId(), orderVo.getStoreId());
+        if (cnt < 1) {
+            DrugUserStore userStore = new DrugUserStore();
+            userStore.setUserId(orderVo.getUserId());
+            userStore.setStoreId(orderVo.getStoreId());
+            userStore.setCreateTime(LocalDateTime.now());
+            userMapper.insertUserStore(userStore);
+        }
 
         // 订单拍照药品信息
         List<DrugOrderGoods> goods = orderVo.asGoods();
