@@ -8,6 +8,7 @@
     <result column="amount" jdbcType="DECIMAL" property="amount" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="debit" jdbcType="INTEGER" property="debit" />
+    <result column="classify" jdbcType="INTEGER" property="classify" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -20,27 +21,66 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <insert id="income" parameterType="com.wannengyongyao.drug.model.DrugSellerBalance">
-    insert into drug_seller_account (
+  <insert id="sellerBalance" parameterType="com.wannengyongyao.drug.model.DrugSellerBalance">
+    insert into drug_seller_balance (
       seller_id,
       order_id,
       amount,
       create_time,
       debit,
+      classify,
       remark)
-    values (
-      #{sellerId,jdbcType=BIGINT},
-      #{orderId,jdbcType=BIGINT},
-      #{amount,jdbcType=DECIMAL},
-      #{createTime,jdbcType=TIMESTAMP},
-      #{debit,jdbcType=INTEGER},
-      #{remark,jdbcType=VARCHAR}
-    );
+    values
+    <foreach collection ="list" item="item" separator =",">
+    (
+      #{item.sellerId,jdbcType=BIGINT},
+      #{item.orderId,jdbcType=BIGINT},
+      #{item.amount,jdbcType=DECIMAL},
+      #{item.createTime,jdbcType=TIMESTAMP},
+      #{item.debit,jdbcType=INTEGER},
+      #{item.classify,jdbcType=INTEGER},
+      #{item.remark,jdbcType=VARCHAR}
+    )
+    </foreach>
+  </insert>
+
+  <update id="sellerAccount">
     UPDATE
       drug_seller
     SET
-      account_balance = account_balance + #{amount,jdbcType=DECIMAL)
+      account_balance = account_balance + #{amount,jdbcType=DECIMAL}
     WHERE
       id = #{sellerId,jdbcType=BIGINT};
+  </update>
+
+  <insert id="systemBalance" parameterType="com.wannengyongyao.drug.model.DrugSystemBalance">
+    insert into drug_system_balance (
+      order_id,
+      amount,
+      create_time,
+      debit,
+      classify,
+      remark)
+    values
+    <foreach collection ="list" item="item" separator =",">
+      (
+      #{item.orderId,jdbcType=BIGINT},
+      #{item.amount,jdbcType=DECIMAL},
+      #{item.createTime,jdbcType=TIMESTAMP},
+      #{item.debit,jdbcType=INTEGER},
+      #{item.classify,jdbcType=INTEGER},
+      #{item.remark,jdbcType=VARCHAR}
+      )
+    </foreach>
   </insert>
+
+  <update id="systemAccount">
+    UPDATE
+      drug_system_account
+    SET
+      expenditure = expenditure + #{expenditure,jdbcType=DECIMAL},
+      income = income + #{income,jdbcType=DECIMAL}
+    WHERE
+      id = 1;
+  </update>
 </mapper>

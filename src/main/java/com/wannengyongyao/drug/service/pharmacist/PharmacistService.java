@@ -112,14 +112,4 @@ public interface PharmacistService {
      * @return
      */
     List<DrugUser> getPharmacistUsers(Long pharmacistId);
-
-    /**
-     * 用户收入
-     *
-     * @param sellerId
-     * @param orderId
-     * @param amount
-     * @return
-     */
-    int income(Long sellerId, Long orderId, BigDecimal amount, String remark);
 }

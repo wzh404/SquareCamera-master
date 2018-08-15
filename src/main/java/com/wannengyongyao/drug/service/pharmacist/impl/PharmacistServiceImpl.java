@@ -152,17 +152,4 @@ public class PharmacistServiceImpl implements PharmacistService {
     public List<DrugUser> getPharmacistUsers(Long pharmacistId) {
         return userMapper.getPharmacistUsers(pharmacistId);
     }
-
-    @Override
-    public int income(Long sellerId, Long orderId, BigDecimal amount, String remark) {
-        DrugSellerBalance balance = new DrugSellerBalance();
-        balance.setAmount(amount);
-        balance.setSellerId(sellerId);
-        balance.setOrderId(orderId);
-        balance.setCreateTime(LocalDateTime.now());
-        balance.setRemark(remark);
-        balance.setDebit(1);
-
-        return balanceMapper.income(balance);
-    }
 }

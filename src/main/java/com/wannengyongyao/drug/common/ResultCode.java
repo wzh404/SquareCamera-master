@@ -28,6 +28,8 @@ public enum ResultCode {
     NOT_REPEAT_SEND_CODE(4002),
     PHARMACIST_NOT_EXIST(5001),
     PHARMACIST_ORDER_EXIST(5002),
+    COUPON_NOT_EXIST(6001),
+    COUPON_USER_ADDED(6002),
     BAD_REQUEST(9998),
     FAILED(9999);
 
@@ -66,9 +68,12 @@ public enum ResultCode {
             .put(INVALID_SMS_CODE.code, "无效的手机验证码")
             .put(NOT_REPEAT_SEND_CODE.code, "不要重复发送手机验证码")
 
+            .put(COUPON_NOT_EXIST.code, "优惠券不存在")
+            .put(COUPON_USER_ADDED.code, "优惠券已添加")
+
             .put(PHARMACIST_NOT_EXIST.code, "药师不存在")
             .put(PHARMACIST_ORDER_EXIST.code, "订单已抢")
             .put(BAD_REQUEST.code, "非法请求")
-            .put(FAILED.code, "系统错误")
+            .put(FAILED.code, "操作失败")
             .build();
 }

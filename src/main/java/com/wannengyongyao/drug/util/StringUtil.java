@@ -59,4 +59,20 @@ public class StringUtil {
         }
         return sb.toString();
     }
+
+    /**
+     * 生成优惠码
+     *
+     * @param length
+     * @return
+     */
+    public static String getCouponCode(int length) {
+        String str = "0123456789ABCDEFGHIJKLMNOPQRSTUVMXYZ";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            sb.append(str.charAt(random.nextInt(36)));
+        }
+        return sb.toString();
+    }
 }

@@ -49,6 +49,9 @@ public class DrugOrderServiceImpl implements DrugOrderService {
     @Autowired
     private DrugSellerMapper sellerMapper;
 
+    @Autowired
+    private DrugCouponMapper couponMapper;
+
     /**
      * 下单
      *
@@ -62,6 +65,16 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         DrugUser user = userMapper.get(orderVo.getUserId());
         DrugOrder order = orderVo.asOrder();
         order.setUserName(user.getName());
+
+        // 优惠券
+        if (orderVo.getCoupon() != null) {
+            DrugUserCoupon coupon = couponMapper.getUserCoupon(orderVo.getCoupon());
+            if (coupon == null){
+                return -2;
+            }
+
+            order.setDiscountAmount(BigDecimal.valueOf(coupon.getAmount()));
+        }
 
         // 订单代收药店
         DrugStore store = drugStoreMapper.get(orderVo.getStoreId());
@@ -86,7 +99,7 @@ public class DrugOrderServiceImpl implements DrugOrderService {
             return -1;
         }
 
-        // 我的代收药店
+        // 自动添加我的代收药店
         int cnt = userMapper.getUserStoreCount(orderVo.getUserId(), orderVo.getStoreId());
         if (cnt < 1) {
             DrugUserStore userStore = new DrugUserStore();
@@ -113,6 +126,16 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         DrugUser user = userMapper.get(orderVo.getUserId());
         DrugOrder order = orderVo.asOrder();
         order.setUserName(user.getName());
+
+        // 优惠券
+        if (orderVo.getCoupon() != null) {
+            DrugUserCoupon coupon = couponMapper.getUserCoupon(orderVo.getCoupon());
+            if (coupon == null){
+                return -2;
+            }
+
+            order.setDiscountAmount(BigDecimal.valueOf(coupon.getAmount()));
+        }
 
         // 订单代收药店
         DrugStore store = drugStoreMapper.get(orderVo.getStoreId());

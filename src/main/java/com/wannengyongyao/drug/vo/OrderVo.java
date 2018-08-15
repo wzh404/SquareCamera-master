@@ -22,6 +22,9 @@ public class OrderVo {
     private BigDecimal rewardAmount;
     // 运费
     private BigDecimal freight;
+    // 优惠券
+    private String coupon;
+
     // 代收药店
     @Min(1)
     private Integer storeId;

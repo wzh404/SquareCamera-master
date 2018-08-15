@@ -3,10 +3,12 @@ package com.wannengyongyao.drug.controller.user;
 import com.github.pagehelper.Page;
 import com.wannengyongyao.drug.common.ResultCode;
 import com.wannengyongyao.drug.common.ResultObject;
+import com.wannengyongyao.drug.common.status.CouponStatus;
 import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.service.user.DrugOrderService;
 import com.wannengyongyao.drug.service.user.DrugSellerService;
 import com.wannengyongyao.drug.service.user.DrugUserService;
+import com.wannengyongyao.drug.util.DrugConstants;
 import com.wannengyongyao.drug.util.RequestUtil;
 import com.wannengyongyao.drug.vo.CartVo;
 import com.wannengyongyao.drug.vo.LongTermVo;
@@ -213,5 +215,48 @@ public class DrugUserController {
 
         int rows = userService.deleteUserLongTerm(longTerms);
         return ResultObject.cond(rows > 0, ResultCode.FAILED);
+    }
+
+    /**
+     * 我的优惠券
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/my/coupons", method= {RequestMethod.GET})
+    public ResultObject myCoupons(HttpServletRequest request,
+                                  @RequestParam("page") int page){
+        Long userId = RequestUtil.getUserId(request);
+        List<DrugUserCoupon> coupons = userService.myCoupons(page, DrugConstants.PAGE_SIZE, userId);
+
+        return ResultObject.ok(coupons);
+    }
+
+    /**
+     * 用户添加优惠券
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/new/coupon", method= {RequestMethod.POST})
+    public ResultObject newUserCoupon(HttpServletRequest request,
+                                      @RequestParam("code")String code){
+        Long userId = RequestUtil.getUserId(request);
+
+        DrugUserCoupon userCoupon = new DrugUserCoupon();
+        userCoupon.setUserId(userId);
+        userCoupon.setCode(code);
+        userCoupon.setCreateTime(LocalDateTime.now());
+        userCoupon.setStatus(CouponStatus.NORMAL.get());
+
+        int ret = userService.insertUserCoupon(userCoupon);
+        if (ret == -1){
+            return ResultObject.fail(ResultCode.COUPON_NOT_EXIST);
+        }
+        if (ret == -2){
+            return ResultObject.fail(ResultCode.COUPON_USER_ADDED);
+        }
+
+        return ResultObject.cond(ret > 0, ResultCode.FAILED);
     }
 }

@@ -1,9 +1,8 @@
 package com.wannengyongyao.drug.service.user.impl;
 
-import com.wannengyongyao.drug.dao.DrugMapper;
-import com.wannengyongyao.drug.dao.DrugUserCartMapper;
-import com.wannengyongyao.drug.dao.DrugUserMapper;
-import com.wannengyongyao.drug.dao.DrugUserWeixinMapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.wannengyongyao.drug.dao.*;
 import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.service.user.DrugUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,9 @@ public class DrugUserServiceImpl implements DrugUserService {
 
     @Autowired
     private DrugMapper drugMapper;
+
+    @Autowired
+    private DrugCouponMapper couponMapper;
 
     @Override
     public int insertUserPharmacist(DrugUserPharmacist pharmacist) {
@@ -140,5 +142,24 @@ public class DrugUserServiceImpl implements DrugUserService {
     @Override
     public int deleteUserLongTerm(List<DrugUserLongterm> longterms) {
         return userMapper.deleteUserLongTerm(longterms);
+    }
+
+    @Override
+    public Page<DrugUserCoupon> myCoupons(int page, int pageSize, Long userId) {
+        PageHelper.startPage(page, pageSize);
+        return couponMapper.myCoupons(userId);
+    }
+
+    @Override
+    public int insertUserCoupon(DrugUserCoupon userCoupon) {
+        DrugCoupon c = couponMapper.get(userCoupon.getCode());
+        if (c == null){
+            return -1;
+        }
+        DrugUserCoupon uc = couponMapper.getUserCoupon(userCoupon.getCode());
+        if (uc != null){
+            return -2;
+        }
+        return couponMapper.insertUserCoupon(userCoupon);
     }
 }

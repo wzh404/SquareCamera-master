@@ -31,6 +31,8 @@
     <result column="collection_store" jdbcType="VARCHAR" property="collectionStore" />
     <result column="collection_store_id" jdbcType="INTEGER" property="collectionStoreId" />
 
+    <result column="coupon_code" jdbcType="VARCHAR" property="couponCode" />
+
     <collection property="drugs" ofType="com.wannengyongyao.drug.model.DrugOrderGoods">
       <id column="d_id" jdbcType="INTEGER" property="id" />
       <result column="order_id" jdbcType="BIGINT" property="orderId" />
@@ -128,6 +130,27 @@
       pay_status as payStatus,
       shipping_status as shippingStatus,
       collection_code as collectionCode
+    FROM
+      drug_order
+    WHERE
+      id = #{orderId}
+  </select>
+
+  <select id="getSettleOrder" resultType="com.wannengyongyao.drug.model.DrugOrder">
+    SELECT
+      id,
+      user_id as userId,
+      seller_id as sellerId,
+      collection_store_id as collectionStoreId,
+      order_status as orderStatus,
+      pay_status as payStatus,
+      shipping_status as shippingStatus,
+      sign_time as signTime,
+      order_amount as orderAmount,
+      freight,
+      service_charge as serviceCharge,
+      reward_amount as rewardAmount,
+      discount_amount as discountAmount
     FROM
       drug_order
     WHERE

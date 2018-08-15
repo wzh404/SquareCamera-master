@@ -80,5 +80,7 @@ public class DrugOrder  {
 
     private Integer collectionStoreId;
 
+    private String couponCode;
+
     private List<DrugOrderGoods> drugs;
 }

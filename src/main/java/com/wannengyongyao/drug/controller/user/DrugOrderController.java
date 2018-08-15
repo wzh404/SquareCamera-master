@@ -49,6 +49,9 @@ public class DrugOrderController {
 
         orderVo.setUserId(userId);
         int rows = orderService.newOrder(orderVo);
+        if (rows == -2){
+            return ResultObject.fail(ResultCode.COUPON_NOT_EXIST);
+        }
 
         return ResultObject.cond(rows > 0, ResultCode.FAILED);
     }
@@ -71,6 +74,9 @@ public class DrugOrderController {
 
         orderVo.setUserId(userId);
         int rows = orderService.newPhotoOrder(orderVo);
+        if (rows == -2){
+            return ResultObject.fail(ResultCode.COUPON_NOT_EXIST);
+        }
 
         return ResultObject.cond(rows > 0, ResultCode.FAILED);
     }

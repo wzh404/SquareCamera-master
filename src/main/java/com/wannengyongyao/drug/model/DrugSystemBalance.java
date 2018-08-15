@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
  * 平台支出 = e
  */
 @Data
-public class DrugSellerBalance {
+public class DrugSystemBalance {
     private Integer id;
 
     private Long sellerId;

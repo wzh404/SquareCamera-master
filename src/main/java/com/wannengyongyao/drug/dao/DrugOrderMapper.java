@@ -26,6 +26,13 @@ public interface DrugOrderMapper {
     DrugOrder getOrderStatus(@Param("orderId")Long orderId);
 
     /**
+     *
+     * @param orderId
+     * @return
+     */
+    DrugOrder getSettleOrder(@Param("orderId")Long orderId);
+
+    /**
      * 改变订单状态
      *
      * @param orderId

@@ -1,5 +1,6 @@
 package com.wannengyongyao.drug.service.user;
 
+import com.github.pagehelper.Page;
 import com.wannengyongyao.drug.model.*;
 import org.apache.ibatis.annotations.Param;
 
@@ -99,4 +100,20 @@ public interface DrugUserService {
      * @return
      */
     int deleteUserLongTerm(List<DrugUserLongterm> longterms);
+
+    /**
+     * 我的优惠券
+     *
+     * @param userId
+     * @return
+     */
+    Page<DrugUserCoupon> myCoupons(int page, int pageSize, Long userId);
+
+    /**
+     * 用户新增优惠券
+     *
+     * @param userCoupon
+     * @return
+     */
+    int insertUserCoupon(DrugUserCoupon userCoupon);
 }
