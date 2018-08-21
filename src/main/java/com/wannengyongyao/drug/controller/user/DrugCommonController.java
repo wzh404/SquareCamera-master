@@ -15,11 +15,13 @@ import com.wannengyongyao.drug.util.StringUtil;
 import com.wannengyongyao.drug.util.TokenUtil;
 import com.wannengyongyao.drug.util.WxUtils;
 import com.wannengyongyao.drug.vo.LoginVo;
+import com.wannengyongyao.drug.vo.UserRegisterVo;
 import com.wannengyongyao.drug.vo.WeChatLoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +74,30 @@ public class DrugCommonController {
         smsCache.put(mobile, code);
 
         return ResultObject.ok(code);
+    }
+
+    /**
+     * 根据openid获取access_token
+     *
+     * @param openid
+     * @return
+     */
+    @RequestMapping(value="/common/openid", method= {RequestMethod.POST})
+    public ResultObject openid(@RequestParam("openid")String openid){
+        DrugUser user = userService.getUserByOpenid(openid);
+        if (user == null){
+            return ResultObject.fail(ResultCode.BAD_REQUEST);
+        }
+
+        // 生成access_token
+        JwtObject jwt = new JwtObject(user.getId());
+        Optional<String> token = TokenUtil.createJwtToken(jwt.toJson());
+        if (!token.isPresent()){
+            return ResultObject.fail(ResultCode.FAILED);
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("access_token", token.get());
+        return ResultObject.ok(resultMap);
     }
 
     /**
@@ -177,5 +203,41 @@ public class DrugCommonController {
     @RequestMapping(value="/common/district", method= {RequestMethod.GET})
     public ResultObject district(@RequestParam("code")String code){
         return ResultObject.ok(commonService.getDistrict(code.substring(0,4)));
+    }
+
+    @RequestMapping(value="/common/register", method= {RequestMethod.POST})
+    public ResultObject newUser(HttpServletRequest request,
+                                @RequestBody UserRegisterVo registerVo) {
+        String smsCode = smsCache.getIfPresent(registerVo.getMobile());
+        if (smsCode == null || !smsCode.equalsIgnoreCase(registerVo.getCode())){
+            return ResultObject.fail(ResultCode.INVALID_SMS_CODE);
+        }
+        smsCache.invalidate(registerVo.getMobile());
+
+        // 获取用户微信授权信息
+        DrugWeixinUser wxUser = userService.getByOpenId(registerVo.getOpenid());
+        if (wxUser == null){
+            return ResultObject.fail(ResultCode.BAD_REQUEST);
+        }
+
+        // 注册用户
+        DrugUser user = registerVo.asUser();
+        user.setAvatar(wxUser.getAvatarUrl());
+        user.setName(wxUser.getNickName());
+        user.setGender("1".equals(wxUser.getGender()) ? 1 : 0);
+        int rows = userService.insertUserAndAddress(user, registerVo.asAddress());
+        if (rows < 1){
+            return ResultObject.fail(ResultCode.FAILED);
+        }
+
+        // 生成access_token
+        JwtObject jwt = new JwtObject(user.getId());
+        Optional<String> token = TokenUtil.createJwtToken(jwt.toJson());
+        if (!token.isPresent()){
+            return ResultObject.fail(ResultCode.FAILED);
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("access_token", token.get());
+        return ResultObject.ok(resultMap);
     }
 }

@@ -33,6 +33,7 @@ public class PharmacistVo {
         s.setClassify("01");
         s.setStatus(PharmacistStatus.REGISTER.get());
         s.setReceiveStatus(0);
+        s.setOpenid(this.openid);
 
         return s;
     }

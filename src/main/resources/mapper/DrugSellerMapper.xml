@@ -38,6 +38,15 @@
       s.id = #{id,jdbcType=BIGINT}
   </select>
 
+  <select id="getSellerByOpenid" resultMap="Seller">
+    select
+      <include refid="Base_Column_List" />
+    from
+      drug_seller s
+    where
+      s.openid = #{openid}
+  </select>
+
   <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugSeller">
     insert into drug_seller (
       name,
@@ -53,6 +62,7 @@
       last_updated_time,
       status,
       receive_status,
+      openid,
       store_id
       )
     values (
@@ -69,6 +79,7 @@
       #{lastUpdatedTime,jdbcType=TIMESTAMP},
       #{status,jdbcType=INTEGER},
       #{receiveStatus,jdbcType=INTEGER},
+      #{openid,jdbcType=VARCHAR},
       #{storeId,jdbcType=INTEGER}
       )
   </insert>
@@ -89,8 +100,7 @@
       se.gender,
       se.mobile,
       se.store_id as storeId,
-      st.name as storeName,
-      ST_Distance_Sphere (Point (#{lon}, #{lat}), st.geom ) AS distance
+      st.name as storeName
     FROM
       drug_seller se
     INNER JOIN

@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service("pharmacistService")
 public class PharmacistServiceImpl implements PharmacistService {
@@ -70,15 +71,15 @@ public class PharmacistServiceImpl implements PharmacistService {
     @Transactional(propagation = Propagation.REQUIRED)
     public int grab(PharmacistOrderVo orderVo, long sellerId) {
         DrugSellerOrder so = sellerOrderMapper.getSellerOrder(orderVo.getOrderId(), sellerId);
-        if (so != null){
+        if (so != null) {
             return -1;
         }
         DrugSeller seller = sellerMapper.get(sellerId);
-        if (seller == null){
+        if (seller == null) {
             return -2;
         }
         DrugOrder order = orderMapper.orderDetail(orderVo.getOrderId());
-        if (order == null){
+        if (order == null) {
             return -3;
         }
 
@@ -87,30 +88,31 @@ public class PharmacistServiceImpl implements PharmacistService {
         sellerOrder.setCreateTime(LocalDateTime.now());
         sellerOrder.setUserId(order.getUserId());
         sellerOrder.setUserName(order.getUserName());
-        sellerOrder.setSellerId(seller.getId());
+        sellerOrder.setSellerId(sellerId);
         sellerOrder.setSellerName(seller.getName());
         sellerOrder.setDrugStore(seller.getStoreName());
         sellerOrder.setDrugStoreId(seller.getStoreId());
         sellerOrder.setStatus(0);
 
+        Map<Integer, DrugOrderGoods> drugMap = order.getDrugs().stream().collect(Collectors.toMap(d -> d.getId(), d -> d));
         // 药师抢单明细
         BigDecimal amount = BigDecimal.valueOf(0.0);
         List<DrugSellerOrderGoods> orderGoodsList = orderVo.asSellerOrderGoods();
-        for (DrugSellerOrderGoods sog : orderGoodsList){
-            for (DrugOrderGoods og : order.getDrugs()){
-                if (sog.getOrderDrugId().intValue() == og.getId().intValue()){
-                    sog.setOrderId(order.getId());
-                    sog.setDrugId(og.getDrugId());
-                    sog.setDrugName(og.getDrugName());
-                    sog.setManufacturer(og.getManufacturer());
-                    sog.setQuantity(og.getQuantity());
-                    sog.setSpecifications(og.getSpecifications());
-                    sog.setSellerId(sellerId);
-                    sog.setPhotos(og.getPhotos());
-                    sog.setRemark(og.getRemark());
-
-                    amount = amount.add(sog.getUnitPrice().multiply(new BigDecimal(sog.getQuantity())));
-                }
+        for (DrugSellerOrderGoods sog : orderGoodsList) {
+            DrugOrderGoods og = drugMap.get(sog.getOrderDrugId().intValue());
+            if (og != null) {
+                sog.setOrderId(order.getId());
+                sog.setDrugId(og.getDrugId());
+                sog.setDrugName(og.getDrugName());
+                sog.setManufacturer(og.getManufacturer());
+                sog.setQuantity(og.getQuantity());
+                sog.setSpecifications(og.getSpecifications());
+                sog.setSellerId(sellerId);
+                sog.setPhotos(og.getPhotos());
+                sog.setRemark(og.getRemark());
+                amount = amount.add(sog.getUnitPrice().multiply(new BigDecimal(sog.getQuantity())));
+            } else {
+                return -4;
             }
         }
         sellerOrder.setAmount(amount);
@@ -149,7 +151,7 @@ public class PharmacistServiceImpl implements PharmacistService {
     }
 
     @Override
-    public List<DrugUser> getPharmacistUsers(Long pharmacistId) {
-        return userMapper.getPharmacistUsers(pharmacistId);
+    public List<DrugUser> getPharmacistUsers(Map<String, Object> conditionMap) {
+        return userMapper.getPharmacistUsers(conditionMap);
     }
 }

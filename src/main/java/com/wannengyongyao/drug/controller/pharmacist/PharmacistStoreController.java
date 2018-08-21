@@ -42,10 +42,10 @@ public class PharmacistStoreController {
             conditionMap.put("name", name);
         }
         if (!StringUtils.isEmpty(province)){
-            conditionMap.put("province", province);
+            conditionMap.put("province", province.substring(0, 2));
         }
         if (!StringUtils.isEmpty(city)){
-            conditionMap.put("city", city);
+            conditionMap.put("city", city.substring(0, 4));
         }
         if (!StringUtils.isEmpty(district)){
             conditionMap.put("district", district);

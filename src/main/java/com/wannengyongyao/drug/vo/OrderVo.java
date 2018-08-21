@@ -6,7 +6,6 @@ import com.wannengyongyao.drug.model.DrugOrder;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 

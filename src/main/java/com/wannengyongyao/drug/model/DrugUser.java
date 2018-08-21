@@ -36,4 +36,6 @@ public class DrugUser {
     private Integer status;
 
     private Integer drugNum;
+
+    private Double distance;
 }

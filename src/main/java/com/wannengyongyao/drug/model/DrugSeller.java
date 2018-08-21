@@ -42,5 +42,8 @@ public class DrugSeller {
     private Integer storeId;
 
     private String storeName;
+
     private Double distance;
+
+    private String openid;
 }

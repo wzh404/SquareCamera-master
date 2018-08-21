@@ -52,6 +52,15 @@ public class DrugOrderController {
         if (rows == -2){
             return ResultObject.fail(ResultCode.COUPON_NOT_EXIST);
         }
+        if (rows == -3){
+            return ResultObject.fail(ResultCode.COUPON_USED);
+        }
+        if (rows == -4){
+            return ResultObject.fail(ResultCode.COUPON_EXPIRED);
+        }
+        if (rows == -5){
+            return ResultObject.fail(ResultCode.COUPON_NOT_STARTED);
+        }
 
         return ResultObject.cond(rows > 0, ResultCode.FAILED);
     }
@@ -76,6 +85,15 @@ public class DrugOrderController {
         int rows = orderService.newPhotoOrder(orderVo);
         if (rows == -2){
             return ResultObject.fail(ResultCode.COUPON_NOT_EXIST);
+        }
+        if (rows == -3){
+            return ResultObject.fail(ResultCode.COUPON_USED);
+        }
+        if (rows == -4){
+            return ResultObject.fail(ResultCode.COUPON_EXPIRED);
+        }
+        if (rows == -5){
+            return ResultObject.fail(ResultCode.COUPON_NOT_STARTED);
         }
 
         return ResultObject.cond(rows > 0, ResultCode.FAILED);

@@ -108,8 +108,8 @@ public interface PharmacistService {
     /**
      * 药师结交的用户列表
      *
-     * @param pharmacistId
+     * @param conditionMap
      * @return
      */
-    List<DrugUser> getPharmacistUsers(Long pharmacistId);
+    List<DrugUser> getPharmacistUsers(Map<String, Object> conditionMap);
 }

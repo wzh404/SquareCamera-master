@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wannengyongyao.drug.dao.DrugUserAddressMapper">
+  <resultMap id="Address" type="com.wannengyongyao.drug.model.DrugUserAddress">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="district" jdbcType="VARCHAR" property="district" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, user_id, district, address,create_time,status
+  </sql>
+
+  <select id="get" resultMap="Address">
+    SELECT
+      <include refid="Base_Column_List" />
+    FROM
+      drug_user_address
+    WHERE
+      id = #{id}
+  </select>
+
+  <insert id="insert" parameterType="com.wannengyongyao.drug.model.DrugUserAddress">
+    insert into drug_user_address
+    (
+      user_id,
+      district,
+      address,
+      create_time,
+      status
+    )
+    values (
+      #{userId,jdbcType=BIGINT},
+      #{district,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=INTEGER}
+    )
+  </insert>
+
+  <select id="list" resultMap="Address">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+      drug_user_address
+    WHERE
+      user_id = #{userId}
+    AND
+      (status = 0 OR status = 1)
+    ORDER BY create_time DESC
+  </select>
+
+  <update id="changeStatus">
+    UPDATE drug_user_address
+    SET
+      status = #{status}
+    WHERE
+      id = #{id}
+  </update>
+
+  <update id="undefaultStatus">
+    UPDATE drug_user_address
+    SET
+      status = 0
+    WHERE
+      user_id = #{userId}
+    AND
+      status = 1
+  </update>
+</mapper>

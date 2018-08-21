@@ -19,9 +19,7 @@ public class DrugStore {
 
     private String address;
 
-    private String province;
-
-    private String city;
+    private String phone;
 
     private String district;
 
@@ -35,5 +33,7 @@ public class DrugStore {
 
     private Integer status;
 
-    private Double distanceInMeters;
+    private Double distance;
+
+    private String geom;
 }

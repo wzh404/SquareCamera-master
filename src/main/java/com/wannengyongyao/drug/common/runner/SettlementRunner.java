@@ -8,15 +8,14 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Component
 public class SettlementRunner implements ApplicationRunner, Ordered, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(SettlementRunner.class);
 
     private static ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(150));
+    private static ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(10);
 
     @Override
     public void destroy() throws Exception {
@@ -25,6 +24,11 @@ public class SettlementRunner implements ApplicationRunner, Ordered, DisposableB
         }
     }
 
+    /**
+     * 加载未完成的结算任务
+     *
+     * @param args
+     */
     @Override
     public void run(ApplicationArguments args) {
 
@@ -37,5 +41,14 @@ public class SettlementRunner implements ApplicationRunner, Ordered, DisposableB
 
     public static void execute(Runnable command){
         executor.execute(command);
+    }
+
+    /**
+     * 24小时后执行
+     *
+     * @param command
+     */
+    public static  void schedule(Runnable command){
+        scheduledThreadPool.schedule(command, 24, TimeUnit.HOURS);
     }
 }

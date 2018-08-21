@@ -2,11 +2,15 @@ package com.wannengyongyao.drug.service.user.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.wannengyongyao.drug.common.status.UserAddressStatus;
 import com.wannengyongyao.drug.dao.*;
 import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.service.user.DrugUserService;
+import com.wannengyongyao.drug.vo.UserAddressVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,6 +31,9 @@ public class DrugUserServiceImpl implements DrugUserService {
 
     @Autowired
     private DrugCouponMapper couponMapper;
+
+    @Autowired
+    private DrugUserAddressMapper addressMapper;
 
     @Override
     public int insertUserPharmacist(DrugUserPharmacist pharmacist) {
@@ -161,5 +168,43 @@ public class DrugUserServiceImpl implements DrugUserService {
             return -2;
         }
         return couponMapper.insertUserCoupon(userCoupon);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public int insertUserAndAddress(DrugUser user, DrugUserAddress address) {
+        userMapper.insert(user);
+        address.setUserId(user.getId());
+        return addressMapper.insert(address);
+    }
+
+    @Override
+    public int insertUserAddress(DrugUserAddress address) {
+        return addressMapper.insert(address);
+    }
+
+    @Override
+    public List<DrugUserAddress> myAddress(Long userId) {
+        return addressMapper.list(userId);
+    }
+
+    @Override
+    public int changeUserAddressStatus(Long id, Long userId, Integer status) {
+        DrugUserAddress a = addressMapper.get(id);
+        if (a == null){
+            return -1;
+        }
+        if (a.getUserId().longValue() != userId.longValue()){
+            return -2;
+        }
+        if (status == UserAddressStatus.DEFAULT.get()){
+            addressMapper.undefaultStatus(userId);
+        }
+        return addressMapper.changeStatus(id, status);
+    }
+
+    @Override
+    public DrugUser getUserByOpenid(String openid) {
+        return userMapper.getUserByOpenid(openid);
     }
 }

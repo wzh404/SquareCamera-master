@@ -2,6 +2,7 @@ package com.wannengyongyao.drug.service.user;
 
 import com.github.pagehelper.Page;
 import com.wannengyongyao.drug.model.*;
+import com.wannengyongyao.drug.vo.UserAddressVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -116,4 +117,43 @@ public interface DrugUserService {
      * @return
      */
     int insertUserCoupon(DrugUserCoupon userCoupon);
+
+    /**
+     * 新增用户及用户地址
+     *
+     * @param address
+     * @return
+     */
+    int insertUserAndAddress(DrugUser user, DrugUserAddress address);
+
+    /**
+     * 新增用户地址
+     *
+     * @param address
+     * @return
+     */
+    int insertUserAddress(DrugUserAddress address);
+
+    /**
+     * 列表用户地址
+     *
+     * @param userId
+     * @return
+     */
+    List<DrugUserAddress> myAddress(Long userId);
+
+    /**
+     * 删除用户地址
+     *
+     * @param id
+     * @return
+     */
+    int changeUserAddressStatus(Long id, Long userId, Integer status);
+
+    /**
+     *
+     * @param openid
+     * @return
+     */
+    DrugUser getUserByOpenid(String openid);
 }

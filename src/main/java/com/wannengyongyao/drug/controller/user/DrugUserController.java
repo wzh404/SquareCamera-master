@@ -1,17 +1,23 @@
 package com.wannengyongyao.drug.controller.user;
 
 import com.github.pagehelper.Page;
+import com.google.common.cache.Cache;
+import com.wannengyongyao.drug.common.JwtObject;
 import com.wannengyongyao.drug.common.ResultCode;
 import com.wannengyongyao.drug.common.ResultObject;
 import com.wannengyongyao.drug.common.status.CouponStatus;
+import com.wannengyongyao.drug.common.status.UserAddressStatus;
 import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.service.user.DrugOrderService;
 import com.wannengyongyao.drug.service.user.DrugSellerService;
 import com.wannengyongyao.drug.service.user.DrugUserService;
 import com.wannengyongyao.drug.util.DrugConstants;
 import com.wannengyongyao.drug.util.RequestUtil;
+import com.wannengyongyao.drug.util.TokenUtil;
 import com.wannengyongyao.drug.vo.CartVo;
 import com.wannengyongyao.drug.vo.LongTermVo;
+import com.wannengyongyao.drug.vo.UserAddressVo;
+import com.wannengyongyao.drug.vo.UserRegisterVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -68,15 +71,13 @@ public class DrugUserController {
      * @return
      */
     @RequestMapping(value="/my/pharmacist", method= {RequestMethod.GET})
-    public ResultObject myPharmacist(HttpServletRequest request,
-                                     @RequestParam("lon")Double lon,
-                                     @RequestParam("lat")Double lat){
+    public ResultObject myPharmacist(HttpServletRequest request){
         Long userId = RequestUtil.getUserId(request);
 
         Map<String, Object> conditionMap = new HashMap<>();
         conditionMap.put("userId", userId);
-        conditionMap.put("lon", lon);
-        conditionMap.put("lat", lat);
+        //conditionMap.put("lon", lon);
+        //conditionMap.put("lat", lat);
         Page<DrugSeller> sellerPage = sellerService.myPharmacists(1, 10, conditionMap);
         return ResultObject.ok(sellerPage.getResult());
     }
@@ -257,6 +258,40 @@ public class DrugUserController {
             return ResultObject.fail(ResultCode.COUPON_USER_ADDED);
         }
 
+        return ResultObject.cond(ret > 0, ResultCode.FAILED);
+    }
+
+    @RequestMapping(value="/new/address", method= {RequestMethod.POST})
+    public ResultObject newUserAddress(HttpServletRequest request,
+                                @RequestBody UserAddressVo addressVo) {
+        Long userId = RequestUtil.getUserId(request);
+        addressVo.setUserId(userId);
+
+        int ret = userService.insertUserAddress(addressVo.asAddress());
+        return ResultObject.cond(ret > 0, ResultCode.FAILED);
+    }
+
+    @RequestMapping(value="/my/address", method= {RequestMethod.GET})
+    public ResultObject myAddress(HttpServletRequest request) {
+        Long userId = RequestUtil.getUserId(request);
+
+        List<DrugUserAddress> address = userService.myAddress(userId);
+        return ResultObject.ok(address);
+    }
+
+    @RequestMapping(value="/remove/address", method= {RequestMethod.POST})
+    public ResultObject removeAddress(HttpServletRequest request,
+                                      @RequestParam("id")Long id) {
+        Long userId = RequestUtil.getUserId(request);
+        int ret = userService.changeUserAddressStatus(id, userId, UserAddressStatus.DELETED.get());
+        return ResultObject.cond(ret > 0, ResultCode.FAILED);
+    }
+
+    @RequestMapping(value="/default/address", method= {RequestMethod.POST})
+    public ResultObject defaultAddress(HttpServletRequest request,
+                                      @RequestParam("id")Long id) {
+        Long userId = RequestUtil.getUserId(request);
+        int ret = userService.changeUserAddressStatus(id, userId, UserAddressStatus.DEFAULT.get());
         return ResultObject.cond(ret > 0, ResultCode.FAILED);
     }
 }

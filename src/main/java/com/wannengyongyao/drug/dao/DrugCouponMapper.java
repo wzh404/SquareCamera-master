@@ -30,7 +30,7 @@ public interface DrugCouponMapper {
      * @param code
      * @return
      */
-    int changeUserCouponStatus(@Param("code")String code, @Param("status")String status);
+    int changeUserCouponStatus(@Param("code")String code, @Param("status")Integer status);
 
     /**
      * 根据优惠券码获取用户优惠券信息

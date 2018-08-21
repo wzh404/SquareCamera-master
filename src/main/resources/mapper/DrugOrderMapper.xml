@@ -101,7 +101,8 @@
       shipping_status,
       seller_num,
       collection_store,
-      collection_store_id)
+      collection_store_id,
+      coupon_code)
     values (
       #{id,jdbcType=BIGINT},
       #{userId,jdbcType=BIGINT},
@@ -117,7 +118,8 @@
       #{shippingStatus,jdbcType=INTEGER},
       #{sellerNum,jdbcType=INTEGER},
       #{collectionStore,jdbcType=VARCHAR},
-      #{collectionStoreId,jdbcType=INTEGER})
+      #{collectionStoreId,jdbcType=INTEGER},
+      #{couponCode,jdbcType=VARCHAR})
   </insert>
 
   <select id="getOrderStatus" resultType="com.wannengyongyao.drug.model.DrugOrder">
@@ -183,6 +185,7 @@
     (
       SELECT
         id,
+        seller_id,
         seller_name,
         seller_store_name,
         expected_amount,

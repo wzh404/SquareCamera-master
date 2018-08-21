@@ -1,6 +1,7 @@
 package com.wannengyongyao.drug.service.user.impl;
 
 import com.wannengyongyao.drug.common.ResultCode;
+import com.wannengyongyao.drug.common.status.CouponStatus;
 import com.wannengyongyao.drug.common.status.OrderStatus;
 import com.wannengyongyao.drug.dao.*;
 import com.wannengyongyao.drug.model.*;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,16 +71,30 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         // 优惠券
         if (orderVo.getCoupon() != null) {
             DrugUserCoupon coupon = couponMapper.getUserCoupon(orderVo.getCoupon());
-            if (coupon == null){
+            if (coupon == null ){
                 return -2;
+            }
+            if (coupon.getStatus() != CouponStatus.NORMAL.get()){
+                return -3;
+            }
+            if (coupon.getEndDate().isBefore(LocalDate.now())){
+                return -4;
+            }
+            if (coupon.getStartDate().isAfter(LocalDate.now())){
+                return -5;
             }
 
             order.setDiscountAmount(BigDecimal.valueOf(coupon.getAmount()));
+            order.setCouponCode(orderVo.getCoupon());
+            couponMapper.changeUserCouponStatus(orderVo.getCoupon(), CouponStatus.USED.get());
+        } else {
+            order.setDiscountAmount(BigDecimal.valueOf(0.0));
         }
 
         // 订单代收药店
         DrugStore store = drugStoreMapper.get(orderVo.getStoreId());
         order.setCollectionStore(store.getName());
+
         // 生成订单
         long orderId = StringUtil.getOrderId(orderVo.getUserId());
         order.setId(orderId);
@@ -130,11 +146,24 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         // 优惠券
         if (orderVo.getCoupon() != null) {
             DrugUserCoupon coupon = couponMapper.getUserCoupon(orderVo.getCoupon());
-            if (coupon == null){
+            if (coupon == null ){
                 return -2;
+            }
+            if (coupon.getStatus() != CouponStatus.NORMAL.get()){
+                return -3;
+            }
+            if (coupon.getEndDate().isBefore(LocalDate.now())){
+                return -4;
+            }
+            if (coupon.getStartDate().isAfter(LocalDate.now())){
+                return -5;
             }
 
             order.setDiscountAmount(BigDecimal.valueOf(coupon.getAmount()));
+            order.setCouponCode(orderVo.getCoupon());
+            couponMapper.changeUserCouponStatus(orderVo.getCoupon(), CouponStatus.USED.get());
+        } else {
+            order.setDiscountAmount(BigDecimal.valueOf(0.0));
         }
 
         // 订单代收药店
@@ -191,7 +220,7 @@ public class DrugOrderServiceImpl implements DrugOrderService {
 
         // 不是userId拥有的订单
         if (order.getUserId() != userId){
-            return -3;
+            return -4;
         }
 
         return orderMapper.changeOrderStatus(orderId, OrderStatus.CANCEL.get());

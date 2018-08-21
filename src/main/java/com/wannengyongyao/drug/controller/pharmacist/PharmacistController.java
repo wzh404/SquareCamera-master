@@ -9,13 +9,12 @@ import com.wannengyongyao.drug.service.pharmacist.PharmacistService;
 import com.wannengyongyao.drug.util.RequestUtil;
 import com.wannengyongyao.drug.vo.PharmacistVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/pharmacist")
@@ -87,14 +86,20 @@ public class PharmacistController {
      * @return
      */
     @RequestMapping(value="/users", method= {RequestMethod.GET})
-    public ResultObject myUser(HttpServletRequest request){
+    public ResultObject myUser(HttpServletRequest request,
+                               @RequestParam("lon")Double lon,
+                               @RequestParam("lat")Double lat){
         long sellerId = RequestUtil.getUserId(request);
         DrugSeller seller = pharmacistService.getSeller(sellerId);
         if (seller == null){
             return ResultObject.fail(ResultCode.PHARMACIST_NOT_EXIST);
         }
+        Map<String, Object> conditionMap = new HashMap<>();
+        conditionMap.put("pharmacistId", sellerId);
+        conditionMap.put("lon", lon);
+        conditionMap.put("lat", lat);
 
-        List<DrugUser> users = pharmacistService.getPharmacistUsers(sellerId);
+        List<DrugUser> users = pharmacistService.getPharmacistUsers(conditionMap);
         return ResultObject.ok(users);
     }
 }

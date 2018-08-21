@@ -29,7 +29,10 @@ public enum ResultCode {
     PHARMACIST_NOT_EXIST(5001),
     PHARMACIST_ORDER_EXIST(5002),
     COUPON_NOT_EXIST(6001),
-    COUPON_USER_ADDED(6002),
+    COUPON_USED(6002),
+    COUPON_EXPIRED(6003),
+    COUPON_NOT_STARTED(6004),
+    COUPON_USER_ADDED(6005),
     BAD_REQUEST(9998),
     FAILED(9999);
 
@@ -69,6 +72,9 @@ public enum ResultCode {
             .put(NOT_REPEAT_SEND_CODE.code, "不要重复发送手机验证码")
 
             .put(COUPON_NOT_EXIST.code, "优惠券不存在")
+            .put(COUPON_USED.code, "优惠券已使用")
+            .put(COUPON_EXPIRED.code, "优惠券已过期")
+            .put(COUPON_NOT_STARTED.code, "优惠券未开始使用")
             .put(COUPON_USER_ADDED.code, "优惠券已添加")
 
             .put(PHARMACIST_NOT_EXIST.code, "药师不存在")

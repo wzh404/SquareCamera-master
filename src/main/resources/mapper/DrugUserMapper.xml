@@ -13,6 +13,7 @@
     <result column="create_ip" jdbcType="VARCHAR" property="createIp" />
     <result column="last_updated_time" jdbcType="TIMESTAMP" property="lastUpdatedTime" />
     <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="distance" jdbcType="DECIMAL" property="distance" />
   </resultMap>
   <sql id="Base_Column_List">
     u.id, `name`, gender, mobile, remark, u.create_time, create_ip, last_updated_time, status
@@ -72,6 +73,15 @@
     )
   </insert>
 
+  <select id="getUserByOpenid" resultMap="User">
+    select
+    <include refid="Base_Column_List" />
+    from
+      drug_user u
+    where
+      u.openid = #{openid}
+  </select>
+
   <select id="getUserPharmacist" resultType="java.lang.Integer">
     SELECT COUNT(0) FROM drug_user_pharmacist
     WHERE
@@ -117,6 +127,7 @@
       user_id = #{userId, jdbcType=BIGINT}
   </select>
 
+  <!-- 我的结交 -->
   <select id="getPharmacistUsers" resultMap="User">
     SELECT
       u.id,
@@ -125,13 +136,22 @@
       u.mobile,
       u.status,
       p.create_time,
-      p.drug_num as drugNum
+      p.drug_num as drugNum,
+      ROUND(ST_Distance_Sphere(Point(#{lon}, #{lat}), st.geom )/1000, 1) AS distance
     FROM
       drug_user_pharmacist p
     INNER JOIN
       drug_user u
     ON
       p.user_id = u.id
+    INNER JOIN
+      drug_seller s
+    ON
+      p.pharmacist_id = s.id
+    INNER JOIN
+      drug_store st
+    ON
+      s.store_id = st.id
     WHERE
       p.pharmacist_id = #{pharmacistId}
   </select>
@@ -180,7 +200,15 @@
 
   <select id="getUserLongTerm" resultType="com.wannengyongyao.drug.model.DrugUserLongterm">
     select
-      *
+      id,
+      drug_id as drugId,
+      drug_name as drugName,
+      unit,
+      unit_price as unitPrice,
+      specifications,
+      quantity,
+      manufacturer,
+      create_time as createTime
     from
       drug_user_longterm
     WHERE

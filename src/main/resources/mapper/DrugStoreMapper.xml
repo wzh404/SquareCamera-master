@@ -6,8 +6,6 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="classify" jdbcType="VARCHAR" property="classify" />
     <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="province" jdbcType="VARCHAR" property="province" />
-    <result column="city" jdbcType="VARCHAR" property="city" />
     <result column="district" jdbcType="VARCHAR" property="district" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -16,7 +14,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, name, classify, address, province, city, district, remark, create_time,
+    id, name, classify, address, district, remark, create_time,
     last_updated_time, status
   </sql>
 
@@ -32,9 +30,9 @@
       name,
       classify,
       address,
-      province,
-      city,
+      phone,
       district,
+      geom,
       remark,
       create_time,
       last_updated_time,
@@ -44,9 +42,9 @@
       #{name,jdbcType=VARCHAR},
       #{classify,jdbcType=VARCHAR},
       #{address,jdbcType=VARCHAR},
-      #{province,jdbcType=VARCHAR},
-      #{city,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR},
       #{district,jdbcType=VARCHAR},
+      ST_GeomFromText(#{geom}),
       #{remark,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP},
       #{lastUpdatedTime,jdbcType=TIMESTAMP},
@@ -60,7 +58,7 @@
       name,
       address,
       classify,
-      ST_Distance_Sphere (Point (#{lon}, #{lat}), geom ) AS distanceInMeters
+      ROUND(ST_Distance_Sphere(Point(#{lon}, #{lat}), geom )/1000, 1) AS distance
     FROM
       drug_store
     WHERE
@@ -70,16 +68,15 @@
           Point (( #{lon} - ( #{distance} / 111.12 )), ( #{lat} - ( #{distance} / 111.12 )))
         ), geom
       )
-    ORDER BY distanceInMeters ASC
+    ORDER BY distance ASC
   </select>
 
   <select id="list" resultMap="Store">
     SELECT
+      id,
       name,
       address,
       classify,
-      province,
-      city,
       district
     FROM
       drug_store
@@ -89,10 +86,10 @@
       AND name LIKE CONCAT('%',#{name},'%')
     </if>
     <if test="province != null">
-      AND province = #{province}
+      AND district LIKE CONCAT(#{province},'%')
     </if>
     <if test="city != null">
-      AND city = #{city}
+      AND district LIKE CONCAT(#{city},'%')
     </if>
     <if test="district != null">
       AND district = #{district}

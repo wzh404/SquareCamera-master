@@ -49,6 +49,16 @@ public class PharmacistOrderController {
         if (ret == -1){
             return ResultObject.fail(ResultCode.PHARMACIST_ORDER_EXIST);
         }
+        if (ret == -2){
+            return ResultObject.fail(ResultCode.PHARMACIST_NOT_EXIST);
+        }
+        if (ret == -3){
+            return ResultObject.fail(ResultCode.ORDER_NOT_EXIST);
+        }
+        if (ret == -4){
+            return ResultObject.fail(ResultCode.BAD_REQUEST);
+        }
+
         if (ret < 1){
             return ResultObject.fail(ResultCode.FAILED);
         }

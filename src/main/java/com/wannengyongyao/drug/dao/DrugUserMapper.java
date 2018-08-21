@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface DrugUserMapper {
@@ -63,12 +64,20 @@ public interface DrugUserMapper {
     DrugUser getByMobile(@Param("mobile")String mobile);
 
     /**
-     * 药师结交的用户列表
+     * 根据openid查询用户
      *
-     * @param pharmacistId
+     * @param openid
      * @return
      */
-    List<DrugUser> getPharmacistUsers(@Param("pharmacistId")Long pharmacistId);
+    DrugUser getUserByOpenid(@Param("openid")String openid);
+
+    /**
+     * 药师结交的用户列表
+     *
+     * @param conditionMap
+     * @return
+     */
+    List<DrugUser> getPharmacistUsers(Map<String, Object> conditionMap);
 
     /**
      * 用户长期用药列表

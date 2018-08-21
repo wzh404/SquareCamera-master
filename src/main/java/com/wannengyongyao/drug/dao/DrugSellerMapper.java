@@ -47,4 +47,11 @@ public interface DrugSellerMapper {
      * @return
      */
     DrugSeller get(@Param("id")Long id);
+
+    /**
+     *
+     * @param openid
+     * @return
+     */
+    DrugSeller getSellerByOpenid(@Param("openid")String openid);
 }
