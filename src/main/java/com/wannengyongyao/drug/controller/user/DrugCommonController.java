@@ -86,7 +86,7 @@ public class DrugCommonController {
     public ResultObject openid(@RequestParam("openid")String openid){
         DrugUser user = userService.getUserByOpenid(openid);
         if (user == null){
-            return ResultObject.fail(ResultCode.BAD_REQUEST);
+            return ResultObject.fail(ResultCode.USER_PLEASE_LOGIN);
         }
 
         // 生成access_token
@@ -205,9 +205,14 @@ public class DrugCommonController {
         return ResultObject.ok(commonService.getDistrict(code.substring(0,4)));
     }
 
+    /**
+     * 从用户地址登录并注册
+     *
+     * @param registerVo
+     * @return
+     */
     @RequestMapping(value="/common/register", method= {RequestMethod.POST})
-    public ResultObject newUser(HttpServletRequest request,
-                                @RequestBody UserRegisterVo registerVo) {
+    public ResultObject newUser(@RequestBody UserRegisterVo registerVo) {
         String smsCode = smsCache.getIfPresent(registerVo.getMobile());
         if (smsCode == null || !smsCode.equalsIgnoreCase(registerVo.getCode())){
             return ResultObject.fail(ResultCode.INVALID_SMS_CODE);
@@ -220,8 +225,13 @@ public class DrugCommonController {
             return ResultObject.fail(ResultCode.BAD_REQUEST);
         }
 
+        DrugUser user = userService.getUserByOpenid(registerVo.getOpenid());
+        if (user != null){
+            return ResultObject.fail(ResultCode.USER_REGISTER_ALREADY);
+        }
+
         // 注册用户
-        DrugUser user = registerVo.asUser();
+        user = registerVo.asUser();
         user.setAvatar(wxUser.getAvatarUrl());
         user.setName(wxUser.getNickName());
         user.setGender("1".equals(wxUser.getGender()) ? 1 : 0);

@@ -154,4 +154,9 @@ public class PharmacistServiceImpl implements PharmacistService {
     public List<DrugUser> getPharmacistUsers(Map<String, Object> conditionMap) {
         return userMapper.getPharmacistUsers(conditionMap);
     }
+
+    @Override
+    public DrugSeller getSellerByOpenid(String openid) {
+        return sellerMapper.getSellerByOpenid(openid);
+    }
 }

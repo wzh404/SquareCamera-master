@@ -49,7 +49,7 @@ public class PharmacistCommonController {
     }
 
     /**
-     * 用户登录并注册
+     * 用户根据手机号登录
      *
      * @param loginVo
      * @return
@@ -63,6 +63,28 @@ public class PharmacistCommonController {
         DrugSeller seller = pharmacistService.getPharmacitsByMobile(loginVo.getMobile());
         if (seller == null){
             return ResultObject.fail(ResultCode.PHARMACIST_NOT_EXIST);
+        }
+        JwtObject jwt = new JwtObject(seller.getId());
+        Optional<String> token = TokenUtil.createJwtToken(jwt.toJson());
+        if (!token.isPresent()){
+            return ResultObject.fail(ResultCode.FAILED);
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("access_token", token.get());
+        return ResultObject.ok(resultMap);
+    }
+
+    /**
+     * 用户根据openid登录
+     *
+     * @param openid
+     * @return
+     */
+    @RequestMapping(value="/common/openid", method= {RequestMethod.POST})
+    public ResultObject openid(@RequestParam("openid")String openid){
+        DrugSeller seller = pharmacistService.getSellerByOpenid(openid);
+        if (seller == null){
+            return ResultObject.fail(ResultCode.USER_PLEASE_LOGIN);
         }
         JwtObject jwt = new JwtObject(seller.getId());
         Optional<String> token = TokenUtil.createJwtToken(jwt.toJson());

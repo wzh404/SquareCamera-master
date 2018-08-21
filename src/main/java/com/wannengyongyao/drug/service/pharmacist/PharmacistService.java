@@ -112,4 +112,11 @@ public interface PharmacistService {
      * @return
      */
     List<DrugUser> getPharmacistUsers(Map<String, Object> conditionMap);
+
+    /**
+     *
+     * @param openid
+     * @return
+     */
+    DrugSeller getSellerByOpenid(String openid);
 }

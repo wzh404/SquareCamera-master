@@ -38,6 +38,11 @@ public class PharmacistController {
             return ResultObject.fail(ResultCode.INVALID_SMS_CODE);
         }
 
+        DrugSeller seller = pharmacistService.getSellerByOpenid(pharmacistVo.getOpenid());
+        if (seller != null){
+            return ResultObject.fail(ResultCode.PHARMACIST_REGISTER_ALREADY);
+        }
+
         int rows = pharmacistService.insert(pharmacistVo.asPharmacist());
         return ResultObject.cond(rows > 0, ResultCode.FAILED);
     }

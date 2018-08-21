@@ -12,6 +12,7 @@ public enum ResultCode {
     USER_PLEASE_LOGIN(1000),
     UPLOAD_FILE_FAILED(1001),
     DRUG_NOT_EXIST(1003),
+    USER_REGISTER_ALREADY(1004),
     USER_PHARMACIST_EXIST(2001),
     USER_CART_DRUG_EXIST(2002),
     ORDER_NOT_EXIST(3001),
@@ -28,6 +29,7 @@ public enum ResultCode {
     NOT_REPEAT_SEND_CODE(4002),
     PHARMACIST_NOT_EXIST(5001),
     PHARMACIST_ORDER_EXIST(5002),
+    PHARMACIST_REGISTER_ALREADY(5003),
     COUPON_NOT_EXIST(6001),
     COUPON_USED(6002),
     COUPON_EXPIRED(6003),
@@ -56,6 +58,7 @@ public enum ResultCode {
             .put(USER_PHARMACIST_EXIST.code, "药师已结交")
             .put(USER_CART_DRUG_EXIST.code, "药师已结交")
             .put(DRUG_NOT_EXIST.code, "药品不存在")
+            .put(USER_REGISTER_ALREADY.code, "用微信户已注册")
 
             .put(ORDER_NOT_EXIST.code, "订单不存在")
             .put(ORDER_CANCELED.code, "订单已取消")
@@ -79,6 +82,7 @@ public enum ResultCode {
 
             .put(PHARMACIST_NOT_EXIST.code, "药师不存在")
             .put(PHARMACIST_ORDER_EXIST.code, "订单已抢")
+            .put(PHARMACIST_REGISTER_ALREADY.code, "药师已注册")
             .put(BAD_REQUEST.code, "非法请求")
             .put(FAILED.code, "操作失败")
             .build();

@@ -31,6 +31,13 @@ public class GlobalExceptionHandler {
         return ResultObject.fail(ResultCode.BAD_REQUEST, e.getMessage());
     }
 
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public ResultObject handleAllException(Exception e){
+        logger.error("error", e);
+        return ResultObject.fail(ResultCode.FAILED, e.getMessage());
+    }
+
     private String getErrorMessage(FieldError fieldError){
         StringBuilder errorMessage = new StringBuilder(fieldError.getField());
         errorMessage.append("-");
