@@ -16,6 +16,7 @@ public class UserRegisterVo {
     private String address;
     private String code;
     private String district;
+    private String name;
 
     private Long userId;
 
@@ -26,6 +27,7 @@ public class UserRegisterVo {
         address.setCreateTime(LocalDateTime.now());
         address.setStatus(UserAddressStatus.DEFAULT.get());
         address.setUserId(this.userId);
+        address.setName(this.name);
 
         return address;
     }

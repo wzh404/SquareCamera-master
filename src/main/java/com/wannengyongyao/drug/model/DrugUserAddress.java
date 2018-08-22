@@ -8,10 +8,12 @@ import java.time.LocalDateTime;
 public class DrugUserAddress {
     private Long id;
     private Long userId;
+    private String name;
     private String district;
     private String city;
     private String province;
     private String address;
+    private String mobile;
     private LocalDateTime createTime;
     private Integer status;
 

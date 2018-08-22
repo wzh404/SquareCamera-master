@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service("drugUserService")
@@ -59,12 +60,41 @@ public class DrugUserServiceImpl implements DrugUserService {
     }
 
     @Override
-    public int insertWeixinUser(DrugWeixinUser user) {
-        DrugWeixinUser u = weixinMapper.getByOpenId(user.getOpenId());
+    @Transactional(propagation = Propagation.REQUIRED)
+    public int insertWeixinUser(DrugWeixinUser wxUser) {
+        DrugWeixinUser u = weixinMapper.getByOpenId(wxUser.getOpenId());
         if (u != null){
             return 1;
         }
-        return weixinMapper.insert(user);
+        return weixinMapper.insert(wxUser);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Long insertWeixinAndUser(DrugWeixinUser wxUser) {
+        DrugWeixinUser u = weixinMapper.getByOpenId(wxUser.getOpenId());
+        if (u != null){
+            DrugUser du = userMapper.getUserByOpenid(wxUser.getOpenId());
+            if (du == null){
+                return -1L;
+            }
+            return du.getId();
+        }
+
+        DrugUser user = new DrugUser();
+        user.setName(u.getNickName());
+        user.setCreateIp("localhost");
+        user.setOpenId(wxUser.getOpenId());
+        user.setMobile("-");
+        user.setCreateTime(LocalDateTime.now());
+        user.setLastUpdatedTime(LocalDateTime.now());
+        user.setStatus(0);
+        user.setAvatar(wxUser.getAvatarUrl());
+        user.setCreateIp("localhost");
+
+        userMapper.insert(user);
+        weixinMapper.insert(wxUser);
+        return user.getId();
     }
 
     @Override
@@ -170,6 +200,7 @@ public class DrugUserServiceImpl implements DrugUserService {
         return couponMapper.insertUserCoupon(userCoupon);
     }
 
+    /*
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public int insertUserAndAddress(DrugUser user, DrugUserAddress address) {
@@ -177,9 +208,13 @@ public class DrugUserServiceImpl implements DrugUserService {
         address.setUserId(user.getId());
         return addressMapper.insert(address);
     }
-
+*/
     @Override
     public int insertUserAddress(DrugUserAddress address) {
+        List<DrugUserAddress> l = myAddress(address.getUserId());
+        if (l == null || l.isEmpty()){
+            address.setStatus(1);
+        }
         return addressMapper.insert(address);
     }
 
@@ -201,6 +236,11 @@ public class DrugUserServiceImpl implements DrugUserService {
             addressMapper.undefaultStatus(userId);
         }
         return addressMapper.changeStatus(id, status);
+    }
+
+    @Override
+    public int changeAddress(DrugUserAddress address) {
+        return addressMapper.changeAddress(address);
     }
 
     @Override

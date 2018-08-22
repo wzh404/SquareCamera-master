@@ -18,6 +18,8 @@
     <result column="receive_status" jdbcType="INTEGER" property="receiveStatus" />
     <result column="store_id" jdbcType="INTEGER" property="storeId" />
     <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+    <result column="success_rate" jdbcType="INTEGER" property="successRate" />
+    <result column="last_drug_name" jdbcType="VARCHAR" property="lastDrugName" />
   </resultMap>
   <sql id="Base_Column_List">
     s.id, s.name, gender, mobile, id_number, job, s.classify, account_balance, s.remark, s.create_time,
@@ -125,4 +127,21 @@
     WHERE
       id = #{id}
   </update>
+
+  <select id="reliableSeller" resultType="com.wannengyongyao.drug.model.DrugSeller">
+    SELECT
+      s.id,
+      s.name,
+      s.success_rate as successRate,
+      s.last_drug_name as lastDrugName,
+      st.name as storeName
+    FROM
+      drug_seller s
+    INNER JOIN
+      drug_store  st
+    ON
+      s.store_id = st.id
+    ORDER BY
+      success_rate DESC
+  </select>
 </mapper>

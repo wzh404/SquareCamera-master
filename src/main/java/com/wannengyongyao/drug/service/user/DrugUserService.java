@@ -41,6 +41,14 @@ public interface DrugUserService {
     int insertWeixinUser(DrugWeixinUser user);
 
     /**
+     *
+     * @param user
+     * @return
+     */
+    Long insertWeixinAndUser(DrugWeixinUser user);
+
+
+    /**
      * 注册用户
      *
      * @param user
@@ -123,9 +131,9 @@ public interface DrugUserService {
      *
      * @param address
      * @return
-     */
-    int insertUserAndAddress(DrugUser user, DrugUserAddress address);
 
+    int insertUserAndAddress(DrugUser user, DrugUserAddress address);
+     */
     /**
      * 新增用户地址
      *
@@ -150,6 +158,13 @@ public interface DrugUserService {
      */
     int changeUserAddressStatus(Long id, Long userId, Integer status);
 
+    /**
+     * 修改用户地址
+     *
+     * @param address
+     * @return
+     */
+    int changeAddress(DrugUserAddress address);
     /**
      *
      * @param openid

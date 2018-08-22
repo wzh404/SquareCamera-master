@@ -20,4 +20,10 @@ public class DrugSellerServiceImpl implements DrugSellerService {
         PageHelper.startPage(page, pageSize);
         return sellerMapper.myPharmacists(conditionMap);
     }
+
+    @Override
+    public Page<DrugSeller> reliableSeller(int page, int pageSize) {
+        PageHelper.startPage(page, pageSize);
+        return sellerMapper.reliableSeller();
+    }
 }

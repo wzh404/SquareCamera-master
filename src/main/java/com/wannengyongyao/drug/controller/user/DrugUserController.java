@@ -287,6 +287,15 @@ public class DrugUserController {
         return ResultObject.cond(ret > 0, ResultCode.FAILED);
     }
 
+    @RequestMapping(value="/change/address", method= {RequestMethod.POST})
+    public ResultObject changeAddress(HttpServletRequest request,
+                                      @RequestBody UserAddressVo addressVo) {
+        Long userId = RequestUtil.getUserId(request);
+        addressVo.setUserId(userId);
+        int ret = userService.changeAddress(addressVo.asAddress());
+        return ResultObject.cond(ret > 0, ResultCode.FAILED);
+    }
+
     @RequestMapping(value="/default/address", method= {RequestMethod.POST})
     public ResultObject defaultAddress(HttpServletRequest request,
                                       @RequestParam("id")Long id) {

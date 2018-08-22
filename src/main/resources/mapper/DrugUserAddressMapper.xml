@@ -4,6 +4,8 @@
   <resultMap id="Address" type="com.wannengyongyao.drug.model.DrugUserAddress">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="district" jdbcType="VARCHAR" property="district" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -11,7 +13,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, user_id, district, address,create_time,status
+    id, user_id, name, mobile, district, address,create_time,status
   </sql>
 
   <select id="get" resultMap="Address">
@@ -27,6 +29,8 @@
     insert into drug_user_address
     (
       user_id,
+      `name`,
+      mobile,
       district,
       address,
       create_time,
@@ -34,6 +38,8 @@
     )
     values (
       #{userId,jdbcType=BIGINT},
+      #{name,jdbcType=VARCHAR},
+      #{mobile,jdbcType=VARCHAR},
       #{district,jdbcType=VARCHAR},
       #{address,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP},
@@ -69,5 +75,15 @@
       user_id = #{userId}
     AND
       status = 1
+  </update>
+
+  <update id="changeAddress" parameterType="com.wannengyongyao.drug.model.DrugUserAddress">
+    UPDATE drug_user_address
+    SET
+      name = #{name},
+      address = #{address},
+      district = #{district}
+    WHERE
+      id = #{id}
   </update>
 </mapper>

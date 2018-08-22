@@ -46,4 +46,11 @@ public interface DrugUserAddressMapper {
      * @return
      */
     DrugUserAddress get(@Param("id")Long id);
+
+    /**
+     *
+     * @param address
+     * @return
+     */
+    int changeAddress(DrugUserAddress address);
 }

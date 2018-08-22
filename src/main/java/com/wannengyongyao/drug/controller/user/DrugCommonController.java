@@ -14,15 +14,11 @@ import com.wannengyongyao.drug.service.user.DrugUserService;
 import com.wannengyongyao.drug.util.StringUtil;
 import com.wannengyongyao.drug.util.TokenUtil;
 import com.wannengyongyao.drug.util.WxUtils;
-import com.wannengyongyao.drug.vo.LoginVo;
-import com.wannengyongyao.drug.vo.UserRegisterVo;
 import com.wannengyongyao.drug.vo.WeChatLoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +101,7 @@ public class DrugCommonController {
      *
      * @param loginVo
      * @return
-     */
+
     @RequestMapping(value="/common/login", method= {RequestMethod.POST})
     public ResultObject login(@Valid @RequestBody LoginVo loginVo){
         String smsCode = smsCache.getIfPresent(loginVo.getMobile());
@@ -139,7 +135,7 @@ public class DrugCommonController {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("access_token", token.get());
         return ResultObject.ok(resultMap);
-    }
+    }*/
 
     /**
      * 获取微信用户信息，并保存。
@@ -166,11 +162,21 @@ public class DrugCommonController {
 
         // decode json
         DrugWeixinUser user = JSON.parseObject(jsonString.get(), DrugWeixinUser.class);
-        if (userService.insertWeixinUser(user) < 1){
+        Long userId = userService.insertWeixinAndUser(user);
+        if ( userId < 0){
             return ResultObject.fail(ResultCode.FAILED);
         }
 
-        return ResultObject.ok("openid",openid);
+        JwtObject jwt = new JwtObject(userId);
+        Optional<String> token = TokenUtil.createJwtToken(jwt.toJson());
+        if (!token.isPresent()){
+            return ResultObject.fail(ResultCode.FAILED);
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("access_token", token.get());
+        resultMap.put("openid", openid);
+        return ResultObject.ok(resultMap);
     }
 
     /**
@@ -210,7 +216,7 @@ public class DrugCommonController {
      *
      * @param registerVo
      * @return
-     */
+
     @RequestMapping(value="/common/register", method= {RequestMethod.POST})
     public ResultObject newUser(@RequestBody UserRegisterVo registerVo) {
         String smsCode = smsCache.getIfPresent(registerVo.getMobile());
@@ -249,5 +255,5 @@ public class DrugCommonController {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("access_token", token.get());
         return ResultObject.ok(resultMap);
-    }
+    }*/
 }

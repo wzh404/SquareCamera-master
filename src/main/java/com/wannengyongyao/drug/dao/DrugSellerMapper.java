@@ -54,4 +54,11 @@ public interface DrugSellerMapper {
      * @return
      */
     DrugSeller getSellerByOpenid(@Param("openid")String openid);
+
+    /**
+     * 靠谱药师
+     *
+     * @return
+     */
+    Page<DrugSeller> reliableSeller();
 }

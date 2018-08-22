@@ -2,8 +2,11 @@ package com.wannengyongyao.drug.controller.user;
 
 import com.github.pagehelper.Page;
 import com.wannengyongyao.drug.common.ResultObject;
+import com.wannengyongyao.drug.dao.DrugSellerMapper;
 import com.wannengyongyao.drug.model.Drug;
 import com.wannengyongyao.drug.model.DrugRank;
+import com.wannengyongyao.drug.model.DrugSeller;
+import com.wannengyongyao.drug.service.user.DrugSellerService;
 import com.wannengyongyao.drug.service.user.DrugService;
 import com.wannengyongyao.drug.util.DrugConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class DrugController {
     @Autowired
     private DrugService drugService;
+
+    @Autowired
+    private DrugSellerService sellerService;
 
     @RequestMapping(value="/common/search", method= {RequestMethod.GET})
     public ResultObject search(@RequestParam("page")int page,
@@ -59,5 +65,17 @@ public class DrugController {
     public ResultObject success(@RequestParam("page")int page){
         Page<DrugRank> ranks = drugService.listDrugSuccessRank(page, DrugConstants.PAGE_SIZE);
         return ResultObject.ok(ranks.getResult());
+    }
+
+    /**
+     * 靠谱药师
+     *
+     * @param page
+     * @return
+     */
+    @RequestMapping(value="/common/reliable/seller", method= {RequestMethod.GET})
+    public ResultObject reliable(@RequestParam("page")int page){
+        Page<DrugSeller> sellers = sellerService.reliableSeller(page, DrugConstants.PAGE_SIZE);
+        return ResultObject.ok(sellers.getResult());
     }
 }
