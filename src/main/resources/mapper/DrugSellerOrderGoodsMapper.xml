@@ -67,4 +67,14 @@
     and
       seller_id = #{sellerId,jdbcType=BIGINT}
   </select>
+
+  <select id="getFirstDrugName" resultType="java.lang.String">
+    SELECT
+      drug_name
+    FROM
+      drug_seller_order_goods
+    WHERE
+      order_id = #{orderId}
+    LIMIT 0,1
+  </select>
 </mapper>

@@ -4,7 +4,10 @@ import com.wannengyongyao.drug.common.status.BalanceClassify;
 import com.wannengyongyao.drug.common.status.OrderStatus;
 import com.wannengyongyao.drug.dao.DrugOrderMapper;
 import com.wannengyongyao.drug.dao.DrugSellerBalanceMapper;
+import com.wannengyongyao.drug.dao.DrugSellerMapper;
+import com.wannengyongyao.drug.dao.DrugSellerOrderGoodsMapper;
 import com.wannengyongyao.drug.model.DrugOrder;
+import com.wannengyongyao.drug.model.DrugSeller;
 import com.wannengyongyao.drug.model.DrugSellerBalance;
 import com.wannengyongyao.drug.model.DrugSystemBalance;
 import com.wannengyongyao.drug.service.manager.ManagerSettlementService;
@@ -31,6 +34,18 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
     @Autowired
     private DrugSellerBalanceMapper balanceMapper;
 
+    @Autowired
+    private DrugSellerMapper sellerMapper;
+
+    @Autowired
+    private DrugSellerOrderGoodsMapper goodsMapper;
+
+    /**
+     * 订单成功后结算
+     *
+     * @param orderId
+     * @return
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public int settle(Long orderId) {
@@ -49,11 +64,12 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
             return -3;
         }
 
-        long days = order.getSignTime().until(LocalDateTime.now(), ChronoUnit.DAYS);
-        if (days < 1){
+        long minutes = order.getSignTime().until(LocalDateTime.now(), ChronoUnit.MINUTES);
+        if (minutes < 1440){
             logger.error("order {} settle date has not arrived", orderId);
             return -4;
         }
+
         // 服务费分成
         BigDecimal sellerServiceAmount = order.getServiceCharge()
                 .multiply(BigDecimal.valueOf(0.4))
@@ -91,7 +107,13 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
         BigDecimal income = systemServiceAmount.add(order.getFreight());
         BigDecimal expenditure = order.getDiscountAmount();
         balanceMapper.systemAccount(expenditure, income);
+
         // 代收药店
+
+
+        // 药师成功抢单数增加
+        String drugName = goodsMapper.getFirstDrugName(orderId);
+        sellerMapper.increaseSuccess(order.getSellerId(), drugName);
 
         return 0;
     }

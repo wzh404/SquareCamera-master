@@ -50,4 +50,8 @@ public class DrugSeller {
     private String lastDrugName;
 
     private Integer successRate;
+
+    private Integer grabNum;
+
+    private Integer successNum;
 }

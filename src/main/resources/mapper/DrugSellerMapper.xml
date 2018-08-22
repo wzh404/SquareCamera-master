@@ -19,6 +19,8 @@
     <result column="store_id" jdbcType="INTEGER" property="storeId" />
     <result column="store_name" jdbcType="VARCHAR" property="storeName" />
     <result column="success_rate" jdbcType="INTEGER" property="successRate" />
+    <result column="grab_num" jdbcType="INTEGER" property="grabNum" />
+    <result column="success_num" jdbcType="INTEGER" property="successNum" />
     <result column="last_drug_name" jdbcType="VARCHAR" property="lastDrugName" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -144,4 +146,25 @@
     ORDER BY
       success_rate DESC
   </select>
+
+  <update id="increaseGrab">
+    UPDATE
+      drug_seller
+    SET
+      grab_num = grab_num + 1,
+      success_rate = ROUND(100 * success_num / grab_num, 0)
+    WHERE
+      id = #{sellerId}
+  </update>
+
+  <update id="increaseSuccess">
+    UPDATE
+      drug_seller
+    SET
+      success_num = success_num + 1,
+      success_rate = ROUND(100 * success_num / grab_num, 0),
+      last_drug_name = #{drugName}
+    WHERE
+      id = #{sellerId}
+  </update>
 </mapper>

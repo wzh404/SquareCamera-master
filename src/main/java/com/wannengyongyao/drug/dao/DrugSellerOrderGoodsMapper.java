@@ -10,5 +10,18 @@ import java.util.List;
 public interface DrugSellerOrderGoodsMapper {
     int insert(List<DrugSellerOrderGoods> orderGoods);
 
+    /**
+     *
+     * @param orderId
+     * @param sellerId
+     * @return
+     */
     List<DrugSellerOrderGoods> getByOrderAndSeller(@Param("orderId")Long orderId, @Param("sellerId")Long sellerId);
+
+    /**
+     *
+     * @param orderId
+     * @return
+     */
+    String getFirstDrugName(@Param("orderId")Long orderId);
 }
