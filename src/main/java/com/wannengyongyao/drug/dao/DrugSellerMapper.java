@@ -61,4 +61,20 @@ public interface DrugSellerMapper {
      * @return
      */
     Page<DrugSeller> reliableSeller();
+
+    /**
+     * 增加抢购订单数量
+     *
+     * @param sellerId
+     * @return
+     */
+    int increaseGrab(@Param("sellerId")Long sellerId);
+
+    /**
+     * 增加抢购成功订单数量
+     *
+     * @param sellerId
+     * @return
+     */
+    int increaseSuccess(@Param("sellerId")Long sellerId, @Param("drugName")String drugName);
 }

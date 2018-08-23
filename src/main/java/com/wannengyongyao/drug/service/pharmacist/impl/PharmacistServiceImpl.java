@@ -117,6 +117,8 @@ public class PharmacistServiceImpl implements PharmacistService {
         }
         sellerOrder.setAmount(amount);
         sellerOrderMapper.insert(sellerOrder);
+        // 增加抢购数量
+        sellerMapper.increaseGrab(sellerId);
         return sellerOrderGoodsMapper.insert(orderGoodsList);
     }
 
