@@ -210,6 +210,7 @@ public class DrugUserServiceImpl implements DrugUserService {
     }
 */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int insertUserAddress(DrugUserAddress address) {
         if (address.getStatus() == UserAddressStatus.DEFAULT.get()){
             addressMapper.undefaultStatus(address.getUserId());
@@ -220,6 +221,11 @@ public class DrugUserServiceImpl implements DrugUserService {
     @Override
     public List<DrugUserAddress> myAddress(Long userId) {
         return addressMapper.list(userId);
+    }
+
+    @Override
+    public DrugUserAddress addressDetail(Long id) {
+        return addressMapper.get(id);
     }
 
     @Override
@@ -238,6 +244,7 @@ public class DrugUserServiceImpl implements DrugUserService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int changeAddress(DrugUserAddress address) {
         if (address.getStatus() == UserAddressStatus.DEFAULT.get()){
             addressMapper.undefaultStatus(address.getUserId());

@@ -8,12 +8,13 @@
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="district" jdbcType="VARCHAR" property="district" />
     <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="status" jdbcType="INTEGER" property="status" />
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, user_id, name, mobile, district, address,create_time,status
+    id, user_id, name, mobile, district, address,city_name,create_time,status
   </sql>
 
   <select id="get" resultMap="Address">
@@ -33,6 +34,7 @@
       mobile,
       district,
       address,
+      city_name,
       create_time,
       status
     )
@@ -42,6 +44,7 @@
       #{mobile,jdbcType=VARCHAR},
       #{district,jdbcType=VARCHAR},
       #{address,jdbcType=VARCHAR},
+      #{cityName,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP},
       #{status,jdbcType=INTEGER}
     )
@@ -82,7 +85,10 @@
     SET
       name = #{name},
       address = #{address},
-      district = #{district}
+      district = #{district},
+      status = #{status},
+      mobile = #{mobile},
+      city_name = #{cityName}
     WHERE
       id = #{id}
   </update>

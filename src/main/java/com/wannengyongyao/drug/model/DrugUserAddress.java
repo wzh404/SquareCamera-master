@@ -16,6 +16,7 @@ public class DrugUserAddress {
     private String mobile;
     private LocalDateTime createTime;
     private Integer status;
+    private String cityName;
 
     public String getCity(){
         return this.district.substring(0,4) + "00";

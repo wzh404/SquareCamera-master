@@ -303,4 +303,15 @@ public class DrugUserController {
         int ret = userService.changeUserAddressStatus(id, userId, UserAddressStatus.DEFAULT.get());
         return ResultObject.cond(ret > 0, ResultCode.FAILED);
     }
+
+    @RequestMapping(value="/address/detail", method= {RequestMethod.POST})
+    public ResultObject addressDetail(HttpServletRequest request,
+                                       @RequestParam("id")Long id) {
+        Long userId = RequestUtil.getUserId(request);
+        DrugUserAddress address = userService.addressDetail(id);
+        if (address.getUserId().longValue() != userId.longValue()){
+            return ResultObject.fail(ResultCode.BAD_REQUEST);
+        }
+        return ResultObject.ok(address);
+    }
 }

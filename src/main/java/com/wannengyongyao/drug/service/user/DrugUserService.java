@@ -151,6 +151,14 @@ public interface DrugUserService {
     List<DrugUserAddress> myAddress(Long userId);
 
     /**
+     * 地址详情
+     *
+     * @param id
+     * @return
+     */
+    DrugUserAddress addressDetail(Long id);
+
+    /**
      * 删除用户地址
      *
      * @param id

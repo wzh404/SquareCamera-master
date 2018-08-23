@@ -14,6 +14,7 @@ public class UserAddressVo {
     private String mobile;
     @JsonProperty("default")
     private Integer status;
+    private String cityName;
 
     private Long userId;
 
@@ -30,6 +31,7 @@ public class UserAddressVo {
         address.setMobile(this.mobile);
         address.setUserId(this.userId);
         address.setStatus(this.status);
+        address.setCityName(this.cityName);
 
         return address;
     }
