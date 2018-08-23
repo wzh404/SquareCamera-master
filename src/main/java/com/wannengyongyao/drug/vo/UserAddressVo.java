@@ -1,5 +1,6 @@
 package com.wannengyongyao.drug.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wannengyongyao.drug.model.DrugUserAddress;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -11,6 +12,8 @@ public class UserAddressVo {
     private String address;
     private String district;
     private String mobile;
+    @JsonProperty("default")
+    private Integer status;
 
     private Long userId;
 
@@ -26,6 +29,7 @@ public class UserAddressVo {
         address.setName(name);
         address.setMobile(this.mobile);
         address.setUserId(this.userId);
+        address.setStatus(this.status);
 
         return address;
     }

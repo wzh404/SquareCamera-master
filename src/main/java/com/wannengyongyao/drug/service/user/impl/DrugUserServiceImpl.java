@@ -211,9 +211,8 @@ public class DrugUserServiceImpl implements DrugUserService {
 */
     @Override
     public int insertUserAddress(DrugUserAddress address) {
-        List<DrugUserAddress> l = myAddress(address.getUserId());
-        if (l == null || l.isEmpty()){
-            address.setStatus(1);
+        if (address.getStatus() == UserAddressStatus.DEFAULT.get()){
+            addressMapper.undefaultStatus(address.getUserId());
         }
         return addressMapper.insert(address);
     }
@@ -240,6 +239,10 @@ public class DrugUserServiceImpl implements DrugUserService {
 
     @Override
     public int changeAddress(DrugUserAddress address) {
+        if (address.getStatus() == UserAddressStatus.DEFAULT.get()){
+            addressMapper.undefaultStatus(address.getUserId());
+        }
+
         return addressMapper.changeAddress(address);
     }
 
