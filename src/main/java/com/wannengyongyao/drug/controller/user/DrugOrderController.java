@@ -142,7 +142,7 @@ public class DrugOrderController {
     }
 
     /**
-     * 待抢订单
+     * 待抢订单（暂不卖家报价）
      *
      * @param request
      * @param page
@@ -158,6 +158,30 @@ public class DrugOrderController {
         conditionMap.put("pageSize", DrugConstants.PAGE_SIZE);
         conditionMap.put("userId", userId);
         conditionMap.put("status", OrderStatus.INIT.get());
+        conditionMap.put("grab", 0);
+        List<DrugOrder> orders = orderService.list(conditionMap);
+
+        return ResultObject.ok(orders);
+    }
+
+    /**
+     * 待确认订单（有卖家报价）
+     *
+     * @param request
+     * @param page
+     * @return
+     */
+    @RequestMapping(value="/order/unconfirmed", method= {RequestMethod.GET})
+    public ResultObject unconfirmedOrder(HttpServletRequest request,
+                                     @RequestParam("page")Integer page){
+        Long userId = RequestUtil.getUserId(request);
+        if (page < 1) page = 1;
+        Map<String, Object> conditionMap = new HashMap<>();
+        conditionMap.put("start", (page - 1) * DrugConstants.PAGE_SIZE);
+        conditionMap.put("pageSize", DrugConstants.PAGE_SIZE);
+        conditionMap.put("userId", userId);
+        conditionMap.put("status", OrderStatus.INIT.get());
+        conditionMap.put("unconfirmed", 0);
         List<DrugOrder> orders = orderService.list(conditionMap);
 
         return ResultObject.ok(orders);
@@ -210,7 +234,7 @@ public class DrugOrderController {
     }
 
     /**
-     * 已发货待收货订单
+     * 已发货订单
      *
      * @param request
      * @param page

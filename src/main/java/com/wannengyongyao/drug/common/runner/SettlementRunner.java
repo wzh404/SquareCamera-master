@@ -1,27 +1,34 @@
 package com.wannengyongyao.drug.common.runner;
 
+import com.wannengyongyao.drug.model.DrugOrder;
+import com.wannengyongyao.drug.service.manager.ManagerSettlementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Component
 public class SettlementRunner implements ApplicationRunner, Ordered, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(SettlementRunner.class);
 
-    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(150));
-    private static ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(10);
+    @Autowired
+    private ManagerSettlementService settlementService;
+
+    @Autowired
+    private ScheduleTask task;
 
     @Override
     public void destroy() throws Exception {
-        if (executor != null){
-            executor.shutdown();
-        }
+        logger.info("settle runner destroy.");
     }
 
     /**
@@ -31,24 +38,26 @@ public class SettlementRunner implements ApplicationRunner, Ordered, DisposableB
      */
     @Override
     public void run(ApplicationArguments args) {
+        List<DrugOrder> orders = settlementService.listUnSettlementOrder();
+        if (orders == null || orders.isEmpty()){
+            return;
+        }
 
+        orders.stream().forEach(order -> {
+            LocalDateTime t = order.getSignTime();
+            long minutes = Duration.between(t, LocalDateTime.now()).get(ChronoUnit.SECONDS) / 60;
+            if (minutes >= 24 * 60) {
+                minutes = 0;
+            } else {
+                minutes = 24 * 60 - minutes;
+            }
+            logger.info("submit order {} after {} minute", order.getId(), minutes);
+            task.submit(order.getId(), minutes);
+        });
     }
 
     @Override
     public int getOrder() {
         return 2;
-    }
-
-    public static void execute(Runnable command){
-        executor.execute(command);
-    }
-
-    /**
-     * 24小时后执行
-     *
-     * @param command
-     */
-    public static  void schedule(Runnable command){
-        scheduledThreadPool.schedule(command, 24, TimeUnit.HOURS);
     }
 }

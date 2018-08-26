@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,7 +43,10 @@ public class PharmacistServiceImpl implements PharmacistService {
 
     @Override
     public DrugSeller getSeller(Long id) {
-        return sellerMapper.get(id);
+        DrugSeller seller = sellerMapper.get(id);
+        int orderNum = orderMapper.getSellerOrderTotal(id);
+        seller.setOrderNum(orderNum);
+        return seller;
     }
 
     @Override
@@ -117,8 +121,10 @@ public class PharmacistServiceImpl implements PharmacistService {
         }
         sellerOrder.setAmount(amount);
         sellerOrderMapper.insert(sellerOrder);
-        // 增加抢购数量
+        // 增加药师抢购的订单数量
         sellerMapper.increaseGrab(sellerId);
+        // 增加订单的抢购人数
+        orderMapper.increaseSellerNum(order.getId());
         return sellerOrderGoodsMapper.insert(orderGoodsList);
     }
 
@@ -160,5 +166,42 @@ public class PharmacistServiceImpl implements PharmacistService {
     @Override
     public DrugSeller getSellerByOpenid(String openid) {
         return sellerMapper.getSellerByOpenid(openid);
+    }
+
+    @Override
+    public Map<String, Object> myBalance(Long sellerId) {
+        DrugSeller seller = sellerMapper.get(sellerId);
+        if (seller == null){
+            return null;
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("account", seller.getAccountBalance());
+        map.put("available", seller.getAvailableBalance());
+
+        // 本月业绩
+        Map<String, Object> conditionMap = new HashMap<>();
+        conditionMap.put("sellerId", sellerId);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime one = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0,0,0);
+        conditionMap.put("endTime", now);
+        conditionMap.put("startTime", one);
+        BigDecimal month = sellerMapper.sumSeller(conditionMap);
+        map.put("month", month);
+
+        // 平台奖励（服务费）收入
+        conditionMap.clear();
+        conditionMap.put("sellerId", sellerId);
+        conditionMap.put("classify", "1002");
+        BigDecimal service = sellerMapper.sumSeller(conditionMap);
+        map.put("service", service);
+
+        // 悬赏收入
+        conditionMap.clear();
+        conditionMap.put("sellerId", sellerId);
+        conditionMap.put("classify", "1003");
+        BigDecimal reward = sellerMapper.sumSeller(conditionMap);
+        map.put("reward", reward);
+
+        return map;
     }
 }

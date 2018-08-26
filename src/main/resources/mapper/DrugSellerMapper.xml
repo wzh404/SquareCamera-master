@@ -10,6 +10,7 @@
     <result column="job" jdbcType="VARCHAR" property="job" />
     <result column="classify" jdbcType="VARCHAR" property="classify" />
     <result column="account_balance" jdbcType="DECIMAL" property="accountBalance" />
+    <result column="available_balance" jdbcType="DECIMAL" property="availableBalance" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_ip" jdbcType="VARCHAR" property="createIp" />
@@ -22,16 +23,20 @@
     <result column="grab_num" jdbcType="INTEGER" property="grabNum" />
     <result column="success_num" jdbcType="INTEGER" property="successNum" />
     <result column="last_drug_name" jdbcType="VARCHAR" property="lastDrugName" />
+    <result column="address" jdbcType="VARCHAR" property="storeAddress" />
+    <result column="district" jdbcType="VARCHAR" property="storeDistrict" />
   </resultMap>
   <sql id="Base_Column_List">
-    s.id, s.name, gender, mobile, id_number, job, s.classify, account_balance, s.remark, s.create_time,
+    s.id, s.name, gender, mobile, id_number, job, s.classify, account_balance, available_balance, s.remark, s.create_time,
     create_ip, s.last_updated_time, s.status, receive_status, store_id
   </sql>
 
   <select id="get" parameterType="java.lang.Long" resultMap="Seller">
     select 
       <include refid="Base_Column_List" />,
-      st.name as store_name
+      st.name as store_name,
+      st.address,
+      st.district
     from
       drug_seller s
     inner join
@@ -130,6 +135,7 @@
       id = #{id}
   </update>
 
+  <!-- 未登录用户推荐的药师 -->
   <select id="reliableSeller" resultType="com.wannengyongyao.drug.model.DrugSeller">
     SELECT
       s.id,
@@ -143,6 +149,30 @@
       drug_store  st
     ON
       s.store_id = st.id
+    ORDER BY
+      success_rate DESC
+  </select>
+
+  <!-- 登录用户推荐的药师 -->
+  <select id="reliableUserSeller" resultType="com.wannengyongyao.drug.model.DrugSeller">
+    SELECT
+      s.id,
+      s.name,
+      s.success_rate as successRate,
+      s.last_drug_name as lastDrugName,
+      st.name as storeName
+    FROM
+      drug_seller s
+    INNER JOIN
+      drug_store  st
+    ON
+      s.store_id = st.id
+    LEFT JOIN
+      drug_user_pharmacist p
+    ON
+    ( s.id = p.pharmacist_id AND p.user_id = #{userId} )
+    WHERE
+      p.pharmacist_id is null
     ORDER BY
       success_rate DESC
   </select>
@@ -167,4 +197,22 @@
     WHERE
       id = #{sellerId}
   </update>
+
+  <select id="sumSeller" resultType="java.math.BigDecimal">
+    SELECT
+      SUM(amount) AS amount
+    FROM
+      drug_seller_balance
+    WHERE
+      seller_id = #{sellerId}
+    <if test="classify != null">
+      <![CDATA[ AND classify = #{classify} ]]>
+    </if>
+    <if test="startTime != null">
+      <![CDATA[ AND create_time >= #{startTime} ]]>
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ AND create_time <= #{endTime} ]]>
+    </if>
+  </select>
 </mapper>

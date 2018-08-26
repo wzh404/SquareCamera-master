@@ -22,8 +22,12 @@ public class DrugSellerServiceImpl implements DrugSellerService {
     }
 
     @Override
-    public Page<DrugSeller> reliableSeller(int page, int pageSize) {
+    public Page<DrugSeller> reliableSeller(int page, int pageSize, long userId) {
         PageHelper.startPage(page, pageSize);
-        return sellerMapper.reliableSeller();
+        if (userId < 1L) {
+            return sellerMapper.reliableSeller();
+        }
+
+        return sellerMapper.reliableUserSeller(userId);
     }
 }

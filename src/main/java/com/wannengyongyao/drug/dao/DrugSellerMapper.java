@@ -5,6 +5,7 @@ import com.wannengyongyao.drug.model.DrugSeller;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Mapper
@@ -63,6 +64,14 @@ public interface DrugSellerMapper {
     Page<DrugSeller> reliableSeller();
 
     /**
+     * 登录用户靠谱药师推荐
+     *
+     * @param userId
+     * @return
+     */
+    Page<DrugSeller> reliableUserSeller(@Param("userId")Long userId);
+
+    /**
      * 增加抢购订单数量
      *
      * @param sellerId
@@ -77,4 +86,11 @@ public interface DrugSellerMapper {
      * @return
      */
     int increaseSuccess(@Param("sellerId")Long sellerId, @Param("drugName")String drugName);
+
+    /**
+     *
+     * @param conditionMap
+     * @return
+     */
+    BigDecimal sumSeller(Map<String, Object> conditionMap);
 }

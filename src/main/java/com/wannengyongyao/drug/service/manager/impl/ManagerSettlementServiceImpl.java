@@ -70,6 +70,11 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
             return -4;
         }
 
+        if (order.getSettlementStatus().intValue() == 1){
+            logger.info("order {} settle already.", orderId);
+            return -5;
+        }
+
         // 服务费分成
         BigDecimal sellerServiceAmount = order.getServiceCharge()
                 .multiply(BigDecimal.valueOf(0.4))
@@ -94,7 +99,6 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
                 .add(sellerServiceAmount);
         balanceMapper.sellerAccount(order.getSellerId(), sellerAmount);
 
-
         // 平台收入流水
         List<DrugSystemBalance> systemBalanceList = new ArrayList<>();
         systemBalanceList.add(freight(order));
@@ -115,7 +119,14 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
         String drugName = goodsMapper.getFirstDrugName(orderId);
         sellerMapper.increaseSuccess(order.getSellerId(), drugName);
 
+        // 更新订单结算状态
+        orderMapper.changeOrderSettlementStatus(orderId);
         return 0;
+    }
+
+    @Override
+    public List<DrugOrder> listUnSettlementOrder() {
+        return orderMapper.listUnSettlementOrder();
     }
 
     /**

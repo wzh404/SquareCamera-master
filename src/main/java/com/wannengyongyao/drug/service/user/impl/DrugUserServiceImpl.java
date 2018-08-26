@@ -82,7 +82,8 @@ public class DrugUserServiceImpl implements DrugUserService {
         }
 
         DrugUser user = new DrugUser();
-        user.setName(u.getNickName());
+        user.setName(wxUser.getNickName());
+        user.setGender("1".equals(wxUser.getGender()) ? 1 : 0);
         user.setCreateIp("localhost");
         user.setOpenId(wxUser.getOpenId());
         user.setMobile("-");
@@ -110,7 +111,7 @@ public class DrugUserServiceImpl implements DrugUserService {
             return -2;
         }
         user.setName(w.getNickName());
-        // user.setGender("男".equalsIgnoreCase(w.getGender()) ? 0 : 1);
+        user.setGender("1".equalsIgnoreCase(w.getGender()) ? 0 : 1);
 
         return userMapper.insert(user);
     }
@@ -129,7 +130,8 @@ public class DrugUserServiceImpl implements DrugUserService {
 
         DrugUserCart c = userCartMapper.getUserCart(cart.getUserId(), cart.getDrugId());
         if (c != null){
-            return -2;
+            userCartMapper.changeUserCartQuantity(cart.getUserId(), cart.getDrugId(), 1);
+            return 1;
         }
         cart.setDrugName(drug.getName());
         cart.setManufacturer(drug.getManufacturer());

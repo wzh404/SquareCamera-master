@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -119,7 +120,7 @@ public class DrugUserController {
      */
     @RequestMapping(value="/new/cart", method= {RequestMethod.POST})
     public ResultObject newCarts(HttpServletRequest request,
-                                 @RequestBody CartVo cartVo){
+                                 @Valid  @RequestBody CartVo cartVo){
         Long userId = RequestUtil.getUserId(request);
         DrugUserCart cart = new DrugUserCart();
         cart.setUserId( userId);

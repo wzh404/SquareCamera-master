@@ -13,5 +13,5 @@ public interface DrugSellerService {
      *
      * @return
      */
-    Page<DrugSeller> reliableSeller(int page, int pageSize);
+    Page<DrugSeller> reliableSeller(int page, int pageSize, long userId);
 }

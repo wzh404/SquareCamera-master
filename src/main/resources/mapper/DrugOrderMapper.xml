@@ -28,6 +28,7 @@
     <result column="shipping_company" jdbcType="VARCHAR" property="shippingCompany" />
     <result column="shipping_id" jdbcType="VARCHAR" property="shippingId" />
     <result column="seller_num" jdbcType="INTEGER" property="sellerNum" />
+    <result column="settlement_status" jdbcType="INTEGER" property="settlementStatus" />
     <result column="collection_store" jdbcType="VARCHAR" property="collectionStore" />
     <result column="collection_store_id" jdbcType="INTEGER" property="collectionStoreId" />
 
@@ -152,7 +153,8 @@
       freight,
       service_charge as serviceCharge,
       reward_amount as rewardAmount,
-      discount_amount as discountAmount
+      discount_amount as discountAmount,
+      settlement_status as settlementStatus
     FROM
       drug_order
     WHERE
@@ -202,6 +204,12 @@
         order_status = #{status}
       AND
         user_id = #{userId}
+      <if test="grab != null">
+        AND seller_num = 0  <!-- 报价人数 -->
+      </if>
+      <if test="unconfirmed != null">
+        AND seller_num > 0
+      </if>
       ORDER BY create_time DESC
       LIMIT #{start}, #{pageSize}
     ) o
@@ -267,27 +275,32 @@
     FROM
     (
       SELECT
-        id,
-        user_id,
-        user_name,
-        expected_amount,
-        reward_amount,
-        service_charge,
-        freight,
-        collection_store,
-        collection_store_id,
-        order_status,
-        create_time
+        d.id,
+        d.user_id,
+        d.user_name,
+        d.expected_amount,
+        d.reward_amount,
+        d.service_charge,
+        d.freight,
+        d.collection_store,
+        d.collection_store_id,
+        d.order_status,
+        d.create_time
       FROM
-        drug_order
+        drug_order d
+      LEFT JOIN
+        drug_seller_order so
+      ON
+        (
+          d.id = so.order_id
+        AND
+          d.order_status = 0
+        AND
+          so.seller_id = #{sellerId}
+        )
       WHERE
-        order_status = 0
-      AND (
-          seller_id = #{sellerId}
-        OR
-          seller_id = 0
-      )
-      ORDER BY create_time DESC
+        so.order_id is null
+      ORDER BY d.create_time DESC
       LIMIT #{start}, #{pageSize}
     ) o
     INNER join
@@ -327,7 +340,7 @@
       FROM
         drug_order
       WHERE
-        order_status = 0
+        order_status = #{status}
       AND
         seller_id = #{sellerId}
       ORDER BY create_time DESC
@@ -409,4 +422,44 @@
     WHERE
       id = #{id}
   </update>
+
+  <update id="increaseSellerNum">
+    UPDATE
+      drug_order
+    SET
+      seller_num = seller_num + 1
+    WHERE
+      id = #{id}
+  </update>
+
+  <update id="changeOrderSettlementStatus">
+    UPDATE
+      drug_order
+    SET
+      settlement_status = 1
+    WHERE
+      id = #{id}
+  </update>
+
+  <select id="listUnSettlementOrder" resultType="com.wannengyongyao.drug.model.DrugOrder">
+    select
+      id,
+      sign_time as signTime
+    from
+      drug_order
+    where
+      order_status = 1009
+    and
+      pay_status = 1
+    and
+      settlement_status = 0
+  </select>
+
+  <select id="getSellerOrderTotal" resultType="java.lang.Integer">
+    select count(*)
+    from
+      drug_order
+    where
+      seller_id = #{sellerId}
+  </select>
 </mapper>

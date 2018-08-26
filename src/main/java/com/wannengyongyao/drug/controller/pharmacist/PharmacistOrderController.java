@@ -2,6 +2,7 @@ package com.wannengyongyao.drug.controller.pharmacist;
 
 import com.wannengyongyao.drug.common.ResultCode;
 import com.wannengyongyao.drug.common.ResultObject;
+import com.wannengyongyao.drug.common.runner.ScheduleTask;
 import com.wannengyongyao.drug.common.status.OrderStatus;
 import com.wannengyongyao.drug.common.status.ShippingStatus;
 import com.wannengyongyao.drug.model.DrugOrder;
@@ -34,6 +35,9 @@ public class PharmacistOrderController {
 
     @Autowired
     private DrugOrderService orderService;
+
+    @Autowired
+    private ScheduleTask task;
 
     /**
      * 发送报价
@@ -118,7 +122,7 @@ public class PharmacistOrderController {
         conditionMap.put("start", (page - 1) * DrugConstants.PAGE_SIZE);
         conditionMap.put("pageSize", DrugConstants.PAGE_SIZE);
         conditionMap.put("sellerId", sellerId);
-        conditionMap.put("status", OrderStatus.SHIPPED);
+        conditionMap.put("status", OrderStatus.SHIPPED.get());
 
         return ResultObject.ok(pharmacistService.listSeller(conditionMap));
     }
@@ -138,7 +142,7 @@ public class PharmacistOrderController {
         conditionMap.put("start", (page - 1) * DrugConstants.PAGE_SIZE);
         conditionMap.put("pageSize", DrugConstants.PAGE_SIZE);
         conditionMap.put("sellerId", sellerId);
-        conditionMap.put("status", OrderStatus.CONFIRM);
+        conditionMap.put("status", OrderStatus.CONFIRM.get());
 
         return ResultObject.ok(pharmacistService.listSeller(conditionMap));
     }
@@ -158,7 +162,7 @@ public class PharmacistOrderController {
         conditionMap.put("start", (page - 1) * DrugConstants.PAGE_SIZE);
         conditionMap.put("pageSize", DrugConstants.PAGE_SIZE);
         conditionMap.put("sellerId", sellerId);
-        conditionMap.put("status", OrderStatus.COMPLETED);
+        conditionMap.put("status", OrderStatus.COMPLETED.get());
 
         return ResultObject.ok(pharmacistService.listSeller(conditionMap));
     }
@@ -184,7 +188,7 @@ public class PharmacistOrderController {
         conditionMap.put("pageSize", DrugConstants.PAGE_SIZE);
         conditionMap.put("storeId", seller.getStoreId());
 
-        return ResultObject.ok(pharmacistService.listSeller(conditionMap));
+        return ResultObject.ok(pharmacistService.listCollection(conditionMap));
     }
 
     /**
@@ -266,6 +270,9 @@ public class PharmacistOrderController {
         order.setShippingStatus(ShippingStatus.COMPLETED.get());
         order.setOrderStatus(OrderStatus.COMPLETED.get());
         int rows = pharmacistService.sellerCollection(order);
+        if (rows > 0){
+            task.submit(order.getId());
+        }
         return ResultObject.cond(rows > 0, ResultCode.FAILED);
     }
 

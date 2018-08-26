@@ -119,4 +119,6 @@ public interface PharmacistService {
      * @return
      */
     DrugSeller getSellerByOpenid(String openid);
+
+    Map<String, Object> myBalance(Long sellerId);
 }

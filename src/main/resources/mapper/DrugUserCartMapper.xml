@@ -75,4 +75,15 @@
       drug_id = #{item.drugId,jdbcType=INTEGER}
     </foreach>
   </delete>
+
+  <update id="changeUserCartQuantity">
+    UPDATE
+      drug_user_cart
+    SET
+      quantity = quantity + #{quantity}
+    WHERE
+      user_id = #{userId,jdbcType=BIGINT}
+    AND
+      drug_id = #{drugId,jdbcType=INTEGER}
+  </update>
 </mapper>

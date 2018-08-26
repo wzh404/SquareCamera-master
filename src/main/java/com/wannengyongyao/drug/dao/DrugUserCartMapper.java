@@ -43,4 +43,14 @@ public interface DrugUserCartMapper {
      * @return
      */
     DrugUserCart getUserCart(@Param("userId")Long userId, @Param("drugId")Integer drugId);
+
+    /**
+     * 增加用户购物车药品数量
+     *
+     * @param userId
+     * @param drugId
+     * @param quantity
+     * @return
+     */
+    int changeUserCartQuantity(@Param("userId")Long userId, @Param("drugId")Integer drugId, @Param("quantity")Integer quantity);
 }

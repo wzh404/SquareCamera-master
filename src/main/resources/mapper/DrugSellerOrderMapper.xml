@@ -136,7 +136,7 @@
       s.seller_id = g.seller_id
   </select>
 
-  <!-- 卖家待确认订单列表 -->
+  <!-- 卖家待确认（已报价）订单列表 -->
   <select id="listSellerUnconfirmed" resultMap="SellerOrder">
     SELECT
       s.*,

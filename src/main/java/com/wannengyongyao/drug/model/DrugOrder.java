@@ -73,6 +73,9 @@ public class DrugOrder  {
     // 抢单数
     private Integer sellerNum;
 
+    // 订单结算状态
+    private Integer settlementStatus;
+
     // 代收人情况
     private String collectionStore;
 

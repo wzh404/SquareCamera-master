@@ -104,4 +104,34 @@ public interface DrugOrderMapper {
      * @return
      */
     List<DrugOrder> listCollection(Map<String, Object> conditionMap);
+
+    /**
+     * 增加订单抢购人数
+     *
+     * @param id
+     * @return
+     */
+    int increaseSellerNum(@Param("id")Long id);
+
+    /**
+     * 更改订单结算状态
+     *
+     * @param id
+     * @return
+     */
+    int changeOrderSettlementStatus(@Param("id")Long id);
+
+    /**
+     * 查询未结算的订单
+     *
+     * @return
+     */
+    List<DrugOrder> listUnSettlementOrder();
+
+    /**
+     *
+     * @param sellerId
+     * @return
+     */
+    int getSellerOrderTotal(@Param("sellerId")Long sellerId);
 }

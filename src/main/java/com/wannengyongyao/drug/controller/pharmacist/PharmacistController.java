@@ -107,4 +107,22 @@ public class PharmacistController {
         List<DrugUser> users = pharmacistService.getPharmacistUsers(conditionMap);
         return ResultObject.ok(users);
     }
+
+    /**
+     * 药师收入
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/balance", method= {RequestMethod.GET})
+    public ResultObject balance(HttpServletRequest request) {
+        long sellerId = RequestUtil.getUserId(request);
+
+        Map<String, Object> balanceMap = pharmacistService.myBalance(sellerId);
+        if (balanceMap == null) {
+            return ResultObject.fail(ResultCode.PHARMACIST_NOT_EXIST);
+        }
+
+        return ResultObject.ok(balanceMap);
+    }
 }

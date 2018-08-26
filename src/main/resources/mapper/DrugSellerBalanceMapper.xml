@@ -48,7 +48,8 @@
     UPDATE
       drug_seller
     SET
-      account_balance = account_balance + #{amount,jdbcType=DECIMAL}
+      account_balance = account_balance + #{amount,jdbcType=DECIMAL},
+      available_balance = available_balance + #{amount,jdbcType=DECIMAL}
     WHERE
       id = #{sellerId,jdbcType=BIGINT};
   </update>

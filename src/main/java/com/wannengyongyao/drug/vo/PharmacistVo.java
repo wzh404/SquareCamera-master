@@ -44,6 +44,7 @@ public class PharmacistVo {
         s.setName(this.name);
         s.setJob(this.job);
         s.setIdNumber(this.idNumber);
+        s.setStoreId(this.storeId);
 
         return s;
     }

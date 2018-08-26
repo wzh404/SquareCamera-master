@@ -27,6 +27,8 @@ public class DrugSeller {
 
     private BigDecimal accountBalance;
 
+    private BigDecimal availableBalance;
+
     private String remark;
 
     private LocalDateTime createTime;
@@ -54,4 +56,10 @@ public class DrugSeller {
     private Integer grabNum;
 
     private Integer successNum;
+
+    private Integer orderNum;
+
+    private String storeAddress;
+
+    private String storeDistrict;
 }
