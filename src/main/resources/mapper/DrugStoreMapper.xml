@@ -58,7 +58,7 @@
       name,
       address,
       classify,
-      ROUND(ST_Distance_Sphere(Point(#{lon}, #{lat}), geom )/1000, 1) AS distance
+      ROUND(ST_Distance_Sphere(Point(#{lon}, #{lat}), geom)/1000, 1) AS distance
     FROM
       drug_store
     WHERE
@@ -68,6 +68,9 @@
           Point (( #{lon} - ( #{distance} / 111.12 )), ( #{lat} - ( #{distance} / 111.12 )))
         ), geom
       )
+    <if test="name != null">
+      AND name LIKE CONCAT('%',#{name},'%')
+    </if>
     ORDER BY distance ASC
   </select>
 

@@ -13,5 +13,5 @@ public interface DrugStoreService {
      * @param distance
      * @return
      */
-    List<DrugStore> nearby(Double lon, Double lat, Integer distance);
+    List<DrugStore> nearby(Double lon, Double lat, String name, Integer distance);
 }

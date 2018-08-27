@@ -26,8 +26,9 @@ public class DrugStoreController {
      */
     @RequestMapping(value="/common/drugstore", method= {RequestMethod.GET})
     public ResultObject drugstore(@RequestParam("lon")Double lon,
-                                  @RequestParam("lat")Double lat){
-        List<DrugStore> stores = storeService.nearby(lon, lat, 5);
+                                  @RequestParam("lat")Double lat,
+                                  @RequestParam(value="name", required = false)String name){
+        List<DrugStore> stores = storeService.nearby(lon, lat, name, 5);
 
         return ResultObject.ok(stores);
     }

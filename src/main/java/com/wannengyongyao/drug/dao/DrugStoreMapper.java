@@ -15,7 +15,7 @@ public interface DrugStoreMapper {
 
     DrugStore get(@Param("id")Integer id);
 
-    List<DrugStore> nearby(@Param("lon")Double lon, @Param("lat")Double lat, @Param("distance")Integer distance);
+    List<DrugStore> nearby(@Param("lon")Double lon, @Param("lat")Double lat, @Param("name")String name, @Param("distance")Integer distance);
 
     Page<DrugStore> list(Map<String, Object> conditionMap);
 }

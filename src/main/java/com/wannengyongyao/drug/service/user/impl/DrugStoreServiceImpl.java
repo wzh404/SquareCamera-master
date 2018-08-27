@@ -14,7 +14,7 @@ public class DrugStoreServiceImpl implements DrugStoreService {
     private DrugStoreMapper storeMapper;
 
     @Override
-    public List<DrugStore> nearby(Double lon, Double lat, Integer distance) {
-        return storeMapper.nearby(lon, lat, distance);
+    public List<DrugStore> nearby(Double lon, Double lat, String name, Integer distance) {
+        return storeMapper.nearby(lon, lat, name, distance);
     }
 }
