@@ -34,5 +34,22 @@ public class DrugSellerOrder {
 
     private Integer status;
 
+    // order
+    private String collectionStore;
+
+    private Integer collectionStoreId;
+
+    private BigDecimal rewardAmount;
+
+    private BigDecimal discountAmount;
+
+    private BigDecimal expectedAmount;
+
+    private BigDecimal serviceCharge;
+
+    private BigDecimal freight;
+
+    private String address;
+
     private List<DrugSellerOrderGoods> drugs;
 }

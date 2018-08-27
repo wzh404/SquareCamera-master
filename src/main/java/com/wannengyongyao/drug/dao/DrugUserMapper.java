@@ -109,4 +109,13 @@ public interface DrugUserMapper {
      * @return
      */
     DrugUserLongterm getUserLongTerm(@Param("userId")Long userId, @Param("drugId")Integer drugId);
+
+    /**
+     * 查看历史订单用户订单中指定药品的数量
+     *
+     * @param userId
+     * @param drugId
+     * @return
+     */
+    int getUserOrderDrugCount(@Param("userId")Long userId, @Param("drugId")Integer drugId);
 }

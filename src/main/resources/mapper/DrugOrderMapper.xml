@@ -31,6 +31,7 @@
     <result column="settlement_status" jdbcType="INTEGER" property="settlementStatus" />
     <result column="collection_store" jdbcType="VARCHAR" property="collectionStore" />
     <result column="collection_store_id" jdbcType="INTEGER" property="collectionStoreId" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
 
     <result column="coupon_code" jdbcType="VARCHAR" property="couponCode" />
 

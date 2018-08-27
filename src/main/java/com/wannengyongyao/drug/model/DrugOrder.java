@@ -85,5 +85,7 @@ public class DrugOrder  {
 
     private String couponCode;
 
+    private String address;
+
     private List<DrugOrderGoods> drugs;
 }

@@ -128,9 +128,10 @@
     UPDATE
       drug_seller
     SET
-      name = #{name},
+      `name` = #{name},
       job = #{job},
-      id_number = #{idNumber}
+      id_number = #{idNumber},
+      store_id = #{storeId}
     WHERE
       id = #{id}
   </update>

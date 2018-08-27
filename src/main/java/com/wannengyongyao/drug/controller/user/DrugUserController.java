@@ -178,7 +178,7 @@ public class DrugUserController {
      * @param request
      * @param longTermVo
      * @return
-     */
+
     @RequestMapping(value="/new/longterm", method= {RequestMethod.POST})
     public ResultObject newLongTermVo(HttpServletRequest request,
                                  @RequestBody LongTermVo longTermVo){
@@ -193,7 +193,7 @@ public class DrugUserController {
         }
 
         return ResultObject.cond(rows > 0, ResultCode.FAILED);
-    }
+    }*/
 
     /**
      * 删除购物车药品信息

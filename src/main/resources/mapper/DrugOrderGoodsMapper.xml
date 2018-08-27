@@ -62,4 +62,12 @@
         id = #{item.id}
     </foreach>
   </update>
+
+  <select id="listDrugs" resultType="java.lang.Integer">
+    SELECT drug_id
+    FROM
+      drug_order_goods
+    WHERE
+      order_id = #{orderId}
+  </select>
 </mapper>

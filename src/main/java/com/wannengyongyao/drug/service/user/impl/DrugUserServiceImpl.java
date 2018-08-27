@@ -7,6 +7,8 @@ import com.wannengyongyao.drug.dao.*;
 import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.service.user.DrugUserService;
 import com.wannengyongyao.drug.vo.UserAddressVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,6 +20,8 @@ import java.util.List;
 
 @Service("drugUserService")
 public class DrugUserServiceImpl implements DrugUserService {
+    private final Logger logger = LoggerFactory.getLogger(DrugUserServiceImpl.class);
+
     @Autowired
     private DrugUserMapper userMapper;
 
@@ -74,8 +78,10 @@ public class DrugUserServiceImpl implements DrugUserService {
     public Long insertWeixinAndUser(DrugWeixinUser wxUser) {
         DrugWeixinUser u = weixinMapper.getByOpenId(wxUser.getOpenId());
         if (u != null){
+            logger.warn("openid already exists in wx user.");
             DrugUser du = userMapper.getUserByOpenid(wxUser.getOpenId());
             if (du == null){
+                logger.warn("openid not exists in user.");
                 return -1L;
             }
             return du.getId();
@@ -164,10 +170,18 @@ public class DrugUserServiceImpl implements DrugUserService {
             return -1;
         }
 
+        // 长期用药药品已存在
         DrugUserLongterm c = userMapper.getUserLongTerm(longterm.getUserId(), longterm.getDrugId());
         if (c != null){
             return -2;
         }
+
+        // 历史药品下单数超过2
+        int cnt = userMapper.getUserOrderDrugCount(longterm.getUserId(), longterm.getDrugId());
+        if (cnt < 2) {
+            return -3;
+        }
+
         longterm.setDrugName(drug.getName());
         longterm.setManufacturer(drug.getManufacturer());
         longterm.setSpecifications(drug.getSpecifications());

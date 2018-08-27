@@ -2,6 +2,7 @@ package com.wannengyongyao.drug.dao;
 
 import com.wannengyongyao.drug.model.DrugOrderGoods;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,4 +23,11 @@ public interface DrugOrderGoodsMapper {
      * @return
      */
     int confirm(List<DrugOrderGoods> goods);
+
+    /**
+     *
+     * @param orderId
+     * @return
+     */
+    List<Integer> listDrugs(@Param("orderId")Long orderId);
 }

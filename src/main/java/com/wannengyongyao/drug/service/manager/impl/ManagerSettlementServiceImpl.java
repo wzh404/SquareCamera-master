@@ -2,15 +2,10 @@ package com.wannengyongyao.drug.service.manager.impl;
 
 import com.wannengyongyao.drug.common.status.BalanceClassify;
 import com.wannengyongyao.drug.common.status.OrderStatus;
-import com.wannengyongyao.drug.dao.DrugOrderMapper;
-import com.wannengyongyao.drug.dao.DrugSellerBalanceMapper;
-import com.wannengyongyao.drug.dao.DrugSellerMapper;
-import com.wannengyongyao.drug.dao.DrugSellerOrderGoodsMapper;
-import com.wannengyongyao.drug.model.DrugOrder;
-import com.wannengyongyao.drug.model.DrugSeller;
-import com.wannengyongyao.drug.model.DrugSellerBalance;
-import com.wannengyongyao.drug.model.DrugSystemBalance;
+import com.wannengyongyao.drug.dao.*;
+import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.service.manager.ManagerSettlementService;
+import com.wannengyongyao.drug.service.user.DrugUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +27,19 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
     private DrugOrderMapper orderMapper;
 
     @Autowired
+    private DrugOrderGoodsMapper goodsMapper;
+
+    @Autowired
     private DrugSellerBalanceMapper balanceMapper;
 
     @Autowired
     private DrugSellerMapper sellerMapper;
 
     @Autowired
-    private DrugSellerOrderGoodsMapper goodsMapper;
+    private DrugSellerOrderGoodsMapper sellerGoodsMapper;
+
+    @Autowired
+    private DrugUserService userService;
 
     /**
      * 订单成功后结算
@@ -116,11 +117,21 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
 
 
         // 药师成功抢单数增加
-        String drugName = goodsMapper.getFirstDrugName(orderId);
+        String drugName = sellerGoodsMapper.getFirstDrugName(orderId);
         sellerMapper.increaseSuccess(order.getSellerId(), drugName);
 
         // 更新订单结算状态
         orderMapper.changeOrderSettlementStatus(orderId);
+
+        // 长期用药
+        DrugUserLongterm longTerm = new DrugUserLongterm();
+        longTerm.setUserId(order.getUserId());
+        List<Integer> ids = goodsMapper.listDrugs(orderId);
+        for (Integer id : ids) {
+            longTerm.setDrugId(id);
+            longTerm.setCreateTime(LocalDateTime.now());
+            userService.insertUserLongTerm(longTerm);
+        }
         return 0;
     }
 

@@ -216,4 +216,18 @@
     AND
       drug_id = #{drugId,jdbcType=INTEGER}
   </select>
+
+  <select id="getUserOrderDrugCount" resultType="java.lang.Integer">
+    SELECT count(g.id)
+    FROM
+      drug_order o
+    INNER JOIN
+      drug_order_goods g
+    ON
+      ( o.id = g.order_id AND o.user_id = #{userId} )
+    WHERE
+      o.order_status = 1009
+    AND
+      g.drug_id = #{drugId}
+  </select>
 </mapper>
