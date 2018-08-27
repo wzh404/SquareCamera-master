@@ -23,6 +23,8 @@ public class OrderVo {
     private BigDecimal freight;
     // 优惠券
     private String coupon;
+    // 用户地址
+    private String address;
 
     // 代收药店
     @Min(1)
@@ -38,6 +40,7 @@ public class OrderVo {
         order.setServiceCharge(this.serviceCharge);
         order.setFreight(this.freight);
         order.setRewardAmount(this.rewardAmount);
+        order.setAddress(this.address);
 
         order.setDiscountAmount(new BigDecimal(0.0));
         order.setPayment("weixin");

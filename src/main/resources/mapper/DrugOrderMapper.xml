@@ -78,7 +78,8 @@
     shipping_id,
     seller_num,
     collection_store,
-    collection_store_id
+    collection_store_id,
+    address
   </sql>
   <select id="get" parameterType="java.lang.Long" resultMap="Order">
     select 
@@ -104,6 +105,7 @@
       seller_num,
       collection_store,
       collection_store_id,
+      address,
       coupon_code)
     values (
       #{id,jdbcType=BIGINT},
@@ -121,6 +123,7 @@
       #{sellerNum,jdbcType=INTEGER},
       #{collectionStore,jdbcType=VARCHAR},
       #{collectionStoreId,jdbcType=INTEGER},
+      #{address,jdbcType=VARCHAR},
       #{couponCode,jdbcType=VARCHAR})
   </insert>
 
@@ -197,6 +200,7 @@
         freight,
         collection_store,
         collection_store_id,
+        address,
         order_status,
         create_time
       FROM
@@ -218,6 +222,7 @@
       drug_order_goods g
     ON
       o.id = g.order_id
+    ORDER BY o.create_time DESC
   </select>
 
   <select id="orderDetail" resultMap="Order">
@@ -259,7 +264,7 @@
       id = #{id}
   </update>
 
-  <!-- 卖家待抢订单列表 -->
+  <!-- 药师待抢订单列表 -->
   <select id="listSellerGrab" resultMap="Order">
     SELECT
       o.*,
@@ -285,6 +290,7 @@
         d.freight,
         d.collection_store,
         d.collection_store_id,
+        d.address,
         d.order_status,
         d.create_time
       FROM
@@ -308,9 +314,10 @@
       drug_order_goods g
     ON
       o.id = g.order_id
+    ORDER BY o.create_time DESC
   </select>
 
-  <!-- 卖家订单列表 -->
+  <!-- 药师订单列表 -->
   <select id="listSeller" resultMap="Order">
     SELECT
       o.*,
@@ -336,6 +343,7 @@
         freight,
         collection_store,
         collection_store_id,
+        address,
         order_status,
         create_time
       FROM
@@ -351,6 +359,7 @@
       drug_order_goods g
     ON
       o.id = g.order_id
+    ORDER BY o.create_time DESC
   </select>
 
   <!-- 待取货订单列表 -->
@@ -380,6 +389,7 @@
         freight,
         collection_store,
         collection_store_id,
+        address,
         order_status,
         create_time
       FROM
@@ -397,6 +407,7 @@
       drug_order_goods g
     ON
       o.id = g.order_id
+    ORDER BY o.create_time DESC
   </select>
 
   <!-- 卖家发货 -->

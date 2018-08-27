@@ -129,6 +129,7 @@
         drug_store,
         drug_store_id,
         amount,
+        create_time,
         status
       FROM
         drug_seller_order
@@ -143,6 +144,7 @@
       s.order_id = g.order_id
     AND
       s.seller_id = g.seller_id
+    ORDER BY s.create_time DESC
   </select>
 
   <!-- 卖家待确认（已报价）订单列表 -->
@@ -172,7 +174,8 @@
         o2.reward_amount,
         o1.user_id,
         o1.user_name,
-        o1.amount
+        o1.amount,
+        o2.create_time
       FROM
         drug_seller_order o1
       INNER JOIN
@@ -183,7 +186,7 @@
         o1.seller_id = #{sellerId}
       AND
         o1.status = 0
-      ORDER BY o1.create_time DESC
+      ORDER BY o2.create_time DESC
       LIMIT #{start}, #{pageSize}
     ) s
     INNER JOIN
@@ -192,5 +195,6 @@
       s.order_id = g.order_id
     AND
       s.seller_id = g.seller_id
+    ORDER BY s.create_time DESC
   </select>
 </mapper>
