@@ -79,12 +79,14 @@ public class DrugOrder  {
     // 代收人情况
     private String collectionStore;
 
+    // 收货码
     private String collectionCode;
 
     private Integer collectionStoreId;
 
     private String couponCode;
 
+    // 用户地址
     private String address;
 
     private List<DrugOrderGoods> drugs;
