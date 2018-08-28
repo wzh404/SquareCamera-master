@@ -1,9 +1,11 @@
 package com.wannengyongyao.drug.dao;
 
 import com.wannengyongyao.drug.model.DrugOrder;
+import com.wannengyongyao.drug.model.DrugOrderShare;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -134,4 +136,27 @@ public interface DrugOrderMapper {
      * @return
      */
     int getSellerOrderTotal(@Param("sellerId")Long sellerId);
+
+    /**
+     * 增加悬赏金额
+     *
+     * @param id
+     * @param amount
+     * @return
+     */
+    int addRewardAmount(@Param("id")Long id, @Param("amount")BigDecimal amount);
+
+    /**
+     *
+     * @param share
+     * @return
+     */
+    int insertOrderShare(DrugOrderShare share);
+
+    /**
+     *
+     * @param orderId
+     * @return
+     */
+    List<Map<String, Object>> getOrderShare(@Param("orderId")Long orderId);
 }

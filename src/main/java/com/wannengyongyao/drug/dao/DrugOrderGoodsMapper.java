@@ -29,5 +29,5 @@ public interface DrugOrderGoodsMapper {
      * @param orderId
      * @return
      */
-    List<Integer> listDrugs(@Param("orderId")Long orderId);
+    List<DrugOrderGoods> listDrugs(@Param("orderId")Long orderId);
 }

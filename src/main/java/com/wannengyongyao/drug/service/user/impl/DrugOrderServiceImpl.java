@@ -312,4 +312,19 @@ public class DrugOrderServiceImpl implements DrugOrderService {
     public DrugOrder getOrderStatus(Long orderId) {
         return orderMapper.getOrderStatus(orderId);
     }
+
+    @Override
+    public int addRewardAmount(Long orderId, BigDecimal amount) {
+        return orderMapper.addRewardAmount(orderId, amount);
+    }
+
+    @Override
+    public int insertOrderShare(DrugOrderShare share) {
+        return orderMapper.insertOrderShare(share);
+    }
+
+    @Override
+    public List<Map<String, Object>> getOrderShare(Long orderId) {
+        return orderMapper.getOrderShare(orderId);
+    }
 }

@@ -31,6 +31,7 @@
     <result column="settlement_status" jdbcType="INTEGER" property="settlementStatus" />
     <result column="collection_store" jdbcType="VARCHAR" property="collectionStore" />
     <result column="collection_store_id" jdbcType="INTEGER" property="collectionStoreId" />
+    <result column="collection_code" jdbcType="VARCHAR" property="collectionCode" />
     <result column="address" jdbcType="VARCHAR" property="address" />
 
     <result column="coupon_code" jdbcType="VARCHAR" property="couponCode" />
@@ -79,6 +80,7 @@
     seller_num,
     collection_store,
     collection_store_id,
+    collection_code,
     address
   </sql>
   <select id="get" parameterType="java.lang.Long" resultMap="Order">
@@ -202,6 +204,7 @@
         collection_store_id,
         address,
         order_status,
+        seller_num,
         create_time
       FROM
         drug_order
@@ -298,15 +301,11 @@
       LEFT JOIN
         drug_seller_order so
       ON
-        (
-          d.id = so.order_id
-        AND
-          d.order_status = 0
-        AND
-          so.seller_id = #{sellerId}
-        )
+        d.id = so.order_id
       WHERE
-        so.order_id is null
+        d.order_status = 0
+      AND
+        (so.seller_id != #{sellerId} OR so.seller_id is null)
       ORDER BY d.create_time DESC
       LIMIT #{start}, #{pageSize}
     ) o
@@ -476,5 +475,41 @@
       drug_order
     where
       seller_id = #{sellerId}
+  </select>
+
+  <update id="addRewardAmount">
+    UPDATE drug_order
+    SET
+      reward_amount = reward_amount + #{amount}
+    WHERE
+      id = #{id}
+  </update>
+
+  <insert id="insertOrderShare" parameterType="com.wannengyongyao.drug.model.DrugOrderShare">
+    INSERT INTO drug_order_share (
+      order_id,
+      open_id,
+      share_type,
+      create_time)
+    VALUES(
+      #{orderId},
+      #{openid},
+      #{shareType},
+      #{createTime}
+    )
+  </insert>
+
+  <select id="getOrderShare" resultType="java.util.Map">
+    select
+      order_id,
+      share_type,
+      COUNT(open_id) as total,
+      COUNT(distinct open_id) as man
+    from
+      drug_order_share
+    where
+      order_id = #{orderId}
+    GROUP BY
+      order_id, share_type;
   </select>
 </mapper>

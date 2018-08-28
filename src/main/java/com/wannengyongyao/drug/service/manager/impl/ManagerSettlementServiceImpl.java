@@ -126,9 +126,11 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
         // 长期用药
         DrugUserLongterm longTerm = new DrugUserLongterm();
         longTerm.setUserId(order.getUserId());
-        List<Integer> ids = goodsMapper.listDrugs(orderId);
-        for (Integer id : ids) {
-            longTerm.setDrugId(id);
+        List<DrugOrderGoods> goods = goodsMapper.listDrugs(orderId);
+        for (DrugOrderGoods g : goods) {
+            longTerm.setDrugId(g.getDrugId());
+            longTerm.setUnitPrice(g.getUnitPrice());
+            longTerm.setQuantity(g.getQuantity());
             longTerm.setCreateTime(LocalDateTime.now());
             userService.insertUserLongTerm(longTerm);
         }

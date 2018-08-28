@@ -180,7 +180,16 @@
   </insert>
 
   <select id="listUserLongTerm" resultType="com.wannengyongyao.drug.model.DrugUserLongterm">
-    SELECT *
+    SELECT
+      id,
+      drug_id as drugId,
+      drug_name as drugName,
+      unit,
+      unit_price as unitPrice,
+      specifications,
+      quantity,
+      manufacturer,
+      create_time as createTime
     FROM
       drug_user_longterm
     WHERE

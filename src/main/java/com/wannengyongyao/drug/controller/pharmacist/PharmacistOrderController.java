@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -198,7 +199,7 @@ public class PharmacistOrderController {
      */
     @RequestMapping(value="/shipping", method= {RequestMethod.POST})
     public ResultObject shipping(HttpServletRequest request,
-                                 @RequestBody ShippingVo shippingVo){
+                                 @RequestBody @Valid ShippingVo shippingVo){
         Long sellerId = RequestUtil.getUserId(request);
         DrugOrder order = pharmacistService.getOrderStatus(shippingVo.getOrderId());
         if (order == null) {

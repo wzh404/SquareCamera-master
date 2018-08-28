@@ -2,10 +2,13 @@ package com.wannengyongyao.drug.service.user;
 
 import com.wannengyongyao.drug.common.ResultCode;
 import com.wannengyongyao.drug.model.DrugOrder;
+import com.wannengyongyao.drug.model.DrugOrderShare;
 import com.wannengyongyao.drug.model.DrugSellerOrder;
 import com.wannengyongyao.drug.vo.DrugOrderVo;
 import com.wannengyongyao.drug.vo.PhotoOrderVo;
+import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -76,4 +79,27 @@ public interface DrugOrderService {
      * @return
      */
     DrugOrder getOrderStatus(Long orderId);
+
+    /**
+     * 增加悬赏金额
+     *
+     * @param orderId
+     * @param amount
+     * @return
+     */
+    int addRewardAmount(Long orderId, BigDecimal amount);
+
+    /**
+     *
+     * @param share
+     * @return
+     */
+    int insertOrderShare(DrugOrderShare share);
+
+    /**
+     *
+     * @param orderId
+     * @return
+     */
+    List<Map<String, Object>> getOrderShare(Long orderId);
 }

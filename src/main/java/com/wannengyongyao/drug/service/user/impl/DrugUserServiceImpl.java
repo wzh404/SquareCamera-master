@@ -185,9 +185,9 @@ public class DrugUserServiceImpl implements DrugUserService {
         longterm.setDrugName(drug.getName());
         longterm.setManufacturer(drug.getManufacturer());
         longterm.setSpecifications(drug.getSpecifications());
-        longterm.setQuantity(1);
+        //longterm.setQuantity(1);
         longterm.setUnit("件");
-        longterm.setUnitPrice(BigDecimal.valueOf(0.0));
+        //longterm.setUnitPrice(BigDecimal.valueOf(0.0));
 
         return userMapper.insertUserLongTerm(longterm);
     }

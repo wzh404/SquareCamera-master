@@ -63,8 +63,11 @@
     </foreach>
   </update>
 
-  <select id="listDrugs" resultType="java.lang.Integer">
-    SELECT drug_id
+  <select id="listDrugs" resultType="com.wannengyongyao.drug.model.DrugOrderGoods">
+    SELECT
+      drug_id,
+      unitPrice,
+      quantity
     FROM
       drug_order_goods
     WHERE
