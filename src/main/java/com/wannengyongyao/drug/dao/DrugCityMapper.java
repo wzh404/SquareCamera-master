@@ -16,4 +16,12 @@ public interface DrugCityMapper {
     List<DrugCity> getCity(@Param("code")String code);
 
     List<DrugCity> getProvince();
+
+    /**
+     * 获取字典
+     *
+     * @param classify
+     * @return
+     */
+    List<DrugCity> listDict(@Param("classify")String classify);
 }

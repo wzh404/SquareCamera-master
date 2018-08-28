@@ -70,4 +70,14 @@
     AND
       code != concat(#{code}, '00')
   </select>
+
+  <select id="listDict" resultMap="City">
+    select
+      code,
+      `name`
+    from
+      drug_dict
+    where
+      classify = #{classify}
+  </select>
 </mapper>

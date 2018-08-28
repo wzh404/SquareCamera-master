@@ -220,6 +220,9 @@ public class PharmacistOrderController {
         order.setCollectionCode(StringUtil.getRandomCode(6));
         order.setOrderStatus(OrderStatus.SHIPPED.get());
         order.setShippingStatus(ShippingStatus.SHIPPED.get());
+        order.setShippingCompany(shippingVo.getShippingCompany());
+        order.setShippingId(shippingVo.getShippingId());
+        order.setShippingWay("快递");
 
         int rows = pharmacistService.sellerShipping(order);
         return ResultObject.cond(rows > 0, ResultCode.FAILED);

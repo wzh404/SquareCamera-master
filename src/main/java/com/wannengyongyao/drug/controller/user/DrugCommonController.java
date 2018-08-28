@@ -212,6 +212,17 @@ public class DrugCommonController {
     }
 
     /**
+     * 获取字典
+     *
+     * @param classify
+     * @return
+     */
+    @RequestMapping(value="/common/dict", method= {RequestMethod.GET})
+    public ResultObject dict(@RequestParam("classify")String classify){
+        return ResultObject.ok(commonService.listDict(classify));
+    }
+
+    /**
      * 从用户地址登录并注册
      *
      * @param registerVo

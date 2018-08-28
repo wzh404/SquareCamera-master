@@ -33,4 +33,9 @@ public class DrugCommonServiceImpl implements DrugCommonService {
     public List<DrugCity> getProvince() {
         return cityMapper.getProvince();
     }
+
+    @Override
+    public List<DrugCity> listDict(String classify) {
+        return cityMapper.listDict(classify);
+    }
 }

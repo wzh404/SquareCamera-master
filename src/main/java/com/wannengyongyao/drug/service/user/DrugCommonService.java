@@ -14,4 +14,6 @@ public interface DrugCommonService {
     List<DrugCity> getCity(String code);
 
     List<DrugCity> getProvince();
+
+    List<DrugCity> listDict(String classify);
 }

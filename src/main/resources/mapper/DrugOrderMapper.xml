@@ -418,6 +418,9 @@
       order_status = #{orderStatus},
       shipping_status = #{shippingStatus},
       shipping_time = #{shippingTime},
+      shipping_company = #{shippingCompany},
+      shipping_id = #{shippingId},
+      shipping_way = #{shippingWay},
       collection_code = #{collectionCode}
     WHERE
       id = #{id}
