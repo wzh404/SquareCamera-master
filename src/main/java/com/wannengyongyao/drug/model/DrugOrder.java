@@ -97,6 +97,10 @@ public class DrugOrder  {
     private List<DrugOrderGoods> drugs;
 
     public BigDecimal getPayAmount(){
+        if (this.orderAmount == null || freight == null || serviceCharge == null || rewardAmount == null || discountAmount == null){
+            return BigDecimal.valueOf(0.0);
+        }
+
         return this.orderAmount
                 .add(this.serviceCharge)
                 .add(freight)

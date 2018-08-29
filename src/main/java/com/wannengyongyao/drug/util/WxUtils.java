@@ -161,9 +161,8 @@ public class WxUtils {
             tmp.append("key=" + key);
         }
         String tosend = tmp.toString();
-        MessageDigest md = null;
         try {
-            md = MessageDigest.getInstance("MD5");
+            MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] bytes = md.digest(tosend.getBytes("utf-8"));
             String singe = byteToStr(bytes);
             return singe.toUpperCase();

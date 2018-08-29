@@ -184,6 +184,8 @@
         o2.collection_store_id,
         o2.collection_store,
         o2.address,
+        o2.discount_amount,
+        o2.order_amount,
         o2.service_charge,
         o2.freight,
         o2.expected_amount,
