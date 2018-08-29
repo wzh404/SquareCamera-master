@@ -1,6 +1,7 @@
 package com.wannengyongyao.drug.service.user.impl;
 
 import com.wannengyongyao.drug.dao.DrugCityMapper;
+import com.wannengyongyao.drug.dao.DrugOrderMapper;
 import com.wannengyongyao.drug.model.DrugBanner;
 import com.wannengyongyao.drug.model.DrugCity;
 import com.wannengyongyao.drug.service.user.DrugCommonService;
@@ -13,6 +14,9 @@ import java.util.List;
 public class DrugCommonServiceImpl implements DrugCommonService {
     @Autowired
     private DrugCityMapper cityMapper;
+
+    @Autowired
+    private DrugOrderMapper orderMapper;
 
     @Override
     public List<DrugBanner> banner(Integer classify) {
@@ -37,5 +41,10 @@ public class DrugCommonServiceImpl implements DrugCommonService {
     @Override
     public List<DrugCity> listDict(String classify) {
         return cityMapper.listDict(classify);
+    }
+
+    @Override
+    public int payment(Long orderId) {
+        return orderMapper.payment(orderId);
     }
 }

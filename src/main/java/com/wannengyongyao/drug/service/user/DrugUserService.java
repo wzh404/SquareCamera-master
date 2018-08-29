@@ -173,6 +173,8 @@ public interface DrugUserService {
      * @return
      */
     int changeAddress(DrugUserAddress address);
+
+    String getOpenid(Long userId);
     /**
      *
      * @param openid

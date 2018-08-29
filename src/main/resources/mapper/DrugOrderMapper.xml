@@ -33,6 +33,7 @@
     <result column="collection_store_id" jdbcType="INTEGER" property="collectionStoreId" />
     <result column="collection_code" jdbcType="VARCHAR" property="collectionCode" />
     <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
 
     <result column="coupon_code" jdbcType="VARCHAR" property="couponCode" />
 
@@ -138,6 +139,11 @@
       order_status as orderStatus,
       pay_status as payStatus,
       shipping_status as shippingStatus,
+      reward_amount as rewardAmount,
+      discount_amount as discountAmount,
+      service_charge as serviceCharge,
+      order_amount as orderAmount,
+      freight,
       collection_code as collectionCode
     FROM
       drug_order
@@ -202,16 +208,23 @@
         freight,
         collection_store,
         collection_store_id,
+        shipping_company,
+        shipping_id,
         address,
+        mobile,
         order_status,
         seller_num,
         create_time
       FROM
         drug_order
       WHERE
-        order_status = #{status}
-      AND
         user_id = #{userId}
+      <if test="status != null">
+        AND order_status = #{status}
+      </if>
+      <if test="waiting != null">
+        <![CDATA[ AND (order_status > 0 AND order_status < 1009 ) ]]>
+      </if>
       <if test="grab != null">
         AND seller_num = 0  <!-- 报价人数 -->
       </if>
@@ -342,7 +355,10 @@
         freight,
         collection_store,
         collection_store_id,
+        shipping_company,
+        shipping_id,
         address,
+        mobile,
         order_status,
         create_time
       FROM
@@ -512,4 +528,22 @@
     GROUP BY
       order_id, share_type;
   </select>
+
+  <update id="collectionOrder">
+    UPDATE drug_order
+    SET
+      shipping_status = 2,
+      collection_time = now()
+    WHERE
+      id = #{orderId}
+  </update>
+
+  <update id="payment">
+    UPDATE drug_order
+    SET
+      pay_status = 1,
+      pay_time = now()
+    WHERE
+      id = #{orderId}
+  </update>
 </mapper>

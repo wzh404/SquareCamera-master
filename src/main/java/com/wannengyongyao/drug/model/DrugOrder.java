@@ -89,5 +89,18 @@ public class DrugOrder  {
     // 用户地址
     private String address;
 
+    private String mobile;
+
+    // 代收时间
+    private String collectionTime;
+
     private List<DrugOrderGoods> drugs;
+
+    public BigDecimal getPayAmount(){
+        return this.orderAmount
+                .add(this.serviceCharge)
+                .add(freight)
+                .add(rewardAmount)
+                .subtract(discountAmount);
+    }
 }

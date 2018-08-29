@@ -11,14 +11,18 @@ import com.wannengyongyao.drug.model.DrugUser;
 import com.wannengyongyao.drug.model.DrugWeixinUser;
 import com.wannengyongyao.drug.service.user.DrugCommonService;
 import com.wannengyongyao.drug.service.user.DrugUserService;
+import com.wannengyongyao.drug.util.PayService;
 import com.wannengyongyao.drug.util.StringUtil;
 import com.wannengyongyao.drug.util.TokenUtil;
 import com.wannengyongyao.drug.util.WxUtils;
 import com.wannengyongyao.drug.vo.WeChatLoginVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +31,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 public class DrugCommonController {
+    private final Logger logger = LoggerFactory.getLogger(DrugCommonController.class);
+
     @Autowired
     private DrugCommonService commonService;
 
@@ -35,6 +41,9 @@ public class DrugCommonController {
 
     @Autowired
     private Cache<String, String> smsCache;
+
+    @Autowired
+    private PayService payService;
 
     @Value("${drug.user.appid}")
     private String appid;
@@ -220,6 +229,25 @@ public class DrugCommonController {
     @RequestMapping(value="/common/dict", method= {RequestMethod.GET})
     public ResultObject dict(@RequestParam("classify")String classify){
         return ResultObject.ok(commonService.listDict(classify));
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/pay/notify", method= {RequestMethod.POST})
+    public String pay(HttpServletRequest request){
+        Map<String, String> map = payService.getCallbackParams(request);
+        if (map != null && map.get("result_code").equalsIgnoreCase("SUCCESS")) {
+            String orderId = map.get("out_trade_no");
+            //String openId = map.get("openid");
+
+            //支付成功之后的逻辑
+            commonService.payment(Long.valueOf(orderId));
+        } else {
+            logger.info("pay failed");
+        }
+        return "<xml>\n" +
+                "  <return_code><![CDATA[SUCCESS]]></return_code>\n" +
+                "  <return_msg><![CDATA[OK]]></return_msg>\n" +
+                "</xml>";
     }
 
     /**

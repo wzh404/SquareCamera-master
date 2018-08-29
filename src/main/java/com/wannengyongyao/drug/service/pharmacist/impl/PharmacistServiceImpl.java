@@ -1,5 +1,8 @@
 package com.wannengyongyao.drug.service.pharmacist.impl;
 
+import com.wannengyongyao.drug.common.ResultCode;
+import com.wannengyongyao.drug.common.ResultObject;
+import com.wannengyongyao.drug.common.status.OrderStatus;
 import com.wannengyongyao.drug.dao.*;
 import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.service.pharmacist.PharmacistService;
@@ -203,5 +206,29 @@ public class PharmacistServiceImpl implements PharmacistService {
         map.put("reward", reward);
 
         return map;
+    }
+
+    @Override
+    public ResultCode collectionOrder(Long orderId, Long sellerId) {
+        DrugSeller seller = sellerMapper.get(sellerId);
+        if (seller == null){
+            return ResultCode.PHARMACIST_NOT_EXIST;
+        }
+        // 订单是否存在
+        DrugOrder order = orderMapper.getSettleOrder(orderId);
+        if (order == null){
+            return ResultCode.ORDER_NOT_EXIST;
+        }
+        // 是否已发货
+        if (order.getOrderStatus().intValue() != OrderStatus.SHIPPED.get()){
+            return ResultCode.BAD_REQUEST;
+        }
+        // 是否代收药店
+        if (seller.getStoreId().intValue() != order.getCollectionStoreId().intValue()){
+            return ResultCode.BAD_REQUEST;
+        }
+
+        int rows = orderMapper.collectionOrder(orderId);
+        return rows > 0 ? ResultCode.OK : ResultCode.FAILED;
     }
 }

@@ -1,7 +1,9 @@
 package com.wannengyongyao.drug.service.pharmacist;
 
+import com.wannengyongyao.drug.common.ResultCode;
 import com.wannengyongyao.drug.model.*;
 import com.wannengyongyao.drug.vo.PharmacistOrderVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -121,4 +123,12 @@ public interface PharmacistService {
     DrugSeller getSellerByOpenid(String openid);
 
     Map<String, Object> myBalance(Long sellerId);
+
+    /**
+     * 代收药品
+     *
+     * @param orderId
+     * @return
+     */
+    ResultCode collectionOrder(Long orderId, Long sellerId);
 }

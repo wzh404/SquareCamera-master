@@ -111,6 +111,12 @@
       s.drug_store,
       s.drug_store_id,
       s.amount,
+      s.service_charge,
+      s.expected_amount,
+      s.reward_amount,
+      s.freight,
+      s.collection_store,
+      s.address,
       g.id as d_id,
       g.order_id as d_order_id,
       g.seller_id as d_seller_id,
@@ -123,19 +129,29 @@
     FROM
     (
       SELECT
-        order_id,
-        seller_id,
-        seller_name,
-        drug_store,
-        drug_store_id,
-        amount,
-        create_time,
-        status
+        so.order_id,
+        so.seller_id,
+        so.seller_name,
+        so.drug_store,
+        so.drug_store_id,
+        so.amount,
+        so.create_time,
+        so.status,
+        o.service_charge,
+        o.expected_amount,
+        o.reward_amount,
+        o.freight,
+        o.collection_store,
+        o.address
       FROM
-        drug_seller_order
+        drug_seller_order so
+      INNER JOIN
+        drug_order o
+      ON
+        so.order_id = o.id
       WHERE
-        order_id = #{orderId}
-      ORDER BY create_time DESC
+        so.order_id = #{orderId}
+      ORDER BY so.create_time DESC
       LIMIT #{start}, #{pageSize}
     ) s
     INNER JOIN

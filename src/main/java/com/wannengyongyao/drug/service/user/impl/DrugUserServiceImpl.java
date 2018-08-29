@@ -270,6 +270,12 @@ public class DrugUserServiceImpl implements DrugUserService {
     }
 
     @Override
+    public String getOpenid(Long userId) {
+        DrugUser user = userMapper.get(userId);
+        return user == null ? null : user.getOpenId();
+    }
+
+    @Override
     public DrugUser getUserByOpenid(String openid) {
         return userMapper.getUserByOpenid(openid);
     }

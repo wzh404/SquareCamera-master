@@ -154,6 +154,22 @@ public interface DrugOrderMapper {
     int insertOrderShare(DrugOrderShare share);
 
     /**
+     * 药店代收药品
+     *
+     * @param orderId
+     * @return
+     */
+    int collectionOrder(@Param("orderId")Long orderId);
+
+    /**
+     * 订单已支付
+     *
+     * @param orderId
+     * @return
+     */
+    int payment(@Param("orderId")Long orderId);
+
+    /**
      *
      * @param orderId
      * @return

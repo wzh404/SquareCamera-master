@@ -16,4 +16,12 @@ public interface DrugCommonService {
     List<DrugCity> getProvince();
 
     List<DrugCity> listDict(String classify);
+
+    /**
+     * 已支付
+     *
+     * @param orderId
+     * @return
+     */
+    int payment(Long orderId);
 }

@@ -234,8 +234,8 @@ public class PharmacistOrderController {
      *
      * @return
      */
-    @RequestMapping(value="/collection", method= {RequestMethod.POST})
-    public ResultObject collection(HttpServletRequest request,
+    @RequestMapping(value="/claim", method= {RequestMethod.POST})
+    public ResultObject claimGoods(HttpServletRequest request,
                                  @RequestBody CollectionVo collectionVo){
         Long sellerId = RequestUtil.getUserId(request);
         DrugSeller seller = pharmacistService.getSeller(sellerId);
@@ -308,5 +308,18 @@ public class PharmacistOrderController {
         }
 
         return ResultObject.ok(order);
+    }
+
+    @RequestMapping(value="/collection", method= {RequestMethod.POST})
+    public ResultObject collection(HttpServletRequest request,
+                                   @RequestParam("orderId")Long orderId){
+        Long sellerId = RequestUtil.getUserId(request);
+
+        ResultCode r = pharmacistService.collectionOrder(orderId, sellerId);
+        if (r == ResultCode.OK){
+            return ResultObject.ok();
+        }
+
+        return ResultObject.fail(r);
     }
 }

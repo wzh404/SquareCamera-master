@@ -65,8 +65,8 @@
 
   <select id="listDrugs" resultType="com.wannengyongyao.drug.model.DrugOrderGoods">
     SELECT
-      drug_id,
-      unitPrice,
+      drug_id as drugId,
+      unit_price as unitPrice,
       quantity
     FROM
       drug_order_goods

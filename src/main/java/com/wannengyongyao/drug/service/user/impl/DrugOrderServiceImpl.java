@@ -67,6 +67,7 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         DrugUser user = userMapper.get(orderVo.getUserId());
         DrugOrder order = orderVo.asOrder();
         order.setUserName(user.getName());
+        order.setMobile(user.getMobile());
 
         // 优惠券
         if (orderVo.getCoupon() != null) {

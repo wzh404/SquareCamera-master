@@ -8,7 +8,9 @@ import com.wannengyongyao.drug.model.DrugOrderShare;
 import com.wannengyongyao.drug.service.user.DrugOrderService;
 import com.wannengyongyao.drug.service.user.DrugUserService;
 import com.wannengyongyao.drug.util.DrugConstants;
+import com.wannengyongyao.drug.util.PayService;
 import com.wannengyongyao.drug.util.RequestUtil;
+import com.wannengyongyao.drug.util.WxUtils;
 import com.wannengyongyao.drug.vo.DrugOrderVo;
 import com.wannengyongyao.drug.vo.PhotoOrderVo;
 import com.wannengyongyao.drug.vo.RewardVo;
@@ -16,15 +18,13 @@ import com.wannengyongyao.drug.vo.ShareVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -36,6 +36,15 @@ public class DrugOrderController {
 
     @Autowired
     private DrugUserService userService;
+
+    @Autowired
+    private PayService payService;
+
+    @Value("${drug.user.appid}")
+    private String appid;
+
+    @Value("${drug.user.pay.key}")
+    private String key;
 
     /**
      * 下单
@@ -232,7 +241,7 @@ public class DrugOrderController {
         conditionMap.put("pageSize", DrugConstants.PAGE_SIZE);
 
         conditionMap.put("userId", userId);
-        conditionMap.put("status", OrderStatus.CONFIRM.get());
+        conditionMap.put("waiting", 1);
         List<DrugOrder> orders = orderService.list(conditionMap);
 
         return ResultObject.ok(orders);
@@ -386,7 +395,7 @@ public class DrugOrderController {
 
     /**
      * 分享加速统计
-     * 
+     *
      * @param request
      * @param orderId
      * @return
@@ -395,5 +404,42 @@ public class DrugOrderController {
     public ResultObject shareStat(HttpServletRequest request,
                                   @RequestParam("orderId")Long orderId){
         return ResultObject.ok(orderService.getOrderShare(orderId));
+    }
+
+    /**
+     * 微信统一支付接口
+     *
+     * @param request
+     * @param orderId
+     * @return
+     */
+    @RequestMapping(value="/order/pay", method= {RequestMethod.POST})
+    public ResultObject order(HttpServletRequest request,
+                              @RequestParam("orderId") Long orderId){
+        Long userId = RequestUtil.getUserId(request);
+        String openId = userService.getOpenid(userId);
+        DrugOrder order = orderService.getOrderStatus(orderId);
+        if (order == null) {
+            return ResultObject.fail(ResultCode.ORDER_NOT_EXIST);
+        }
+        String totalFee = order.getPayAmount().toString();
+
+        String ip = RequestUtil.getIpAddress(request);
+        String body = "测试PAY";
+        String requestParam = payService.getPayParam(openId, totalFee, orderId.toString(), ip, body);
+        Map<String, String> result = payService.requestWechatPayServer(requestParam);
+        Map<String, String> data = new TreeMap<>();
+        if (result.get("return_code").equals("SUCCESS")) {
+            String prepayId = result.get("prepay_id");
+            data.put("appId", appid);
+            data.put("package", "prepay_id=" + prepayId);
+            data.put("signType", "MD5");
+            data.put("timeStamp", Long.toString(new Date().getTime()).substring(0, 10));
+            data.put("nonceStr", WxUtils.getNonceStr());
+            String sign = WxUtils.signature(data, key);
+            data.put("paySign", sign);
+            return ResultObject.ok(data);
+        }
+        return ResultObject.fail(ResultCode.FAILED);
     }
 }
