@@ -26,7 +26,7 @@ public class LoginVo {
         user.setCreateTime(LocalDateTime.now());
         user.setLastUpdatedTime(LocalDateTime.now());
         user.setStatus(0);
-        user.setOpenId(this.openid);
+        user.setOpenid(this.openid);
 
         return user;
     }

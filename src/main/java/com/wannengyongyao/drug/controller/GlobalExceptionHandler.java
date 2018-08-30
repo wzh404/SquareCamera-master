@@ -2,6 +2,7 @@ package com.wannengyongyao.drug.controller;
 
 import com.wannengyongyao.drug.common.ResultCode;
 import com.wannengyongyao.drug.common.ResultObject;
+import com.wannengyongyao.drug.common.exception.DrugSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.FieldError;
@@ -29,6 +30,13 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResultObject handleIllegalArgumentException(IllegalArgumentException e){
         return ResultObject.fail(ResultCode.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(value = DrugSQLException.class)
+    @ResponseBody
+    public ResultObject handleDrugSQLException(Exception e){
+        logger.error("error", e);
+        return ResultObject.fail(ResultCode.FAILED, e.getMessage());
     }
 
     @ExceptionHandler(value = Exception.class)

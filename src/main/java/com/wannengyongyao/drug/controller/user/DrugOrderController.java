@@ -355,6 +355,8 @@ public class DrugOrderController {
     @RequestMapping(value="/order/share", method= {RequestMethod.POST})
     public ResultObject share(HttpServletRequest request,
                                @RequestBody @Valid ShareVo vo) {
+        Long userId = RequestUtil.getUserId(request);
+        String openid = userService.getOpenid(userId);
         DrugOrder order = orderService.getOrderStatus(vo.getOrderId());
         if (order == null) {
             return ResultObject.fail(ResultCode.ORDER_NOT_EXIST);
@@ -362,7 +364,7 @@ public class DrugOrderController {
 
         DrugOrderShare orderShare = new DrugOrderShare();
         orderShare.setOrderId(vo.getOrderId());
-        orderShare.setOpenid(vo.getOpenid());
+        orderShare.setOpenid(openid);
         orderShare.setCreateTime(LocalDateTime.now());
         orderShare.setShareType(0);
         int rows = orderService.insertOrderShare(orderShare);
@@ -375,10 +377,13 @@ public class DrugOrderController {
      * @param request
      * @param vo
      * @return
-     */
+
     @RequestMapping(value="/order/speedup", method= {RequestMethod.POST})
     public ResultObject speedup(HttpServletRequest request,
                               @RequestBody @Valid ShareVo vo) {
+        Long userId = RequestUtil.getUserId(request);
+        String openid = userService.getOpenid(userId);
+
         DrugOrder order = orderService.getOrderStatus(vo.getOrderId());
         if (order == null) {
             return ResultObject.fail(ResultCode.ORDER_NOT_EXIST);
@@ -386,12 +391,12 @@ public class DrugOrderController {
 
         DrugOrderShare orderShare = new DrugOrderShare();
         orderShare.setOrderId(vo.getOrderId());
-        orderShare.setOpenid(vo.getOpenid());
+        orderShare.setOpenid(openid);
         orderShare.setCreateTime(LocalDateTime.now());
         orderShare.setShareType(1);
         int rows = orderService.insertOrderShare(orderShare);
         return ResultObject.cond(rows > 0, ResultCode.FAILED);
-    }
+    }*/
 
     /**
      * 分享加速统计
@@ -400,7 +405,7 @@ public class DrugOrderController {
      * @param orderId
      * @return
      */
-    @RequestMapping(value="/order/share/stat", method= {RequestMethod.POST})
+    @RequestMapping(value="/order/share/stat", method= {RequestMethod.GET})
     public ResultObject shareStat(HttpServletRequest request,
                                   @RequestParam("orderId")Long orderId){
         return ResultObject.ok(orderService.getOrderShare(orderId));
@@ -429,7 +434,8 @@ public class DrugOrderController {
         String requestParam = payService.getPayParam(openId, totalFee, orderId.toString(), ip, body);
         Map<String, String> result = payService.requestWechatPayServer(requestParam);
         Map<String, String> data = new TreeMap<>();
-        if (result.get("return_code").equals("SUCCESS")) {
+        if (result.get("return_code").equals("SUCCESS") &&
+                result.get("result_code").equals("SUCCESS")) {
             String prepayId = result.get("prepay_id");
             data.put("appId", appid);
             data.put("package", "prepay_id=" + prepayId);

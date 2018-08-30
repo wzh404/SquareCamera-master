@@ -1,6 +1,7 @@
 package com.wannengyongyao.drug.service.user.impl;
 
 import com.wannengyongyao.drug.common.ResultCode;
+import com.wannengyongyao.drug.common.exception.DrugSQLException;
 import com.wannengyongyao.drug.common.status.CouponStatus;
 import com.wannengyongyao.drug.common.status.OrderStatus;
 import com.wannengyongyao.drug.dao.*;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -268,7 +270,7 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         }
         int rows = drugOrderGoodsMapper.confirm(goods);
         if (rows < 1){
-            return ResultCode.FAILED;
+            throw new DrugSQLException("confirm order goods failed");
         }
 
         // 确认订单卖家(药师),订单状态，订单确认时间
@@ -284,12 +286,13 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         order.setOrderAmount(amount);
         rows = orderMapper.confirm(order);
         if (rows < 1){
-            return ResultCode.FAILED;
+            throw new DrugSQLException("confirm order failed");
         }
 
+        // 更新药师抢购订单状态为已确认
         rows = sellerOrderMapper.changeStatusConfirm(orderId, sellerId);
         if (rows < 1){
-            return ResultCode.FAILED;
+            throw new DrugSQLException("change seller order status failed");
         }
         return ResultCode.OK;
     }
@@ -321,11 +324,23 @@ public class DrugOrderServiceImpl implements DrugOrderService {
 
     @Override
     public int insertOrderShare(DrugOrderShare share) {
-        return orderMapper.insertOrderShare(share);
+        int num = orderMapper.getOrderShareUserNum(share.getOrderId(), share.getOpenid());
+        int rows;
+        if (num > 0){
+            rows = orderMapper.changeOrderShareNum(share.getOrderId(), share.getOpenid());
+        } else {
+            rows = orderMapper.insertOrderShare(share);
+        }
+        return rows;
     }
 
     @Override
-    public List<Map<String, Object>> getOrderShare(Long orderId) {
-        return orderMapper.getOrderShare(orderId);
+    public Map<String, Object> getOrderShare(Long orderId) {
+        Map<String, Object> map = new HashMap<>();
+        int total = orderMapper.getOrderShareTotal(orderId);
+        List<DrugOrderShare> shares = orderMapper.listOrderShareUsers(orderId);
+        map.put("total", total);
+        map.put("users", shares);
+        return map;
     }
 }

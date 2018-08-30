@@ -101,5 +101,5 @@ public interface DrugOrderService {
      * @param orderId
      * @return
      */
-    List<Map<String, Object>> getOrderShare(Long orderId);
+    Map<String, Object> getOrderShare(Long orderId);
 }

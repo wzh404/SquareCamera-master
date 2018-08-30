@@ -16,7 +16,7 @@
     <result column="distance" jdbcType="DECIMAL" property="distance" />
   </resultMap>
   <sql id="Base_Column_List">
-    u.id, `name`, gender, mobile, remark, u.create_time, create_ip, last_updated_time, status
+    u.id, `name`, gender, mobile, openid, remark, u.create_time, create_ip, last_updated_time, status
   </sql>
   <select id="get" parameterType="java.lang.Long" resultMap="User">
     select 
@@ -51,7 +51,7 @@
       #{gender,jdbcType=INTEGER},
       #{mobile,jdbcType=VARCHAR},
       #{avatar,jdbcType=VARCHAR},
-      #{openId,jdbcType=VARCHAR},
+      #{openid,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP},
       #{createIp,jdbcType=VARCHAR},

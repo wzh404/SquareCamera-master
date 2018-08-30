@@ -39,7 +39,7 @@ public class UserRegisterVo {
         user.setLastUpdatedTime(LocalDateTime.now());
         user.setStatus(0);
         user.setCreateIp("localhost");
-        user.setOpenId(this.openid);
+        user.setOpenid(this.openid);
 
         return user;
     }

@@ -36,21 +36,21 @@ public class PayService {
      * @return
      */
     public String getPayParam(String openId, String outTradeNo, String totalFee, String ip, String body) {
-        Map<String, String> datas = new TreeMap<>();
-        datas.put("appid", appid);
-        datas.put("mch_id", mchId);
-        datas.put("device_info", "WEB");
-        datas.put("body", body);
-        datas.put("trade_type", "JSAPI");
-        datas.put("nonce_str", WxUtils.getNonceStr());
-        datas.put("notify_url", notifyUrl);
-        datas.put("out_trade_no", outTradeNo);
-        datas.put("total_fee", totalFee);
-        datas.put("openid", openId);
-        datas.put("spbill_create_ip", ip);
-        String sign = WxUtils.signature(datas, key);
-        datas.put("sign", sign);
-        return this.getRequestXml(datas);
+        Map<String, String> paras = new TreeMap<>();
+        paras.put("appid", appid);
+        paras.put("mch_id", mchId);
+        paras.put("device_info", "miniapp");
+        paras.put("body", body);
+        paras.put("trade_type", "JSAPI");
+        paras.put("nonce_str", WxUtils.getNonceStr());
+        paras.put("notify_url", notifyUrl);
+        paras.put("out_trade_no", outTradeNo);
+        paras.put("total_fee", totalFee);
+        paras.put("openid", openId);
+        paras.put("spbill_create_ip", ip);
+        String sign = WxUtils.signature(paras, key);
+        paras.put("sign", sign);
+        return this.getRequestXml(paras);
     }
 
     /**

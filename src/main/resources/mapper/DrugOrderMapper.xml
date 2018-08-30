@@ -11,6 +11,7 @@
     <result column="seller_store_name" jdbcType="VARCHAR" property="sellerStoreName" />
     <result column="payment" jdbcType="VARCHAR" property="payment" />
     <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
+    <result column="pay_status" jdbcType="INTEGER" property="payStatus" />
     <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
     <result column="reward_amount" jdbcType="DECIMAL" property="rewardAmount" />
     <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
@@ -202,6 +203,8 @@
         seller_id,
         seller_name,
         seller_store_name,
+        order_amount,
+        discount_amount,
         expected_amount,
         reward_amount,
         service_charge,
@@ -213,6 +216,8 @@
         address,
         mobile,
         order_status,
+        pay_status,
+        shipping_status,
         seller_num,
         create_time
       FROM
@@ -310,6 +315,8 @@
         d.collection_store_id,
         d.address,
         d.order_status,
+        d.pay_status,
+        d.shipping_status,
         d.create_time
       FROM
         drug_order d
@@ -364,6 +371,8 @@
         address,
         mobile,
         order_status,
+        pay_status,
+        shipping_status,
         create_time
       FROM
         drug_order
@@ -513,29 +522,62 @@
   <insert id="insertOrderShare" parameterType="com.wannengyongyao.drug.model.DrugOrderShare">
     INSERT INTO drug_order_share (
       order_id,
-      open_id,
+      openid,
       share_type,
+      share_num,
       create_time)
     VALUES(
       #{orderId},
       #{openid},
       #{shareType},
+      1,
       #{createTime}
     )
   </insert>
 
-  <select id="getOrderShare" resultType="java.util.Map">
+  <select id="getOrderShareTotal" resultType="java.lang.Integer">
     select
-      order_id,
-      share_type,
-      COUNT(open_id) as total,
-      COUNT(distinct open_id) as man
+      COUNT(openid)
     from
       drug_order_share
     where
       order_id = #{orderId}
-    GROUP BY
-      order_id, share_type;
+  </select>
+
+  <select id="getOrderShareUserNum" resultType="java.lang.Integer">
+    select
+      COUNT(0)
+    from
+      drug_order_share
+    where
+      order_id = #{orderId}
+    AND
+      openid = #{openid}
+  </select>
+
+  <update id="changeOrderShareNum">
+    UPDATE
+      drug_order_share
+    SET
+      share_num = share_num + 1
+    where
+      order_id = #{orderId}
+    AND
+      openid = #{openid}
+  </update>
+
+  <select id="listOrderShareUsers" resultType="com.wannengyongyao.drug.model.DrugOrderShare">
+    SELECT
+      wx.nick_name as nickName,
+      wx.openid as openid
+    FROM
+      drug_order_share os,
+      drug_user_wx wx
+    WHERE
+      order_id = #{orderId}
+    AND
+      os.openid= wx.openid
+    LIMIT 0, 5
   </select>
 
   <update id="collectionOrder">

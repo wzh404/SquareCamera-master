@@ -91,7 +91,7 @@ public class DrugUserServiceImpl implements DrugUserService {
         user.setName(wxUser.getNickName());
         user.setGender("1".equals(wxUser.getGender()) ? 1 : 0);
         user.setCreateIp("localhost");
-        user.setOpenId(wxUser.getOpenId());
+        user.setOpenid(wxUser.getOpenId());
         user.setMobile("-");
         user.setCreateTime(LocalDateTime.now());
         user.setLastUpdatedTime(LocalDateTime.now());
@@ -112,7 +112,7 @@ public class DrugUserServiceImpl implements DrugUserService {
             return 1;
         }
 
-        DrugWeixinUser w = weixinMapper.getByOpenId(user.getOpenId());
+        DrugWeixinUser w = weixinMapper.getByOpenId(user.getOpenid());
         if (w == null){
             return -2;
         }
@@ -272,7 +272,7 @@ public class DrugUserServiceImpl implements DrugUserService {
     @Override
     public String getOpenid(Long userId) {
         DrugUser user = userMapper.get(userId);
-        return user == null ? null : user.getOpenId();
+        return user == null ? null : user.getOpenid();
     }
 
     @Override

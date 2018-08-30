@@ -29,7 +29,7 @@ public class DrugUser {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime lastUpdatedTime;
 
-    private String openId;
+    private String openid;
 
     private String avatar;
 

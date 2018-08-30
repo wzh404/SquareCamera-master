@@ -5,5 +5,4 @@ import lombok.Data;
 @Data
 public class ShareVo {
     private Long orderId;
-    private String openid;
 }

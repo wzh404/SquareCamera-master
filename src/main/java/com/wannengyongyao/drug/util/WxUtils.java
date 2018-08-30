@@ -2,17 +2,19 @@ package com.wannengyongyao.drug.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.select.Elements;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -24,7 +26,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.AlgorithmParameters;
-import java.security.MessageDigest;
 import java.security.Security;
 import java.util.*;
 
@@ -133,10 +134,14 @@ public class WxUtils {
      */
     public static Map<String, String> parseXml(String xml){
         Map<String, String> map = new HashMap<>();
-        Document document = Jsoup.parse(xml);
-        Element root = document.select("xml").first();
-        for (Element e : root.children()) {
-            map.put(e.nodeName(), e.text());
+        try {
+            Document document = DocumentHelper.parseText(xml);
+            List<Element> elements = document.getRootElement().elements();
+            for (Element e : elements){
+                map.put(e.getName(), e.getText());
+            }
+        } catch (DocumentException e) {
+            e.printStackTrace();
         }
         return map;
     }
@@ -147,57 +152,16 @@ public class WxUtils {
      * @param map
      */
     public static String signature(Map<String, String> map, String key) {
-        Set<String> keySet = map.keySet();
-        String[] str = new String[map.size()];
-        StringBuilder tmp = new StringBuilder();
+        StringBuilder toSign = new StringBuilder();
         // 进行字典排序
-        str = keySet.toArray(str);
-        Arrays.sort(str);
-        for (int i = 0; i < str.length; i++) {
-            String t = str[i] + "=" + map.get(str[i]) + "&";
-            tmp.append(t);
+        SortedMap<String, String> sortedMap = new TreeMap<>(map);
+        for (String k : sortedMap.keySet()) {
+            String value = map.get(k);
+            toSign.append(key).append("=").append(value).append("&");
         }
         if (!StringUtils.isEmpty(key)) {
-            tmp.append("key=" + key);
+            toSign.append("key=").append(key);
         }
-        String tosend = tmp.toString();
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] bytes = md.digest(tosend.getBytes("utf-8"));
-            String singe = byteToStr(bytes);
-            return singe.toUpperCase();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * 字节数组转换为字符串
-     * @param byteArray
-     * @return
-     */
-    public static String byteToStr(byte[] byteArray) {
-        String strDigest = "";
-        for (int i = 0; i < byteArray.length; i++) {
-            strDigest += byteToHexStr(byteArray[i]);
-        }
-        return strDigest;
-    }
-
-    /**
-     * 字节转换为字符串
-     * @param mByte
-     * @return
-     */
-    public static String byteToHexStr(byte mByte) {
-        char[] Digit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
-                'B', 'C', 'D', 'E', 'F' };
-        char[] tempArr = new char[2];
-        tempArr[0] = Digit[(mByte >>> 4) & 0X0F];
-        tempArr[1] = Digit[mByte & 0X0F];
-
-        String s = new String(tempArr);
-        return s;
+        return DigestUtils.md5Hex(toSign.toString()).toUpperCase();
     }
 }

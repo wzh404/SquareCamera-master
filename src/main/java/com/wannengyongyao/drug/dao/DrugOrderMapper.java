@@ -154,6 +154,35 @@ public interface DrugOrderMapper {
     int insertOrderShare(DrugOrderShare share);
 
     /**
+     *
+     * @param orderId
+     * @param openid
+     * @return
+     */
+    int changeOrderShareNum(@Param("orderId")Long orderId, @Param("openid")String openid);
+
+    /**
+     *
+     * @param orderId
+     * @param openid
+     * @return
+     */
+    Integer getOrderShareUserNum(@Param("orderId")Long orderId, @Param("openid")String openid);
+    /**
+     *
+     * @param orderId
+     * @return
+     */
+    List<DrugOrderShare> listOrderShareUsers(@Param("orderId")Long orderId);
+
+    /**
+     *
+     * @param orderId
+     * @return
+     */
+    Integer getOrderShareTotal(@Param("orderId")Long orderId);
+
+    /**
      * 药店代收药品
      *
      * @param orderId
@@ -168,11 +197,4 @@ public interface DrugOrderMapper {
      * @return
      */
     int payment(@Param("orderId")Long orderId);
-
-    /**
-     *
-     * @param orderId
-     * @return
-     */
-    List<Map<String, Object>> getOrderShare(@Param("orderId")Long orderId);
 }

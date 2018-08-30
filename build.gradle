@@ -20,8 +20,8 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-	maven{ url 'https://mvnrepository.com/artifact/dom4j/dom4j'}
 	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+	maven{ url 'https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream'}
 	mavenCentral()
 }
 
@@ -38,14 +38,16 @@ dependencies {
 	compile('com.google.guava:guava:22.0')
 	compile('com.github.pagehelper:pagehelper-spring-boot-starter:1.2.3')
 	compile('com.zaxxer:HikariCP:3.1.0')
-	compile 'org.jsoup:jsoup:1.11.3'
 	compile('org.apache.httpcomponents:httpclient:4.5.5')
 	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.47'
+	compile('dom4j:dom4j:1.6.1')
+	compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10'
 
 	compile group: 'bouncycastle', name: 'bcprov-jdk15', version: '140'
 
-
 	compile('org.projectlombok:lombok')
+
+	testCompile 'org.jsoup:jsoup:1.11.3'
 	testCompile('javax.servlet:javax.servlet-api:3.1.0')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
