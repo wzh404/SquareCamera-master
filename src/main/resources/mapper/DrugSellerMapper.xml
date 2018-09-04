@@ -216,4 +216,22 @@
       <![CDATA[ AND create_time <= #{endTime} ]]>
     </if>
   </select>
+
+  <select id="getShopManager" resultType="com.wannengyongyao.drug.model.DrugSeller">
+    SELECT
+      s.id,
+      s.name,
+      st.name as storeName,
+      s.status,
+      s.receive_status as receiveStatus
+    FROM
+      drug_seller s
+    INNER JOIN
+      drug_store  st
+    ON
+      s.store_id = st.id
+    WHERE
+      s.store_id = #{storeId}
+    LIMIT 0, 1
+  </select>
 </mapper>

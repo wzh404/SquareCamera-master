@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -20,12 +21,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.Cipher;
+import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.AlgorithmParameters;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.util.*;
 
@@ -86,6 +90,7 @@ public class WxUtils {
     }
 
     /**
+     * 解密授权用户信息
      *
      * @param encryptedData
      * @param sessionKey
@@ -157,11 +162,31 @@ public class WxUtils {
         SortedMap<String, String> sortedMap = new TreeMap<>(map);
         for (String k : sortedMap.keySet()) {
             String value = map.get(k);
-            toSign.append(key).append("=").append(value).append("&");
+            toSign.append(k).append("=").append(value).append("&");
         }
         if (!StringUtils.isEmpty(key)) {
             toSign.append("key=").append(key);
         }
+        logger.info(toSign.toString());
         return DigestUtils.md5Hex(toSign.toString()).toUpperCase();
+    }
+
+    public static boolean checkSign(Map<String, String> params, String signKey) {
+        String sign = signature(params, signKey);
+        return sign.equals(params.get("sign"));
+    }
+
+    private static String createHmacSha256Sign(String message, String key) {
+        try {
+            Mac sha256 = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "HmacSHA256");
+            sha256.init(secretKeySpec);
+            byte[] bytes = sha256.doFinal(message.getBytes());
+            return Hex.encodeHexString(bytes).toUpperCase();
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return null;
     }
 }

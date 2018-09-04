@@ -231,14 +231,20 @@ public class DrugCommonController {
         return ResultObject.ok(commonService.listDict(classify));
     }
 
+    /**
+     * 微信支付通知接口
+     *
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value="/pay/notify", method= {RequestMethod.POST})
-    public String pay(HttpServletRequest request){
+    public String notify(HttpServletRequest request){
         Map<String, String> map = payService.getCallbackParams(request);
         if (map != null && map.get("result_code").equalsIgnoreCase("SUCCESS")) {
             String orderId = map.get("out_trade_no");
-            //String openId = map.get("openid");
-
+            String transactionId = map.get("transaction_id");
+            String timeEnd = map.get("time_end");
             //支付成功之后的逻辑
             commonService.payment(Long.valueOf(orderId));
         } else {

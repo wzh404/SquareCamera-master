@@ -569,6 +569,7 @@
   <select id="listOrderShareUsers" resultType="com.wannengyongyao.drug.model.DrugOrderShare">
     SELECT
       wx.nick_name as nickName,
+      wx.avatar_url as avatar,
       wx.openid as openid
     FROM
       drug_order_share os,
@@ -578,6 +579,22 @@
     AND
       os.openid= wx.openid
     LIMIT 0, 5
+  </select>
+
+  <select id="getOrderWxUser" resultType="com.wannengyongyao.drug.model.DrugOrderShare">
+    SELECT
+      wx.nick_name as nickName,
+      wx.avatar_url as avatar
+    FROM
+      drug_order o,
+      drug_user u,
+      drug_user_wx wx
+    WHERE
+      o.id = #{orderId}
+    AND
+      o.user_id = u.id
+    AND
+      u.openid = wx.openid
   </select>
 
   <update id="collectionOrder">

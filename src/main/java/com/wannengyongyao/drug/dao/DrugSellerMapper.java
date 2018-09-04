@@ -93,4 +93,12 @@ public interface DrugSellerMapper {
      * @return
      */
     BigDecimal sumSeller(Map<String, Object> conditionMap);
+
+    /**
+     * 获取药店店长
+     *
+     * @param storeId
+     * @return
+     */
+    DrugSeller getShopManager(@Param("storeId")Integer storeId);
 }

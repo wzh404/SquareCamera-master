@@ -77,24 +77,30 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
         }
 
         // 服务费分成
+        // 卖家分成
         BigDecimal sellerServiceAmount = order.getServiceCharge()
                 .multiply(BigDecimal.valueOf(0.4))
                 .setScale(2, BigDecimal.ROUND_HALF_UP);
+        // 代收药店分成
         BigDecimal storeServiceAmount = order.getServiceCharge()
                 .multiply(BigDecimal.valueOf(0.3))
                 .setScale(2, BigDecimal.ROUND_HALF_UP);
+        // 平台分成
         BigDecimal systemServiceAmount = order.getServiceCharge()
                 .subtract(sellerServiceAmount)
                 .subtract(storeServiceAmount);
 
         // 卖家收入流水
         List<DrugSellerBalance> sellerBalanceList = new ArrayList<>();
+        // 药品费用
         sellerBalanceList.add(drug(order));
-        sellerBalanceList.add(service(order, sellerServiceAmount));
+        // 药品服务费提成
+        sellerBalanceList.add(service(order, order.getSellerId(), sellerServiceAmount, "药品服务费"));
+        // 用户悬赏费用
         sellerBalanceList.add(reward(order));
         balanceMapper.sellerBalance(sellerBalanceList);
 
-        // 卖家账户
+        // 卖家账户 = 药费 + 悬赏费 + 服务分成
         BigDecimal sellerAmount = order.getOrderAmount()
                 .add(order.getRewardAmount())
                 .add(sellerServiceAmount);
@@ -102,19 +108,34 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
 
         // 平台收入流水
         List<DrugSystemBalance> systemBalanceList = new ArrayList<>();
+        // 运费
         systemBalanceList.add(freight(order));
+        // 服务费分成
         systemBalanceList.add(sservice(order, systemServiceAmount));
-        // 平台支出流水
+
+        // 平台支出流水 = 优惠券
         systemBalanceList.add(coupon(order));
         balanceMapper.systemBalance(systemBalanceList);
 
         // 平台账户
+        // 收入 = 服务费提成 + 运费
         BigDecimal income = systemServiceAmount.add(order.getFreight());
+        // 支出 = 优惠券
         BigDecimal expenditure = order.getDiscountAmount();
         balanceMapper.systemAccount(expenditure, income);
 
-        // 代收药店
-
+        // 代收药店服务费提成给药店店长
+        DrugSeller managerSeller = sellerMapper.getShopManager(order.getCollectionStoreId());
+        if (managerSeller == null){
+            logger.warn("shop manager not exists");
+        } else {
+            List<DrugSellerBalance> managerList = new ArrayList<>();
+            // 店长服务费流水
+            managerList.add(service(order, managerSeller.getId(), storeServiceAmount, "代收服务费"));
+            balanceMapper.sellerBalance(managerList);
+            // 店长账户金额
+            balanceMapper.sellerAccount(managerSeller.getId(), storeServiceAmount);
+        }
 
         // 药师成功抢单数增加
         String drugName = sellerGoodsMapper.getFirstDrugName(orderId);
@@ -123,7 +144,7 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
         // 更新订单结算状态
         orderMapper.changeOrderSettlementStatus(orderId);
 
-        // 长期用药
+        // 添加长期用药
         DrugUserLongterm longTerm = new DrugUserLongterm();
         longTerm.setUserId(order.getUserId());
         List<DrugOrderGoods> goods = goodsMapper.listDrugs(orderId);
@@ -168,16 +189,16 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
      * @param fee
      * @return
      */
-    private DrugSellerBalance service(DrugOrder order, BigDecimal fee){
+    private DrugSellerBalance service(DrugOrder order, Long sellerId, BigDecimal fee, String remark){
         DrugSellerBalance balance = new DrugSellerBalance();
         balance.setOrderId(order.getId());
-        balance.setSellerId(order.getSellerId());
+        balance.setSellerId(sellerId);
         balance.setDebit(1);
         balance.setCreateTime(LocalDateTime.now());
 
         balance.setAmount(fee);
         balance.setClassify(BalanceClassify.SERVICE.get());
-        balance.setRemark("服务费");
+        balance.setRemark(remark);
 
         return balance;
     }
@@ -234,7 +255,7 @@ public class ManagerSettlementServiceImpl implements ManagerSettlementService {
 
         balance.setAmount(fee);
         balance.setClassify(BalanceClassify.SERVICE.get());
-        balance.setRemark("服务费提成");
+        balance.setRemark("平台服务费");
         return balance;
     }
 

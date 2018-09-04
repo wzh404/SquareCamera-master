@@ -24,11 +24,12 @@ public class PayService {
     private String notifyUrl;
 
     @Value("${drug.user.pay.key}")
-    private String key;
+    private String _key;
 
 
     /**
-     * 获得统一下单参数
+     * 获得统一下单参数(详见:https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=4_3)
+     *
      * @param openId
      * @param totalFee
      * @param ip
@@ -48,7 +49,7 @@ public class PayService {
         paras.put("total_fee", totalFee);
         paras.put("openid", openId);
         paras.put("spbill_create_ip", ip);
-        String sign = WxUtils.signature(paras, key);
+        String sign = WxUtils.signature(paras, _key);
         paras.put("sign", sign);
         return this.getRequestXml(paras);
     }
@@ -87,7 +88,20 @@ public class PayService {
      * @throws Exception
      */
     public Map<String, String> requestWechatPayServer(String param){
-        String response = HttpClientUtil.doPostHttpsXMLParam("https://api.mch.weixin.qq.com/pay/unifiedorder", param);
+        //String response = HttpClientUtil.doPostHttpsXMLParam("https://api.mch.weixin.qq.com/pay/unifiedorder", param);
+        String response = "<xml>\n" +
+                "   <return_code><![CDATA[SUCCESS]]></return_code>\n" +
+                "   <return_msg><![CDATA[OK]]></return_msg>\n" +
+                "   <appid><![CDATA[wx2421b1c4370ec43b]]></appid>\n" +
+                "   <mch_id><![CDATA[10000100]]></mch_id>\n" +
+                "   <nonce_str><![CDATA[IITRi8Iabbblz1Jc]]></nonce_str>\n" +
+                "   <openid><![CDATA[oUpF8uMuAJO_M2pxb1Q9zNjWeS6o]]></openid>\n" +
+                "   <sign><![CDATA[7921E432F65EB8ED0CE9755F0E86D72F]]></sign>\n" +
+                "   <result_code><![CDATA[SUCCESS]]></result_code>\n" +
+                "   <prepay_id><![CDATA[wx201411101639507cbf6ffd8b0779950874]]></prepay_id>\n" +
+                "   <trade_type><![CDATA[JSAPI]]></trade_type>\n" +
+                "</xml>";
+
         return WxUtils.parseXml(response);
     }
 
@@ -110,5 +124,9 @@ public class PayService {
         } catch (Exception e){
             return null;
         }
+    }
+
+    public boolean checkSign(Map<String, String> params){
+        return WxUtils.checkSign(params, _key);
     }
 }

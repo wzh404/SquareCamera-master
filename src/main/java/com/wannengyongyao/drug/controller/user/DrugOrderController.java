@@ -431,7 +431,7 @@ public class DrugOrderController {
 
         String ip = RequestUtil.getIpAddress(request);
         String body = "测试PAY";
-        String requestParam = payService.getPayParam(openId, totalFee, orderId.toString(), ip, body);
+        String requestParam = payService.getPayParam(openId, orderId.toString(), totalFee, ip, body);
         Map<String, String> result = payService.requestWechatPayServer(requestParam);
         Map<String, String> data = new TreeMap<>();
         if (result.get("return_code").equals("SUCCESS") &&

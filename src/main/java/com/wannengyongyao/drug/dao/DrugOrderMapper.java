@@ -180,6 +180,12 @@ public interface DrugOrderMapper {
      * @param orderId
      * @return
      */
+    DrugOrderShare getOrderWxUser(@Param("orderId")Long orderId);
+    /**
+     *
+     * @param orderId
+     * @return
+     */
     Integer getOrderShareTotal(@Param("orderId")Long orderId);
 
     /**

@@ -17,4 +17,5 @@ public class DrugOrderShare {
     private LocalDateTime createTime;
 
     private String nickName;
+    private String avatar;
 }

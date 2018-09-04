@@ -339,8 +339,12 @@ public class DrugOrderServiceImpl implements DrugOrderService {
         Map<String, Object> map = new HashMap<>();
         int total = orderMapper.getOrderShareTotal(orderId);
         List<DrugOrderShare> shares = orderMapper.listOrderShareUsers(orderId);
+        DrugOrderShare share = orderMapper.getOrderWxUser(orderId);
         map.put("total", total);
         map.put("users", shares);
+        map.put("nickName", share.getNickName());
+        map.put("avatar", share.getAvatar());
+
         return map;
     }
 }
